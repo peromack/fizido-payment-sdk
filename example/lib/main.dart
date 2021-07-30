@@ -5,6 +5,8 @@ import 'package:flutter/services.dart';
 import 'package:empressa_pos/pos.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  EmpressaPos.initializeTerminal();
   runApp(MyApp());
 }
 

@@ -1,6 +1,7 @@
 package com.pos.empressa.empressa_pos;
 
 import android.app.Application;
+import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -10,16 +11,18 @@ import com.socsi.smartposapi.DeviceMaster;
 import com.socsi.smartposapi.ped.Ped;
 import com.sunyard.smartposapi.emv2.EmvL2;
 
-public class MainApplication extends Application {
+import io.flutter.app.FlutterApplication;
+
+public class MainApplication extends FlutterApplication {
     private static final String TAG = "MainApplication";
     private static final String mainKeyDefault = "645E7970C2BCDA1057A715B5C2A40E26";
-    private static final String workKeyDefault = "3104DFD94FCFC16E2EA419EC355B87ED";
+    private static final String workKeyDefault = "9F8011E7E71E483B"; //3104DFD94FCFC16E2EA419EC355B87ED
     @Override
     public void onCreate() {
         super.onCreate();
         DeviceMaster.getInstance().init(this.getApplicationContext());
         loadKey();
-         initEmv();
+         initEmv(this);
         Log.d(TAG, "sdk init");
     }
 
@@ -40,8 +43,8 @@ public class MainApplication extends Application {
         }
     }
 
-    private void initEmv() {
-        EmvL2.getInstance(this, getPackageName()).init();
+    private void initEmv(Context context) {
+        EmvL2.getInstance(context, MainApplication.class.getSimpleName()).init();
         String[] aids = new String[]{
 
                 //VISA
@@ -85,11 +88,11 @@ public class MainApplication extends Application {
         };
 
 
-        int ret = EmvL2.getInstance(this, getPackageName()).clearAids();
+        int ret = EmvL2.getInstance(context, MainApplication.class.getSimpleName()).clearAids();
         if (ret != 0) {
             Log.d(TAG,"clear aids fail");
         }
-        ret = EmvL2.getInstance(this, getPackageName()).addAids(aids);
+        ret = EmvL2.getInstance(context, MainApplication.class.getSimpleName()).addAids(aids);
         if (ret != 0) {
             Log.d(TAG,"add aids fail");
         }
@@ -123,14 +126,21 @@ public class MainApplication extends Application {
                 "9f0605a0000003339f22010bdf05083230313631323331df060101df070101df0281f8cf9fdf46b356378e9af311b0f981b21a1f22f250fb11f55c958709e3c7241918293483289eae688a094c02c344e2999f315a72841f489e24b1ba0056cfab3b479d0e826452375dcdbb67e97ec2aa66f4601d774feaef775accc621bfeb65fb0053fc5f392aa5e1d4c41a4de9ffdfdf1327c4bb874f1f63a599ee3902fe95e729fd78d4234dc7e6cf1ababaa3f6db29b7f05d1d901d2e76a606a8cbffffecbd918fa2d278bdb43b0434f5d45134be1c2781d157d501ff43e5f1c470967cd57ce53b64d82974c8275937c5d8502a1252a8a5d6088a259b694f98648d9af2cb0efd9d943c69f896d49fa39702162acb5af29b90bade005bc157df040103df0314bd331f9996a490b33c13441066a09ad3feb5f66c",
                 "9f0605a0000000659f220114df05083230313631323331df060101df070101df0281f8aeed55b9ee00e1eceb045f61d2da9a66ab637b43fb5cdbdb22a2fbb25be061e937e38244ee5132f530144a3f268907d8fd648863f5a96fed7e42089e93457adc0e1bc89c58a0db72675fbc47fee9ff33c16ade6d341936b06b6a6f5ef6f66a4edd981df75da8399c3053f430eca342437c23af423a211ac9f58eaf09b0f837de9d86c7109db1646561aa5af0289af5514ac64bc2d9d36a179bb8a7971e2bfa03a9e4b847fd3d63524d43a0e8003547b94a8a75e519df3177d0a60bc0b4bab1ea59a2cbb4d2d62354e926e9c7d3be4181e81ba60f8285a896d17da8c3242481b6c405769a39d547c74ed9ff95a70a796046b5eff36682dc29df040103df0314c0d15f6cd957e491db56dcdd1ca87a03ebe06b7b"
         };
-        ret = EmvL2.getInstance(this, getPackageName()).clearCapks();
+        ret = EmvL2.getInstance(context, MainApplication.class.getSimpleName()).clearCapks();
         if (ret != 0) {
             Log.d(TAG,"clear capks fail");
         }
-        ret = EmvL2.getInstance(this, getPackageName()).addCapks(capks);
+        ret = EmvL2.getInstance(context,MainApplication.class.getSimpleName()).addCapks(capks);
         if (ret != 0) {
             Log.d(TAG,"add capks fail");
         }
-        Toast.makeText(this, "init emv success", Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, "success", Toast.LENGTH_SHORT).show();
+    }
+
+    public void initializeApp(Context context){
+        DeviceMaster.getInstance().init(context);
+        loadKey();
+        initEmv(context);
+        Log.d(TAG, "sdk init");
     }
 }

@@ -31,6 +31,16 @@ class EmpressaPos {
       cardDetails = null ;
       print(e.stacktrace);
     }
-return cardDetails;
+  return cardDetails;
   }
+
+
+  static Future<void> initializeTerminal()async{
+    try{
+      var result = await _channel.invokeMethod('initEmv');
+    }catch(e){
+      print(e.stacktrace);
+    }
+  }
+
 }

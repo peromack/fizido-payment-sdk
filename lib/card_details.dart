@@ -37,7 +37,11 @@ class CardDetails {
       this.strTrack2,
       this.pan,
       this.expiry,
-      this.src});
+      this.src,
+        this.cardPin,
+        this.ksn
+
+      });
 
   final String the50;
   final String the57;
@@ -74,12 +78,11 @@ class CardDetails {
   final String the9F21;
   final String the9F41;
   String strTrack2;
-
+  String cardPin ;
   String pan;
-
   String expiry;
-
   String src;
+  String ksn ;
 
   factory CardDetails.fromJson(Map<String, dynamic> json) => CardDetails(
       the50: json["50"],
@@ -119,7 +122,10 @@ class CardDetails {
       strTrack2: json['strTrack2'],
       pan: json['pan'],
       expiry: json['expiry'],
-      src: json['src']);
+      src: json['src'],
+      cardPin: json['CardPin'],
+      ksn: json['ksn'],
+  );
 
   Map<String, dynamic> toJson() => {
         "50": the50,
@@ -159,6 +165,9 @@ class CardDetails {
         'strTrack2': strTrack2,
         'pan': pan,
         'expiry': expiry,
-        'src': src
+        'src': src,
+        'CardPin': cardPin,
+        'ksn': ksn
+    ,
       };
 }

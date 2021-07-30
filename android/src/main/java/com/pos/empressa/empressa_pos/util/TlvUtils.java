@@ -11,11 +11,14 @@ import java.util.Map;
 
 /**
  * 将字符串转换为TLV对象
+ *
+ * Convert string to TLV object
  */
 public abstract class TlvUtils {
 
     /**
      * 将16进制字符串转换为TLV对象列表
+     * Convert a hexadecimal string to a list of TLV objects
      *
      * @param hexString
      * @return
@@ -160,5 +163,24 @@ public abstract class TlvUtils {
         }
         byte[] data = StringUtil.hexStr2Bytes(dataString);
         return data;
+    }
+
+    public static String toHexString(byte[] data) {
+        if (data == null) {
+            return "";
+        } else {
+            StringBuilder stringBuilder = new StringBuilder();
+
+            for(int i = 0; i < data.length; ++i) {
+                String string = Integer.toHexString(data[i] & 255);
+                if (string.length() == 1) {
+                    stringBuilder.append("0");
+                }
+
+                stringBuilder.append(string.toUpperCase());
+            }
+
+            return stringBuilder.toString();
+        }
     }
 }
