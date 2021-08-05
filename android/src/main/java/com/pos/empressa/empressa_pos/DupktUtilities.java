@@ -11,7 +11,7 @@ public class DupktUtilities {
     private Dukpt dukpt = null;
     private int dukptIndex = 1;
     private String ksn = "0000000006DDDDE01500";
-    private final String DukptKey = "FE9C1B69FB3FAE71FE9C1B69FB3FAE71";//FE9C1B69FB3FAE71FE9C1B69FB3FAE71
+    private final String DukptKey = "9F8011E7E71E483B";//FE9C1B69FB3FAE71FE9C1B69FB3FAE71
 
 
 
