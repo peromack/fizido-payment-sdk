@@ -36,7 +36,6 @@ import com.socsi.utils.TlvUtil;
 
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import io.flutter.plugin.common.MethodChannel;
@@ -54,7 +53,7 @@ public class ReadCardUtilities {
     private int channelType;
     private final Context mContext;
     String panNumber ;
-    String cardPin ;
+    String cardPin = "";
 
     public ReadCardUtilities(Context mContext) {
         this.mContext = mContext;
@@ -162,6 +161,7 @@ public class ReadCardUtilities {
                 //updateResult("Na The Pan be this"+panNumber);
                 Log.d("EmpressaPosPlugin", "EMVDevice process startProcess panCofirm");
                 handler.onPanConfirm(0);
+
             }
 
             @Override
@@ -179,13 +179,13 @@ public class ReadCardUtilities {
                             Log.d("EmpressaPosPlugin", "EMVDevice SyncEmvCallback getPin type error: type" + type);
                         }
                         Bundle param = new Bundle();
-                        param.putBoolean("isOnline", isOnlinePin);
+                        param.putBoolean("isOnline", false);
                         param.putString("pan", getpanData());//"6274311520010841"
                         param.putString("promptString", "Enter Card PIN");
                         param.putIntArray("pinLimit", new int[]{0, 4, 6});
-                        param.putInt("pinAlgMode", Ped.ALGORITHMTYPE_USE_PAN_SUPPLY_F);
-                        param.putInt("keysType", Ped.KEYS_TYPE_MK_SK);
-                        param.putInt("desType", Ped.KEYS_TYPE_MK_SK);
+                        param.putInt("pinAlgMode", Ped.DES_TYPE_DES);
+                        param.putInt("keysType", Ped.DES_TYPE_DES);
+                        param.putInt("desType", Ped.DES_TYPE_DES);
                         param.putInt("timeout", 60);
                         try {
                             Ped.getInstance().startPinInput(mContext, 0x01, param, new OperationPinListener() {
@@ -208,9 +208,8 @@ public class ReadCardUtilities {
                                         new Handler(Looper.getMainLooper()).post(new Runnable() {
                                             @Override
                                             public void run() {
-                                                cardPin = HexUtil.toString(data)  ;
-
-                                                Toast.makeText(mContext, "Pin Ok" , Toast.LENGTH_LONG).show();
+                                                getClearPin(data);
+                                                Toast.makeText(mContext, "Pin Ok"  , Toast.LENGTH_LONG).show();
                                             }
                                         });
                                     }
@@ -224,6 +223,7 @@ public class ReadCardUtilities {
                                     Log.d("EmpressaPosPlugin", "onCancel");
                                 }
                             });
+
                         } catch (SDKException e) {
                             new Handler(Looper.getMainLooper()).post(new Runnable() {
                                 @Override
@@ -287,9 +287,16 @@ public class ReadCardUtilities {
                 byte[] tag = StringUtil.hexStr2Bytes("579F269F279F109F379F36959A9F219C9F025F2A829F1A9F039F339F349F359F1E9F06849F099F419F535F345A575F249F079B9F119F125F20995F255F30509F4000");
                 if (ret == 0 || ret == 1 || ret == 2) {
                     byte[] tlvData = emvL2.getTLVData(tag);
+
                     HashMap<String, String> cardDataMap = (HashMap<String, String>) TlvUtil.tlvToMap(tlvData);
-                    cardDataMap.put("CardPin",cardPin);
-                    cardDataMap.put("ksn",getKsn());
+
+
+                    KSNUtilities ksnUtilitites = new KSNUtilities();
+                    String workingKey = ksnUtilitites.getWorkingKey("9F8011E7E71E483B","0000000006DDDDE01500") ;
+                    String pinBlock =  ksnUtilitites.DesEncryptDukpt(ksnUtilitites.getCheckWorkingKey() , cardDataMap.get("5A"),cardPin);
+                    cardDataMap.put("CardPin",pinBlock);
+                    cardDataMap.put("ksn",ksnUtilitites.getLatestKsn());
+
                     Log.d("Trying Something",cardDataMap.toString());
                     new Handler(Looper.getMainLooper()).post(new Runnable() {
                         @Override
@@ -320,6 +327,16 @@ public class ReadCardUtilities {
 
             }
         });
+    }
+
+    private void getClearPin(byte[] data) {
+        String pinHex =  HexUtil.toString(data) ;
+        String[] pinArray = pinHex.split("3");
+
+        for (int i=0; i < pinArray.length; i++)
+        {
+            cardPin = cardPin + pinArray[i] ;
+        }
     }
 
     private void readcard( @NonNull MethodChannel.Result result) {
@@ -399,9 +416,9 @@ public class ReadCardUtilities {
                         param.putString("pan", getpanData());//"6274311520010841"
                         param.putString("promptString", "Enter Card PIN");
                         param.putIntArray("pinLimit", new int[]{4, 6});
-                        param.putInt("pinAlgMode", Ped.ALGORITHMTYPE_PINBLOCK);//ALGORITHMTYPE_USE_PAN_SUPPLY_F
-                        param.putInt("keysType", Ped.KEYS_TYPE_MK_SK);//KEYS_TYPE_DUKPT
-                        param.putInt("desType",Ped.DES_TYPE_3DES);
+                        param.putInt("pinAlgMode", Ped.DES_TYPE_DES);//ALGORITHMTYPE_USE_PAN_SUPPLY_F
+                        param.putInt("keysType", Ped.DES_TYPE_DES);//KEYS_TYPE_DUKPT
+                        param.putInt("desType",Ped.DES_TYPE_DES);
                         param.putInt("timeout", 60);
                         try {
                             Ped.getInstance().startPinInput(mContext, 0x01, param, new OperationPinListener() {
@@ -426,9 +443,9 @@ public class ReadCardUtilities {
 
                                 @Override
                                 public void onConfirm(byte[] data, boolean isNonePin) {
-                                    cardPin = HexUtil.toString(data) ;
+                                    getClearPin(data);
                                     getPinHandler.onGetPin(EmvCallbackGetPinResult.CV_PIN_SUCC, data);
-                                    Log.e("EmpressaPosPlugin", "onConfirm   data:" + HexUtil.toString(data) + "  isNonePin:" + isNonePin);
+                                    Log.e("EmpressaPosPlugin", "onConfirm   data:"  + "  isNonePin:" + isNonePin);
                                 }
 
                                 @Override
@@ -596,8 +613,12 @@ public class ReadCardUtilities {
             return;
         }
         HashMap<String, String> cardDataMap = (HashMap<String, String>) TlvUtil.tlvToMap(cardData);
-        cardDataMap.put("CardPin",cardPin);
-        cardDataMap.put("ksn",getKsn());
+        KSNUtilities ksnUtilitites = new KSNUtilities();
+        String workingKey = ksnUtilitites.getWorkingKey("9F8011E7E71E483B","0000000006DDDDE01500") ;
+        String pinBlock =  ksnUtilitites.DesEncryptDukpt(ksnUtilitites.getCheckWorkingKey() , cardDataMap.get("5A"),cardPin);
+        cardDataMap.put("CardPin",pinBlock);
+        cardDataMap.put("ksn",ksnUtilitites.getLatestKsn());
+
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
             public void run() {
@@ -761,6 +782,5 @@ public class ReadCardUtilities {
         }
         Log.d("EmpressaPosPlugin","init success");
     }
-
 
 }
