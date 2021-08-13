@@ -85,7 +85,7 @@ public class EmpressaPosPlugin implements FlutterPlugin, MethodCallHandler, Acti
     readCardUtilities = new ReadCardUtilities(mContext);
     switch (call.method) {
       case "searchCard":
-        readCardUtilities.searchCard(result);
+        readCardUtilities.searchCard(result,call.argument("transactionAmount"));
         break;
       case "stopSearch":
         readCardUtilities.stopSearch();

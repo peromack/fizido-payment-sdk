@@ -1,6 +1,7 @@
 package com.pos.empressa.empressa_pos;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -36,6 +37,7 @@ import com.socsi.utils.TlvUtil;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import io.flutter.plugin.common.MethodChannel;
@@ -60,7 +62,7 @@ public class ReadCardUtilities {
     }
 
 
-    public void searchCard(@NonNull MethodChannel.Result result) {
+    public void searchCard(@NonNull MethodChannel.Result result,int transactionAmount) {
         try {
             CardReader cardReader = CardReader.getInstance();
             cardReader.setMagCardSearchCallback(new MagCardSearchCallback() {
@@ -92,7 +94,7 @@ public class ReadCardUtilities {
                     switch (ret) {
                         case 0:
                             channelType = EmvStartProcessParam.EMV_API_CHANNEL_FROM_ICC;
-                            startProcess(result);
+                            startProcess(result,transactionAmount);
                             return;
                         case 1:
                             //updateResult("read timeout");
@@ -115,7 +117,7 @@ public class ReadCardUtilities {
                         byte isNFC = Icc.getInstance().checkCardOn((byte) 0x01);
                         Log.i("test", isICC + " " + isNFC);
                         channelType = EmvStartProcessParam.EMV_API_CHANNEL_FORM_PICC;
-                        startProcess(result);
+                        startProcess(result,transactionAmount);
                         return;
                     } else if (ret == 1) {
                         //updateResult("read timeout");
@@ -136,11 +138,11 @@ public class ReadCardUtilities {
         }
     }
 
-    private void startProcess(@NonNull MethodChannel.Result result) {
+    private void startProcess(@NonNull MethodChannel.Result result,int transactionAmount) {
         com.sunyard.smartposapi.emv2.EmvL2 emvL2 = com.sunyard.smartposapi.emv2.EmvL2.getInstance(mContext, EmpressaPosPlugin.class.getSimpleName());
         emvL2.init();
         com.sunyard.middleware.emvl2lib.EmvStartProcessParam param = new com.sunyard.middleware.emvl2lib.EmvStartProcessParam();
-        param.mTransAmt = 100;
+        param.mTransAmt = transactionAmount;
         param.mTransDate = StringUtil.hexStr2Bytes(DateUtil.getCurDateStr("yyMMdd"));
         param.mTransTime = StringUtil.hexStr2Bytes(DateUtil.getCurDateStr("HHmmss"));
         param.mChannelType = channelType;
@@ -152,8 +154,8 @@ public class ReadCardUtilities {
             param.mProcType = EmvStartProcessParam.EMV_API_PROC_PBOC_FULL;
         }
         param.mTransType = EmvStartProcessParam.EMV_API_TRANS_TYPE_NORMAL;
-        param.mTermCountryCode = "356".getBytes();
-        param.mTransCurrCode = "356".getBytes();
+        param.mTermCountryCode = "566".getBytes();
+        param.mTransCurrCode = "566".getBytes();
         emvL2.startProcess(param, new com.sunyard.smartposapi.emv2.AsyncEmvCallback() {
             @Override
             public void panConfirm(final byte[] pan, final com.sunyard.smartposapi.emv2.EmvL2.PanConfirmHandler handler) {
@@ -292,8 +294,8 @@ public class ReadCardUtilities {
 
 
                     KSNUtilities ksnUtilitites = new KSNUtilities();
-                    String workingKey = ksnUtilitites.getWorkingKey("9F8011E7E71E483B","0000000006DDDDE01500") ;
-                    String pinBlock =  ksnUtilitites.DesEncryptDukpt(ksnUtilitites.getCheckWorkingKey() , cardDataMap.get("5A"),cardPin);
+                    String workingKey = ksnUtilitites.getWorkingKey("3F2216D8297BCE9C",getInitialKSN()) ;
+                    String pinBlock =  ksnUtilitites.DesEncryptDukpt(workingKey , cardDataMap.get("5A"),cardPin);
                     cardDataMap.put("CardPin",pinBlock);
                     cardDataMap.put("ksn",ksnUtilitites.getLatestKsn());
 
@@ -608,14 +610,14 @@ public class ReadCardUtilities {
     }
     private void updateICCardData( @NonNull MethodChannel.Result methodResult) {
         byte[] cardData = getTlvData(mContext, EmpressaPosPlugin.class.getSimpleName(), "5A575F345F20");
+
         if (cardData == null) {
-            //updateResult("get ic data fail");
             return;
         }
         HashMap<String, String> cardDataMap = (HashMap<String, String>) TlvUtil.tlvToMap(cardData);
         KSNUtilities ksnUtilitites = new KSNUtilities();
-        String workingKey = ksnUtilitites.getWorkingKey("9F8011E7E71E483B","0000000006DDDDE01500") ;
-        String pinBlock =  ksnUtilitites.DesEncryptDukpt(ksnUtilitites.getCheckWorkingKey() , cardDataMap.get("5A"),cardPin);
+        String workingKey = ksnUtilitites.getWorkingKey("3F2216D8297BCE9C",getInitialKSN()) ;
+        String pinBlock =  ksnUtilitites.DesEncryptDukpt(workingKey , cardDataMap.get("5A"),cardPin);
         cardDataMap.put("CardPin",pinBlock);
         cardDataMap.put("ksn",ksnUtilitites.getLatestKsn());
 
@@ -641,8 +643,6 @@ public class ReadCardUtilities {
                 result += " value:" + tlv.getValue();
             }
         }
-        //updateResult(result);
-
     }
 
     private byte[] getTlvData(Context context, String packageName, String tlvString) {
@@ -659,24 +659,6 @@ public class ReadCardUtilities {
     public void stopSearch() {
         CardReader.getInstance().stopSearch(7);
     }
-
-
-
-    private String getKsn() {
-        DupktUtilities  dupktUtilities = new DupktUtilities();
-        String dupkt = dupktUtilities.loadDukpt();
-        String ksn = "";
-
-        try {
-            ksn = StringUtil.byte2HexStr(Dukpt.getInstance().getCurrentukptKsn());
-        } catch (SDKException e) {
-            e.printStackTrace();
-        } catch (PINPADException e) {
-            e.printStackTrace();
-        }
-        return  ksn ;
-    }
-
 
     private String  getpanData() {
         String sPan = null;
@@ -781,6 +763,19 @@ public class ReadCardUtilities {
             Log.d("EmpressaPosPlugin","add capks fail");
         }
         Log.d("EmpressaPosPlugin","init success");
+    }
+
+    private String getInitialKSN(){
+        SharedPreferences sharedPref = mContext.getSharedPreferences( "KSNCOUNTER", Context.MODE_PRIVATE);
+        int ksn = sharedPref.getInt("KSN",00001);
+        if(ksn > 9999){
+            ksn = 00000 ;
+        }
+        int latestKSN = ksn + 1 ;
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putInt("KSN",latestKSN);
+        editor.apply();
+        return  "0000000002DDDDE"+ String.format("%05d", latestKSN);
     }
 
 }

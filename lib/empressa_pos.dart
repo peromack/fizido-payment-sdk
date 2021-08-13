@@ -10,14 +10,13 @@ class EmpressaPos {
 
 
 
-  static Future<CardDetails> search() async {
+  static Future<CardDetails> search(int transactionAmount) async {
     CardDetails cardDetails ;
     try {
-        var result = await _channel.invokeMethod('searchCard');
+        var result = await _channel.invokeMethod('searchCard',{"transactionAmount":transactionAmount});
         print(result);
        var cardResponse = Map<String, String>.from(result) ;
         cardDetails = CardDetails.fromJson(cardResponse);
-
         var track2Data = cardDetails.the57 ;
         var strTrack2 = track2Data.split("F")[0] ;
         var pan = strTrack2.split('D')[0] ;
@@ -38,6 +37,20 @@ class EmpressaPos {
   static Future<void> initializeTerminal()async{
     try{
       var result = await _channel.invokeMethod('initEmv');
+    }catch(e){
+      print(e.stacktrace);
+    }
+  }
+static Future<void> stopSearch()async{
+    try{
+      var result = await _channel.invokeMethod('stopSearch');
+    }catch(e){
+      print(e.stacktrace);
+    }
+  }
+static Future<void> sunyardPrint()async{
+    try{
+      var result = await _channel.invokeMethod('startPrinter');
     }catch(e){
       print(e.stacktrace);
     }

@@ -29,7 +29,7 @@ class _MyAppState extends State<MyApp> {
     CardDetails platformVersion;
     // Platform messages may fail, so we use a try/catch PlatformException.
     try {
-      platformVersion = await EmpressaPos.search();
+      platformVersion = await EmpressaPos.search(200);
     } on PlatformException  catch (e) {
       platformVersion = null;
       print(e.stacktrace);

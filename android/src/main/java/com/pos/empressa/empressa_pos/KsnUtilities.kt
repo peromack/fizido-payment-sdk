@@ -12,7 +12,7 @@ class KSNUtilities {
 
     var latestKsn: String = "";
     var latestIpek: String = "";
-    var checkWorkingKey = "" ;
+
     //= "9F8011E7E71E483B",  = "0000000006DDDDE01500"
     fun getWorkingKey(IPEK: String  , KSN: String ): String {
         var initialIPEK: String = IPEK
@@ -55,7 +55,7 @@ class KSNUtilities {
             newKSNtoleft16 = newKSN2
             initialIPEK = sessionkey
         }
-         checkWorkingKey = XORorANDorORfunction(
+        var checkWorkingKey  = XORorANDorORfunction(
                 sessionkey, "00000000000000FF00000000000000FF", "^"
         )
         println("**********The value of the working key is $checkWorkingKey")
