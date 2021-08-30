@@ -96,7 +96,11 @@ public class EmpressaPosPlugin implements FlutterPlugin, MethodCallHandler, Acti
         break;
         case "startPrinter":
           PrinterUtilities printerUtilities = new PrinterUtilities(mContext);
-          printerUtilities.startPrint();
+          Log.d("PrintActivity.class", call.arguments.toString());
+          printerUtilities.startPrint(call);
+        break;
+        case "checkSunyardCard":
+          readCardUtilities.checkCard(result);
         break;
       default:
         result.notImplemented();

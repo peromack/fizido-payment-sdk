@@ -49,6 +49,8 @@ import socsi.middleware.emvl2lib.EmvErrorCode;
 import socsi.middleware.emvl2lib.EmvStartProcessParam;
 import socsi.middleware.emvl2lib.EmvTermConfig;
 
+import static com.socsi.smartposapi.icc.Icc.IC_CARD_ON;
+
 public class ReadCardUtilities {
 
 
@@ -199,6 +201,7 @@ public class ReadCardUtilities {
 
                                 @Override
                                 public void onError(int errorCode) {
+                                    stopSearch();
                                     Log.d("EmpressaPosPlugin", "onError   errorCode:" + errorCode);
                                 }
 
@@ -222,6 +225,7 @@ public class ReadCardUtilities {
                                 public void onCancel()
                                 {
                                     stopSearch();
+                                    initEmv();
                                     Log.d("EmpressaPosPlugin", "onCancel");
                                 }
                             });
@@ -452,6 +456,8 @@ public class ReadCardUtilities {
 
                                 @Override
                                 public void onCancel() {
+                                    stopSearch();
+                                    initEmv();
                                     Log.e("EmpressaPosPlugin", "onCancel");
                                     getPinHandler.onGetPin(EmvCallbackGetPinResult.CV_PIN_CANCLE, new byte[]{0x00, 0x00});
                                 }
@@ -776,6 +782,21 @@ public class ReadCardUtilities {
         editor.putInt("KSN",latestKSN);
         editor.apply();
         return  "0000000002DDDDE"+ String.format("%05d", latestKSN);
+    }
+
+
+    public void checkCard( @NonNull MethodChannel.Result result){
+        boolean isCardInserted = false ;
+      if(Icc.IC_CARD_OFF == Icc.getInstance().checkCardOn(Icc.IC_CARD)){
+          Log.d("Empressa","Card is NOT INSERTED");
+          isCardInserted =  false ;
+
+      }else if(IC_CARD_ON == Icc.getInstance().checkCardOn(Icc.IC_CARD)){
+          Log.d("Empressa","Card is INSERTED");
+          isCardInserted =  true ;
+      }
+        Log.d("Empressa","Card NO EVEN DEY AT ALL");
+      result.success(isCardInserted);
     }
 
 }
