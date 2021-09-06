@@ -1,4 +1,4 @@
-package com.pos.empressa.empressa_pos.util;
+package com.pos.empressa.empressa_pos.Sunyard.util;
 
 import android.content.Context;
 import android.graphics.Bitmap;

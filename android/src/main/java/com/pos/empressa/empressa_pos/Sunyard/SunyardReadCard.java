@@ -1,4 +1,4 @@
-package com.pos.empressa.empressa_pos;
+package com.pos.empressa.empressa_pos.Sunyard;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -9,10 +9,11 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
-import com.pos.empressa.empressa_pos.bean.TlvBean;
-import com.pos.empressa.empressa_pos.util.TlvUtils;
+import com.pos.empressa.empressa_pos.EmpressaPosPlugin;
+import com.pos.empressa.empressa_pos.KSNUtilities;
+import com.pos.empressa.empressa_pos.Sunyard.bean.TlvBean;
+import com.pos.empressa.empressa_pos.Sunyard.util.TlvUtils;
 import com.socsi.aidl.pinservice.OperationPinListener;
-import com.socsi.exception.PINPADException;
 import com.socsi.exception.SDKException;
 import com.socsi.smartposapi.card.CardReader;
 import com.socsi.smartposapi.card.IcCardSearchCallback;
@@ -23,7 +24,6 @@ import com.socsi.smartposapi.card.rf.RFSearchResultInfo;
 import com.socsi.smartposapi.card.rf.UltralightDriver;
 import com.socsi.smartposapi.emv2.AsyncEmvCallback;
 import com.socsi.smartposapi.emv2.EmvL2;
-import com.socsi.smartposapi.gmalgorithm.Dukpt;
 import com.socsi.smartposapi.icc.Icc;
 import com.socsi.smartposapi.magcard.CardInfo;
 import com.socsi.smartposapi.magcard.Magcard;
@@ -51,7 +51,7 @@ import socsi.middleware.emvl2lib.EmvTermConfig;
 
 import static com.socsi.smartposapi.icc.Icc.IC_CARD_ON;
 
-public class ReadCardUtilities {
+public class SunyardReadCard {
 
 
     private int channelType;
@@ -59,7 +59,7 @@ public class ReadCardUtilities {
     String panNumber ;
     String cardPin = "";
 
-    public ReadCardUtilities(Context mContext) {
+    public SunyardReadCard(Context mContext) {
         this.mContext = mContext;
     }
 

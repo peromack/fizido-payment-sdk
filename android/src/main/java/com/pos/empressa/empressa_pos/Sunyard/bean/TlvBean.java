@@ -1,4 +1,4 @@
-package com.pos.empressa.empressa_pos.bean;
+package com.pos.empressa.empressa_pos.Sunyard.bean;
 
 public class TlvBean {
 

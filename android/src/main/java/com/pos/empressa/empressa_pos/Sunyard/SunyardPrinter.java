@@ -1,4 +1,4 @@
-package com.pos.empressa.empressa_pos;
+package com.pos.empressa.empressa_pos.Sunyard;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -22,12 +22,12 @@ import java.util.Date;
 import io.flutter.plugin.common.MethodCall;
 
 
-public class PrinterUtilities {
+public class SunyardPrinter {
 
     private Printer2 print;
     private FontType mCh = FontType.SIMSUM, mEn = FontType.AVENIR_NEXT_CONDENSED_BLOD;
 
-    public PrinterUtilities(Context context) {
+    public SunyardPrinter(Context context) {
         initPrinter(context);
     }
 
@@ -48,10 +48,10 @@ public class PrinterUtilities {
 
     public void startPrint(@NonNull MethodCall call) {
         //String stan, int originalMinorAmount, String terminalId, String merchantId, String transmissionDate, String transactionComment
-//        Bitmap bitmap = BitmapFactory.;
-//        Bitmap bitmapForWatermark  = print.createBitmapForWatermark(bitmap);
-//        print.appendImage(bitmap);
-//        print.appendImage(bitmapForWatermark, Align.CENTER);
+        Bitmap bitmap = BitmapFactory.decodeResource();
+        Bitmap bitmapForWatermark  = print.createBitmapForWatermark(bitmap);
+        print.appendImage(bitmap);
+        print.appendImage(bitmapForWatermark, Align.CENTER);
         DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 
         Date today = new Date();
