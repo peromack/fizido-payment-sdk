@@ -1,3 +1,4 @@
+import 'package:empressa_pos/bluetooth_devices.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 
@@ -6,7 +7,8 @@ import 'package:empressa_pos/pos.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  EmpressaPos.initializeTerminal();
+  EmpressaPos.initializeMPos();
+  //EmpressaPos.initializeTerminal();
   runApp(MyApp());
 }
 
@@ -16,7 +18,8 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  CardDetails cardDetails ;
+  List<BluetoothDevices> bluetoothDevices ;
+  bool connectionResult ;
 
   @override
   void initState() {
@@ -25,23 +28,34 @@ class _MyAppState extends State<MyApp> {
   }
 
   // Platform messages are asynchronous, so we initialize in an async method.
-  Future<void> initPlatformState() async {
-    CardDetails platformVersion;
+  Future<List<BluetoothDevices> > searchForDevices() async {
+
     // Platform messages may fail, so we use a try/catch PlatformException.
     try {
-      platformVersion = await EmpressaPos.search(200);
+      bluetoothDevices = await EmpressaPos.startMPosDiscovery();
+      setState(() {
+
+      });
+      //platformVersion = await EmpressaPos.search(200);
     } on PlatformException  catch (e) {
-      platformVersion = null;
-      print(e.stacktrace);
+
+      print(e);
     }
+    return bluetoothDevices ;
+  }
 
-    // If the widget was removed from the tree while the asynchronous platform
-    // message was in flight, we want to discard the reply rather than calling
-    // setState to update our non-existent appearance.
+  Future<bool> connectDevices({String bluetoothName,String bluetoothMac}) async {
 
-    setState(() {
-      cardDetails = platformVersion;
-    });
+    try {
+
+     connectionResult =  await EmpressaPos.connectMPosDevice(bluetoothMac: bluetoothMac,bluetoothName: bluetoothName);
+     setState(() {
+
+     });
+    } on PlatformException  catch (e) {
+      print(e);
+    }
+    return connectionResult ;
   }
 
   @override
@@ -53,15 +67,33 @@ class _MyAppState extends State<MyApp> {
         ),
         body: Column(
           children: [
-         if(cardDetails != null)  Center(
-              child: Text('Running on: ${cardDetails.toJson()}\n'),
-            ),
+
             RaisedButton(onPressed: (){
-              initPlatformState();
+              searchForDevices();
             },
               child: Text('Search Card'),
 
-            )
+            ),
+            RaisedButton(onPressed: (){
+              searchForDevices();
+            },
+              child: Text('Search Card'),
+
+            ),
+            SizedBox(height: 20,),
+            Expanded(child: ListView.separated(
+              shrinkWrap: true,
+              itemCount:  bluetoothDevices == null ? 0 :bluetoothDevices.length,
+              itemBuilder: (BuildContext context, int index) {
+                return InkWell(
+                  onTap: (){
+                    connectDevices(bluetoothName: bluetoothDevices[index].name,bluetoothMac: bluetoothDevices[index].address);
+                  },
+                    child: Text('${bluetoothDevices[index].name + bluetoothDevices[index].address}'));
+              }, separatorBuilder: (BuildContext context, int index) {
+                return SizedBox(height: 20,);
+            },)),
+            Text(connectionResult == true ? 'Connected' : 'I NO Fit CONNECT' + '$connectionResult')
           ],
         ),
       ),

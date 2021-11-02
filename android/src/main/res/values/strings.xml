@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">MposDemo</string>
+    <string name="search_bluetooth">Search Bluetooth</string>
+    <string name="last_connect">Last Connect</string>
+    <string name="calc_mac">Calc Mac</string>
+    <string name="device_connect">Device Connect</string>
+    <string name="input_pin">Input Pin</string>
+    <string name="load_dukpt">Dukpt Init</string>
+    <string name="get_ksn">Get KSN</string>
+    <string name="download_master_key">Download Master Key</string>
+    <string name="download_work_key">Download Work Key</string>
+    <string name="read_card">Read Card</string>
+    <string name="read_card_error">Read card error</string>
+    <string name="get_deviceinof">Read Mpos Information</string>
+
+    <string name="connect_bluetooth_device">Connect Bluetooth Device</string>
+    <string name="is_connect">Is connect</string>
+    <string name="disconnect">Disconnect</string>
+    <string name="cancel_swiper">Cancel Swiper</string>
+
+    <string name="connect_device_first">Terminal is not connected, please connect the terminal first</string>
+
+    <string name="device_already_connect">Device already connect</string>
+    <string name="device_not_connect">Device connect fail</string>
+
+    <string name="wait_read_card">Waiting read card</string>
+    <string name="reading_card">Reading card</string>
+    <string name="waiting_input_pin">Waiting input password</string>
+    <string name="user_cancel">User canceled</string>
+    <string name="timeout">Operation timeout</string>
+    <string name="need_insert_iccard">Need insert iccard</string>
+    <string name="perform_online_authorization">Perform online authorization</string>
+    <string name="get_random_numbers">Get Random Numbers</string>
+    <string name="download_aid">Download AID</string>
+    <string name="download_capk">Download CAPK</string>
+    <string name="read_capk_list">Read capk list</string>
+    <string name="read_capk_point">Read point capk</string>
+    <string name="remove_bond">Remove Bond</string>
+    <string name="download_aid_success">AID download success</string>
+    <string name="download_aid_fail">AID download fail</string>
+    <string name="download_capk_success">CAPK download success</string>
+    <string name="download_capk_fail">CAPK download fail</string>
+    <string name="set_manufacturer_id">Set Manufacturer ID</string>
+    <string name="download_master_key_success">Download master key success</string>
+    <string name="download_work_key_success">Download work key success</string>
+    <string name="download_master_key_fail">Download master key fail</string>
+    <string name="download_work_key_fail">Download work key fail</string>
+    <string name="bluetooth">Bluetooth</string>
+    <string name="connected">Connected</string>
+    <string name="manufacturer_id">Id</string>
+    <string name="disconnected">Disconnected</string>
+    <string name="setting_manufacturer">Setting Manufacturer</string>
+    <string name="setting_success">Setting success</string>
+    <string name="current_manufacturer">Current manufacturer</string>
+    <string name="oct_opus">Octopus</string>
+    <string name="power_on">Power on</string>
+    <string name="power_off">Power off</string>
+    <string name="search_card">Search card</string>
+    <string name="transfer_data">Transfer data</string>
+    <string name="set_qrcode">Set Qrcode</string>
+    <string name="get_random">Get Random</string>
+    <string name="terminal_update">Terminal Update</string>
+    <string name="choose_sign_file">Choose Sign File</string>
+    <string name="choose_update_file">Choose Update File</string>
+    <string name="load_sign_file">Load Sign Data</string>
+    <string name="mpos_ui_display">Set Bitmap</string>
+    <string name="connect_mode">Connected Mode</string>
+    <string name="usb_hid">USB HID</string>
+    <string name="audio">Audio</string>
+    <string name="main_menu">Main Menu</string>
+    <string name="open_device">Open Device</string>
+    <string name="ble">Ble</string>
+
+    <string name="load_kek">Load Kek</string>
+    <string name="load_public_key">Load Public Key</string>
+    <string name="load_kek_success">Load kek success</string>
+    <string name="load_kek_fail">Load kek fail</string>
+    <string name="key_vlaue">Key Value</string>
+    <string name="key_kvc">Check Value</string>
+    <string name="input_key_tip">Please input 32 bit hex string</string>
+    <string name="input_kvc_tip">Please input 8 bit hex string</string>
+    <string name="key_index">Key Index</string>
+    <string name="key_index_tip">(0~9)</string>
+
+    <string name="set_currency_code">Set Currency Code</string>
+    <string name="hkcard_power_on_success">Power on success</string>
+    <string name="hkcard_power_off_success">Power off success</string>
+    <string name="hkcard_power_on_fail">Power on fail</string>
+    <string name="hkcard_power_off_fail">Power off fail</string>
+    <string name="set_text">Set Text</string>
+    <string name="set_emv_param">Set Emv Param</string>
+    <string name="read_card_pressure">Read Card Pressure</string>
+    <string name="setting_fail">Setting fail</string>
+    <string name="read_aid_list">Read AID List</string>
+    <string name="read_aid">Read AID point</string>
+    <string name="m1_card">M1 Card</string>
+    <string name="input_pin_switch">Whether to enter the password</string>
+    <string name="card">Card Oper</string>
+    <string name="card_poweron">Card Power On</string>
+    <string name="card_poweroff">Card Power Off</string>
+    <string name="card_apdu">APDU Communication</string>
+    <string name="qrcode">QrCode</string>
+    <string name="qrcode_show">Qrcode Show</string>
+    <string name="qrcode_scan">QRCode Scan</string>
+    <string name="go_home">Go Home</string>
+    <string name="trans_success">Trans Success</string>
+    <string name="masterkey_encrypt_type">Master Key Encrypt Type</string>
+    <string name="read_card_mode">Read Card Mode</string>
+    <string name="insert_card">Insert Card</string>
+    <string name="tap_card">Tap Card</string>
+    <string name="swipe_card">Swipe Card</string>
+    <string name="trans_type">Trans Type</string>
+    <string name="trans_amount">Trans Amount</string>
+    <string name="trans_name">Trans Name</string>
+    <string name="read_card_timeout">Read Card Timeout</string>
+    <string name="force_online">Whether Force Online</string>
+    <string name="fallback">Whether fallback</string>
+    <string name="please_input_amount">Please Input Amount</string>
+    <string name="mac_algorithm">MAC Algorithm</string>
+    <string name="mac_data">MAC Data</string>
+    <string name="dukpt_encrypt_type">Dukpt Encrypt Type</string>
+    <string name="clear_capk">Clear Capk</string>
+    <string name="clear_aid">Clear Aid</string>
+    <string name="set_sleep_time">Setting Sleep Time</string>
+    <string name="choose_bitmap">Choose Bitmap</string>
+    <string name="setting_bitmap">Setting Bitmap</string>
+    <string name="textview_bitmap">Text View To Bitmap</string>
+    <string name="show_bitmap">Show Bitmap</string>
+    <string name="show_text">Show Text</string>
+    <string name="kek_encrypt_tip">If you choose KEK encryption, the master key is use (11111111111111111111111111111111) encryption</string>
+    <string name="operation_success">Operation successful</string>
+    <string name="operation_fail">Operation fail</string>
+    <string name="load_rki">Load RKI</string>
+    <string name="input_amount">Input Amount</string>
+    <string name="ble_awake">BLE Awake</string>
+    <string name="choose_sign_data">Sign Data</string>
+    <string name="vendor_verify">Vendor Verify</string>
+
+    <string name="kek_tip"><Data><![CDATA[<font color="#1E90FF">
+        1. KEK is used to encrypt the master key. If your master key is clear text, you do not need to call this interface.<br>
+        2. The key information is a 32-bit hexadecimal string<br>
+        3. KVC is through the Key 3DES encryption 16 0 calculation, and then take the first 8 bits
+        Such as:<br>
+        * * * * * * * * * * * * * * * * * * * * * * * * * * * * <br>
+        Key: 11111111111111111111111111111111<br>
+        Algorithm: 3DES ECB<br>
+        Crypto operation: Encryption<br>
+        Data: 0000000000000000<br>
+        Encrypted data: 82E13665B4624DF5<br>
+        </font>]]></Data>
+    </string>
+
+    <string name="masterkey_tip"><Data><![CDATA[<font color="#1E90FF">
+        1. The master key download can choose plaintext or KEK encryption mode.<br>
+        2. If you choose plaintext, assuming the master key is 11111111111111111111111111111111, then KVC =82E13665<br>
+        The calculation is as follows:<br>
+        * * * * * * * * * * * * * * * * * * * * * * * * * * *<br>
+        Key: 11111111111111111111111111111111<br>
+        Algorithm: 3DES ECB<br>
+        Crypto operation: Encryption<br>
+        Data: 0000000000000000<br>
+        Padding Method: ISO9797-1 (Padding method 1)<br>
+        Encrypted data: 82E13665B4624DF5<br>
+        3. If you choose KEK encryption, assuming that KEK is 11111111111111111111111111111111 and the cipher master key is F40379AB9E0EC533F40379AB9E0EC533,
+        then KVC=82E13665, calculated as follows<br>
+        * * * * * * * * * * * * * * * * * * * * * * * * * * * <br>
+        Key: 11111111111111111111111111111111<br>
+        Algorithm: 3DES ECB<br>
+        Crypto operation: Decoding<br>
+        Data: F40379AB9E0EC533F40379AB9E0EC533<br>
+        Padding Method: ISO9797-1 (Padding method 1)<br>
+        Decoded data: 11111111111111111111111111111111<br>
+        * * * * * * * * * * *  * * * * * * * * * * * * * * *<br>
+        Key: 11111111111111111111111111111111<br>
+        Algorithm: 3DES ECB<br>
+        Crypto operation: Encryption<br>
+        Data: 0000000000000000<br>
+        Padding Method: ISO9797-1 (Padding method 1)<br>
+        Encrypted data: 82E13665B4624DF5<br>
+        </font>]]></Data>
+    </string>
+
+    <string name="workkey_tip"><Data><![CDATA[<font color="#1E90FF">
+        1. The working key is encrypted by the master key, in which PIN is the encrypted password and MAC key is used to encrypt MAC.
+        TDK is used to encrypt track information. If you do not use track encryption. All you need to do when loading the working key is set to 0<br>
+        2. Suppose you plain master key is 11111111111111111111111111111111
+        Cipher PIN key is F40379AB9E0EC533F40379AB9E0EC533 then KVC = 82E13665 TDK and MAC calculation process and PIN.<br>
+        The calculation is as follows<br>
+        * * * * * * * * * * * * * * * * * * * * * * * * * * *<br>
+        Key: 11111111111111111111111111111111<br>
+        Algorithm: 3DES ECB<br>
+        Crypto operation: Decoding<br>
+        Data: F40379AB9E0EC533F40379AB9E0EC533<br>
+        Padding Method: ISO9797-1 (Padding method 1)<br>
+        Decoded data: 11111111111111111111111111111111<br>
+        * * * * * * * * * * * * * * * * * * * * * * * * * * *<br>
+        Key: 11111111111111111111111111111111<br>
+        Algorithm: 3DES ECB<br>
+        Crypto operation: Encryption<br>
+        Data: 0000000000000000<br>
+        Encrypted data: 82E13665B4624DF5<br>
+        </font>]]></Data>
+    </string>
+
+    <string name="set_bitmap_tip"><Data><![CDATA[<font color="#1E90FF">
+        RAM: This startup is valid, data is lost after restart, you need to download again.<br>
+        ROM: One download is permanent.<br>
+        </font>]]></Data>
+    </string>
+
+</resources>

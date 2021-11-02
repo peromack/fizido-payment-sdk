@@ -48,28 +48,24 @@ public class SunyardPrinter {
 
     public void startPrint(@NonNull MethodCall call) {
         //String stan, int originalMinorAmount, String terminalId, String merchantId, String transmissionDate, String transactionComment
-        Bitmap bitmap = BitmapFactory.decodeResource();
-        Bitmap bitmapForWatermark  = print.createBitmapForWatermark(bitmap);
-        print.appendImage(bitmap);
-        print.appendImage(bitmapForWatermark, Align.CENTER);
-        DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+//        Bitmap bitmap = BitmapFactory.decodeResource();
+//        Bitmap bitmapForWatermark  = print.createBitmapForWatermark(bitmap);
+//        print.appendImage(bitmap);
+//        print.appendImage(bitmapForWatermark, Align.CENTER);
 
-        Date today = new Date();
-        Date todayWithZeroTime = new Date();
-
-        try {
-             todayWithZeroTime = formatter.parse(formatter.format(today));
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        print.appendTextEntity2(new TextEntity("Transaction Receipt", mCh, mEn, FontLattice.THIRTY, false, Align.CENTER,true));
+        print.appendTextEntity2(new TextEntity("Transaction Receipt\n", mCh, mEn, FontLattice.THIRTY, false, Align.CENTER,true));
         print.appendTextEntity2(print.getSeparatorLinetEntity());
-        print.appendTextEntity2(new TextEntity("TerminalID: "+call.argument("terminalId"), mCh, mEn, FontLattice.TWENTY_FOUR, false, Align.LEFT,true));
-        print.appendTextEntity2(new TextEntity("MerchantID: "+call.argument("merchantId"), mCh, mEn, FontLattice.TWENTY_FOUR, false, Align.LEFT,true));
-        print.appendTextEntity2(new TextEntity("Stan:   "+call.argument("originalTransStan"), mCh, mEn, FontLattice.TWENTY_FOUR, false, Align.LEFT,true));
-        print.appendTextEntity2(new TextEntity("Amount: NGN "+call.argument("originalMinorAmount").toString(), mCh, mEn, FontLattice.TWENTY_FOUR, false, Align.LEFT,true));
-        print.appendTextEntity2(new TextEntity("Date:   "+todayWithZeroTime.toString().substring(0, 10), mCh, mEn, FontLattice.TWENTY_FOUR, false, Align.LEFT,true));
-        print.appendTextEntity2(new TextEntity("Comment:    "+call.argument("transactionComment"), mCh, mEn, FontLattice.TWENTY_FOUR, false, Align.LEFT,true));
+        print.appendTextEntity2(new TextEntity("AMOUNT: NGN" +call.argument("originalMinorAmount").toString() + "\n", mCh, mEn, FontLattice.THIRTY, false, Align.CENTER,true));
+        print.appendTextEntity2(print.getSeparatorLinetEntity());
+        print.appendTextEntity2(new TextEntity("TerminalID: "+call.argument("terminalId")+ "\n", mCh, mEn, FontLattice.TWENTY_FOUR, false, Align.LEFT,true));
+        print.appendTextEntity2(new TextEntity("MerchantID: "+call.argument("merchantId")+ "\n", mCh, mEn, FontLattice.TWENTY_FOUR, false, Align.LEFT,true));
+        print.appendTextEntity2(new TextEntity("Stan:   "+call.argument("originalTransStan")+ "\n", mCh, mEn, FontLattice.TWENTY_FOUR, false, Align.LEFT,true));
+        print.appendTextEntity2(new TextEntity("Date:   "+ call.argument("transmissionDate")+ "\n", mCh, mEn, FontLattice.TWENTY_FOUR, false, Align.LEFT,true));
+        print.appendTextEntity2(new TextEntity("Card PAN:    "+call.argument("cardPan")+ "\n", mCh, mEn, FontLattice.TWENTY_FOUR, false, Align.LEFT,true));
+        print.appendTextEntity2(new TextEntity("Card Expiry: "+call.argument("expiryDate")+ "\n", mCh, mEn, FontLattice.TWENTY_FOUR, false, Align.LEFT,true));
+        print.appendTextEntity2(new TextEntity("Ref: "+call.argument("authCode")+ "\n\n", mCh, mEn, FontLattice.TWENTY_FOUR, false, Align.LEFT,true));
+        print.appendTextEntity2(print.getSeparatorLinetEntity());
+        print.appendTextEntity2(new TextEntity(call.argument("transactionComment")+ "\n", mCh, mEn, FontLattice.THIRTY, false, Align.CENTER,true));
         print.appendTextEntity2(print.getSeparatorLinetEntity());
         print.limitTimePrint(10, print.getPrintBuffer());
         print.startPrint();
