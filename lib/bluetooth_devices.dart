@@ -6,9 +6,9 @@ class BluetoothDevices {
     this.name,
   });
 
-  final String address;
-  final bool bSelected;
-  final String name;
+  final String? address;
+  final bool? bSelected;
+  final String? name;
 
   factory BluetoothDevices.fromJson(Map<String, dynamic> json) => BluetoothDevices(
     address: json['address'],

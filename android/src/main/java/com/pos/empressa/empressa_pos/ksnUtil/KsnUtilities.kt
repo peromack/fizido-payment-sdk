@@ -1,4 +1,4 @@
-package com.pos.empressa.empressa_pos
+package com.pos.empressa.empressa_pos.ksnUtil
 
 import java.io.ByteArrayOutputStream
 import java.security.spec.KeySpec
