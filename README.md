@@ -1,6 +1,6 @@
 # fizido_pos
 
-This is the SDK for payment processing through Fizido payment platform integrated to the Sunyard POS.
+This is the customized fizido-sunyard SDK for payment processing for Blusalt.
 
 ## Getting Started
 
