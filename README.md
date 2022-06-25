@@ -1,6 +1,6 @@
-# empressa_pos
+# fizido_pos
 
-A new Flutter project.
+This is the SDK for payment processing through Fizido payment platform integrated to the Sunyard POS.
 
 ## Getting Started
 
