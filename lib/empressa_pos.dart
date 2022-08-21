@@ -49,6 +49,15 @@ class EmpressaPos {
     }
   }
 
+  static Future<void> sunyardChargeTransactionFidizo(Map<String, dynamic> normalizedTerminalData) async {
+    try {
+      var result = await _channel.invokeMethod('chargeSunyardFidizoTransaction', normalizedTerminalData);
+      return result;
+    } catch (e) {
+      print(e);
+    }
+  }
+
   // static Future<void> sunyardChargeTransaction(Map<String, dynamic> requestBodyDetails) async {
   //   try {
   //     var result = await _channel.invokeMethod('chargeSunyardTransaction', requestBodyDetails);

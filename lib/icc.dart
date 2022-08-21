@@ -40,7 +40,7 @@ class IccUtils {
         stan: nextStan,
         originalTransactionInfoData: OriginalTransactionInfoData(
             originalStan: nextStan,
-            originalTransmissionDateAndTime: '',
+            originalTransmissionDateAndTime: DateTime.now().toString(),
             originalAuthorizationId: nextStan,
             originalAmount: amount.toString(),
             month: '0306',

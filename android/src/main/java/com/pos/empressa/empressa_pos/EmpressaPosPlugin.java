@@ -74,6 +74,9 @@ public class EmpressaPosPlugin implements FlutterPlugin, MethodCallHandler, Acti
             case "chargeSunyardTransaction":
                 sunyardReadCard.chargeTransaction(result, mContext, call);
                 break;
+            case "chargeSunyardFidizoTransaction":
+                sunyardReadCard.chargeFidizoTransaction(result, mContext, call);
+                break;
             case "connectMPos":
                 mPosDeviceConnect.connectDevice(call.argument("bluetoothName"), call.argument("bluetoothMac"),result,mContext);
                 break;
