@@ -64,6 +64,41 @@ class _MyAppState extends State<MyApp> {
     }
   }
 
+  Future<void> chargeTransactionFidizo() async {
+
+    Pair<TerminalInfo, TransactionInfo> terminalData = await IccUtils().buildTerminalData(amount: 10, cardDetails: cardDetails);
+
+    Map<String, dynamic> normalizedTerminalData = new Map();
+
+    Map<String, dynamic> firstData = terminalData.first.toJson();
+    Map<String, dynamic> secondData = terminalData.last.toJson();
+
+    Map<String, dynamic> iccData = secondData["iccData"];
+
+    Map<String, dynamic> orgTransData = secondData["originalTransactionInfoData"];
+
+    secondData.remove("iccData");
+    secondData.remove("originalTransactionInfoData");
+
+    normalizedTerminalData.addAll(firstData);
+    normalizedTerminalData.addAll(secondData);
+    normalizedTerminalData.addAll(iccData);
+    normalizedTerminalData.addAll(orgTransData);
+
+    //Replace value of authToken with authkey gotten from fizido login api
+    normalizedTerminalData["authToken"] = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCIsImN0eSI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IjgwMjk5MDI3MDUtaW5kaXZpZHVhbF9hZ2VudCIsIm5hbWVpZCI6IjIxMTkiLCJmaXJzdC1uYW1lIjoiRWJ1YmUiLCJsYXN0LW5hbWUiOiJPa2VrZSIsInBob25lIjoiODAyOTkwMjcwNSIsInN1YiI6IjIxMTkiLCJoYXMtcGluIjoiVHJ1ZSIsImN1c3RvbWVyLXR5cGUiOiJJbmRpdmlkdWFsX0FnZW50IiwicmVnaXN0cmF0aW9uLXR5cGUiOiJJbmRpdmlkdWFsIiwibmJmIjoxNjYwMjg4NTY5LCJleHAiOjE2NjAyOTAzNjksImlhdCI6MTY2MDI4ODU2OSwiaXNzIjoiQmFja2VuZC5BdXRoZW50aWNhdGlvbiIsImF1ZCI6IkJhY2tlbmRNaWNyb3NlcnZpY2UifQ.592abhphlRx1wGyanxwbJkYJvkMudQmBZpEpso6ZQIU";
+
+    try {
+
+      await EmpressaPos.sunyardChargeTransactionFidizo(normalizedTerminalData);
+      setState(() {
+
+      });
+    } on PlatformException  catch (e) {
+      print(e);
+    }
+  }
+
   Future<void> searchSunyard() async {
 
     try {
@@ -96,6 +131,12 @@ class _MyAppState extends State<MyApp> {
               chargeTransaction();
             },
               child: Text('Pay Charge'),
+
+            ),
+            RaisedButton(onPressed: (){
+              chargeTransactionFidizo();
+            },
+              child: Text('Pay Charge Fidizo'),
 
             ),
             SizedBox(height: 20,),
