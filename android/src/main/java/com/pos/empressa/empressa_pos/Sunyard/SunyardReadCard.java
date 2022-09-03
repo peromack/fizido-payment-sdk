@@ -205,6 +205,7 @@ public class SunyardReadCard {
                             Log.d("EmpressaPosPlugin", "EMVDevice SyncEmvCallback getPin type error: type" + type);
                         }
                         Bundle param = new Bundle();
+
                         param.putBoolean("isOnline", false);
                         param.putString("pan", getpanData());//"6274311520010841"
                         param.putString("promptString", "Enter Card PIN");
@@ -321,7 +322,8 @@ public class SunyardReadCard {
 
                     KSNUtilities ksnUtilitites = new KSNUtilities();
                     String workingKey = ksnUtilitites.getWorkingKey("3F2216D8297BCE9C",getInitialKSN()) ;
-                    String pinBlock =  ksnUtilitites.DesEncryptDukpt(workingKey , getpanData(),cardPin);
+                    Log.d("Trying Something",workingKey + " " + getpanData()+ " " + cardPin);
+                    String pinBlock =  ksnUtilitites.DesEncryptDukpt(workingKey , getpanData(), cardPin);
                     cardDataMap.put("CardPin",pinBlock);
                     cardDataMap.put("ksn",ksnUtilitites.getLatestKsn());
                     cardDataMap.put("pan",panNumber);
@@ -361,6 +363,7 @@ public class SunyardReadCard {
     private void getClearPin(byte[] data) {
         String pinHex =  HexUtil.toString(data) ;
         String[] pinArray = pinHex.split("3");
+
 
         for (int i=0; i < pinArray.length; i++)
         {
@@ -441,7 +444,7 @@ public class SunyardReadCard {
                     @Override
                     public void run() {
                         Bundle param = new Bundle();
-                        param.putBoolean("isOnline", finalIsOnlinePin);
+                        param.putBoolean("isOnline", false);
                         param.putString("pan", getpanData());//"6274311520010841"
                         param.putString("promptString", "Enter Card PIN");
                         param.putIntArray("pinLimit", new int[]{4, 6});
@@ -690,7 +693,7 @@ public class SunyardReadCard {
         CardReader.getInstance().stopSearch(7);
     }
 
-//    private String  getpanData() {
+    //    private String  getpanData() {
 //        String sPan = null;
 //        com.sunyard.smartposapi.emv2.EmvL2 emvL2 = com.sunyard.smartposapi.emv2.EmvL2.getInstance(mContext, EmpressaPosPlugin.class.getSimpleName());
 //        byte[] sendF55Data = emvL2.getTLVData(StringUtil.hexStr2Bytes("5A57"));
@@ -786,8 +789,8 @@ public class SunyardReadCard {
                 "9F0607A00000037100029F220104DF05083230313731323331DF060101DF070101DF028190D13CD5E1B921E4E0F0D40E2DE14CCE73E3A34ED2DCFA826531D8195641091E37C8474D19B686E8243F089A69F7B18D2D34CB4824F228F7750F96D1EFBDFF881F259A8C04DE64915A3A3D7CB846135F4083C93CDE755BC808886F600542DFF085558D5EA7F45CB15EC835064AA856D602A0A44CD021F54CF8EC0CC680B54B3665ABE74A7C43D02897FF84BB4CB98BC91DDF040103DF0314676822D335AB0D2C3848418CB546DF7B6A6C32C0",
                 "9F0607A00000037100029F220103DF05083230313731323331DF060101DF070101DF028190d06238b856cf2c8890a7f668ca17c19247498d193a7c11e7105dedeee6a873e8189e50493e9b17547c42ea4fa88bbef30bb6bc2409246ccc95f36622a7f4d92d46444f20b1b24bf63c5b28395d8ef18c23205c2119dfe5fba2fbfc311b2fe8a6a75b35a7dab72d421792a500cdfd8133b8a97d84a49c0bd22d52d06ea5e0ef3e471d47d8370c37aa48b564689d0035d9DF040103DF0314319F3C608B67F1118C729B0E1516EAB07CB290C8",
                 "9F0607A00000037100029F220106DF05083230323831323238DF060101DF070101DF0281F8D2DA0134B4DFC93A75EE8960C99896D50A91527B87BA7B16CDB77E5B6FDB750EB70B54026CADDA1D562C77A2C6DA541E94BC415D43E68489B16980F2E887C09E4CF90E2E639B179277BBA0E982CCD1F80521D1457209125B3ABCD309E1B92B5AEDA2EB1CBF933BEAD9CE7365E52B7D17FCB405AA28E5DE6AA3F08E764F745E70859ABCBA41E570A6E4367B3D6FECE723B73ABF3EB53DCDE3816E8A813460447021509D0DFDF2EEEE74CC35485FB55C26836EB3BF9C7DEBEE6C0B77B7BE059233801CF76B321FCA25FB1E63117AE1865E23161EC39D7B1FB84256C2BE72BF8EC771548DB9F00BEF77C509FADA15E2B53FF950D383F96211D3DF040103DF0314F5BAB84ECE5F8BD45511E5CA861B80C7E6C51F55",
-                
-                
+
+
                 "9F0605A0000000659F220109DF05083230303931323331DF060101DF070101DF028180B72A8FEF5B27F2B550398FDCC256F714BAD497FF56094B7408328CB626AA6F0E6A9DF8388EB9887BC930170BCC1213E90FC070D52C8DCD0FF9E10FAD36801FE93FC998A721705091F18BC7C98241CADC15A2B9DA7FB963142C0AB640D5D0135E77EBAE95AF1B4FEFADCF9C012366BDDA0455C1564A68810D7127676D493890BDDF040103DF03144410C6D51C2F83ADFD92528FA6E38A32DF048D0A",
                 "9F0605A0000000659F220110DF05083230313231323331DF060101DF070101DF02819099B63464EE0B4957E4FD23BF923D12B61469B8FFF8814346B2ED6A780F8988EA9CF0433BC1E655F05EFA66D0C98098F25B659D7A25B8478A36E489760D071F54CDF7416948ED733D816349DA2AADDA227EE45936203CBF628CD033AABA5E5A6E4AE37FBACB4611B4113ED427529C636F6C3304F8ABDD6D9AD660516AE87F7F2DDF1D2FA44C164727E56BBC9BA23C0285DF040103DF0314C75E5210CBE6E8F0594A0F1911B07418CADB5BAB",
                 "9F0605A0000000659F220112DF05083230313431323331DF060101DF070101DF0281B0ADF05CD4C5B490B087C3467B0F3043750438848461288BFEFD6198DD576DC3AD7A7CFA07DBA128C247A8EAB30DC3A30B02FCD7F1C8167965463626FEFF8AB1AA61A4B9AEF09EE12B009842A1ABA01ADB4A2B170668781EC92B60F605FD12B2B2A6F1FE734BE510F60DC5D189E401451B62B4E06851EC20EBFF4522AACC2E9CDC89BC5D8CDE5D633CFD77220FF6BBD4A9B441473CC3C6FEFC8D13E57C3DE97E1269FA19F655215B23563ED1D1860D8681DF040103DF0314874B379B7F607DC1CAF87A19E400B6A9E25163E8",
@@ -844,16 +847,16 @@ public class SunyardReadCard {
 
     public void checkCard( @NonNull MethodChannel.Result result){
         boolean isCardInserted = false ;
-      if(Icc.IC_CARD_OFF == Icc.getInstance().checkCardOn(Icc.IC_CARD)){
-          Log.d("Empressa","Card is NOT INSERTED");
-          isCardInserted =  false ;
+        if(Icc.IC_CARD_OFF == Icc.getInstance().checkCardOn(Icc.IC_CARD)){
+            Log.d("Empressa","Card is NOT INSERTED");
+            isCardInserted =  false ;
 
-      }else if(IC_CARD_ON == Icc.getInstance().checkCardOn(Icc.IC_CARD)){
-          Log.d("Empressa","Card is INSERTED");
-          isCardInserted =  true ;
-      }
+        }else if(IC_CARD_ON == Icc.getInstance().checkCardOn(Icc.IC_CARD)){
+            Log.d("Empressa","Card is INSERTED");
+            isCardInserted =  true ;
+        }
         Log.d("Empressa","Card NO EVEN DEY AT ALL");
-      result.success(isCardInserted);
+        result.success(isCardInserted);
     }
 
     public void chargeTransaction(@NonNull MethodChannel.Result result, Context mContext,@NonNull MethodCall call) {
