@@ -357,13 +357,19 @@ public class SunyardReadCard {
 
     private void getClearPin(byte[] data) {
         String pinHex =  HexUtil.toString(data) ;
-        String[] pinArray = pinHex.split("3");
-
-
-        for (int i=0; i < pinArray.length; i++)
+        char[] ary = pinHex.toCharArray();
+        StringBuilder cardPins = new StringBuilder();
+        for (int i = 0; i < ary.length; i++)
         {
-            cardPin = cardPin + pinArray[i] ;
+            if (i % 2 == 1)
+            {
+                cardPins.append(ary[i]);
+            }
         }
+
+        String result =  cardPins.toString();
+        cardPin = result;
+        android.util.Log.d("card result",result);
     }
 
     private void readcard( @NonNull MethodChannel.Result result) {
