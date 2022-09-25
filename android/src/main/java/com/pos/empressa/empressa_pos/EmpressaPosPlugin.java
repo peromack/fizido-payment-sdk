@@ -1,12 +1,18 @@
 package com.pos.empressa.empressa_pos;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 
 
 import android.app.Activity;
 import android.content.Context;
+import android.os.Build;
+import android.os.RemoteException;
 
 
+import com.pos.empressa.empressa_pos.Horizon.DeviceHelper;
+import com.pos.empressa.empressa_pos.Horizon.HorizonReadCard;
+import com.pos.empressa.empressa_pos.Horizon.MyApplication;
 import com.pos.empressa.empressa_pos.MPos.MPosDeviceConnect;
 import com.pos.empressa.empressa_pos.MPos.MPosApplication;
 import com.pos.empressa.empressa_pos.Sunyard.SunyardApplication;
@@ -33,9 +39,12 @@ public class EmpressaPosPlugin implements FlutterPlugin, MethodCallHandler, Acti
     /// when the Flutter Engine is detached from the Activity
     private MethodChannel channel;
     SunyardReadCard sunyardReadCard;
+    HorizonReadCard horizonReadCard;
     private Context mContext;
     MPosApplication mPosApplication ;
     MPosDeviceConnect mPosDeviceConnect;
+
+    MyApplication hPosApplication;
 
     @Override
     public void onAttachedToEngine(@NonNull FlutterPluginBinding flutterPluginBinding) {
@@ -44,9 +53,11 @@ public class EmpressaPosPlugin implements FlutterPlugin, MethodCallHandler, Acti
 
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onMethodCall(@NonNull MethodCall call, @NonNull Result result) {
         sunyardReadCard = new SunyardReadCard(mContext);
+        horizonReadCard = new HorizonReadCard(mContext);
 
 
         switch (call.method) {
@@ -60,6 +71,10 @@ public class EmpressaPosPlugin implements FlutterPlugin, MethodCallHandler, Acti
                 SunyardApplication sunyardApplication = new SunyardApplication();
                 sunyardApplication.initializeApp(mContext);
                 break;
+            case "initHorizonEmv":
+                MyApplication myApplication = new MyApplication(mContext);
+                myApplication.bindDriverService();
+                break;
             case "startPrinter":
                 SunyardPrinter sunyardPrinter = new SunyardPrinter(mContext);
                 Log.d("PrintActivity.class", call.arguments.toString());
@@ -68,14 +83,17 @@ public class EmpressaPosPlugin implements FlutterPlugin, MethodCallHandler, Acti
             case "checkSunyardCard":
                 sunyardReadCard.checkCard(result);
                 break;
-                case "initializeMPos":
-                  mPosApplication.initializeMPos(mContext) ;
+            case "initializeMPos":
+              mPosApplication.initializeMPos(mContext) ;
                 break;
             case "chargeSunyardTransaction":
                 sunyardReadCard.chargeTransaction(result, mContext, call);
                 break;
             case "chargeSunyardFidizoTransaction":
                 sunyardReadCard.chargeFidizoTransaction(result, mContext, call);
+                break;
+            case "horizonSearchCard":
+                horizonReadCard.searchCard(result, call.argument("transactionAmount"));
                 break;
             case "connectMPos":
                 mPosDeviceConnect.connectDevice(call.argument("bluetoothName"), call.argument("bluetoothMac"),result,mContext);
@@ -110,7 +128,11 @@ public class EmpressaPosPlugin implements FlutterPlugin, MethodCallHandler, Acti
         Activity activity = binding.getActivity();
         mContext = binding.getActivity().getApplicationContext();
         mPosApplication = new  MPosApplication();
-        mPosApplication.initializeMPos(mContext) ;
+        mPosApplication.initializeMPos(mContext);
+
+        //Horizon application init
+        hPosApplication = new MyApplication(mContext);
+
         mPosDeviceConnect = new MPosDeviceConnect(activity);
 
 

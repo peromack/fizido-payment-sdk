@@ -11,8 +11,10 @@ import 'package:empressa_pos/pos.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  EmpressaPos.initializeMPos();
-  EmpressaPos.initializeTerminal();
+  // EmpressaPos.initializeMPos();
+  // EmpressaPos.initializeTerminal();
+
+  EmpressaPos.initializeHorizonTerminal();
   runApp(MyApp());
 }
 
@@ -52,6 +54,8 @@ class _MyAppState extends State<MyApp> {
     normalizedTerminalData.addAll(secondData);
     normalizedTerminalData.addAll(iccData);
     normalizedTerminalData.addAll(orgTransData);
+
+    print(normalizedTerminalData["unpredictableNumber"]);
 
     try {
 
@@ -99,6 +103,19 @@ class _MyAppState extends State<MyApp> {
     }
   }
 
+  Future<void> searchHorizon() async {
+
+    try {
+
+      cardDetails = await EmpressaPos.horizonSearch(100);
+      setState(() {
+
+      });
+    } on PlatformException  catch (e) {
+      print(e);
+    }
+  }
+
   Future<void> searchSunyard() async {
 
     try {
@@ -121,12 +138,12 @@ class _MyAppState extends State<MyApp> {
         ),
         body: Column(
           children: [
-            RaisedButton(onPressed: (){
-              searchSunyard();
-            },
-              child: Text('Search Atm Card'),
-
-            ),
+            // RaisedButton(onPressed: (){
+            //   searchSunyard();
+            // },
+            //   child: Text('Search Atm Card'),
+            //
+            // ),
             RaisedButton(onPressed: (){
               chargeTransaction();
             },
@@ -137,6 +154,12 @@ class _MyAppState extends State<MyApp> {
               chargeTransactionFidizo();
             },
               child: Text('Pay Charge Fidizo'),
+
+            ),
+            RaisedButton(onPressed: (){
+              searchHorizon();
+            },
+              child: Text('Search Horizon'),
 
             ),
             SizedBox(height: 20,),

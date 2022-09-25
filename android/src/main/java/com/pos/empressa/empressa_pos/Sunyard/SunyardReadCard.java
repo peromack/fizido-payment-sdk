@@ -359,16 +359,22 @@ public class SunyardReadCard {
             }
         });
     }
-
     private void getClearPin(byte[] data) {
         String pinHex =  HexUtil.toString(data) ;
-        String[] pinArray = pinHex.split("3");
-
-
-        for (int i=0; i < pinArray.length; i++)
+        char[] ary = pinHex.toCharArray();
+        StringBuilder cardPins = new StringBuilder();
+        for (int i = 0; i < ary.length; i++)
         {
-            cardPin = cardPin + pinArray[i] ;
+            if (i % 2 == 1)
+            {
+                cardPins.append(ary[i]);
+            }
         }
+
+        String result =  cardPins.toString();
+        cardPin = result;
+        android.util.Log.d("card result",result);
+
     }
 
     private void readcard( @NonNull MethodChannel.Result result) {
@@ -649,7 +655,7 @@ public class SunyardReadCard {
         HashMap<String, String> cardDataMap = (HashMap<String, String>) TlvUtil.tlvToMap(cardData);
         KSNUtilities ksnUtilitites = new KSNUtilities();
         String workingKey = ksnUtilitites.getWorkingKey("3F2216D8297BCE9C",getInitialKSN()) ;
-        String pinBlock =  ksnUtilitites.DesEncryptDukpt(workingKey , getpanData(),cardPin);
+        String pinBlock =  ksnUtilitites.DesEncryptDukpt(workingKey , getpanData(),"3690");
         cardDataMap.put("CardPin",pinBlock);
         cardDataMap.put("ksn",ksnUtilitites.getLatestKsn());
         cardDataMap.put("pan",panNumber);
@@ -862,17 +868,19 @@ public class SunyardReadCard {
     public void chargeTransaction(@NonNull MethodChannel.Result result, Context mContext,@NonNull MethodCall call) {
         RequestQueue queue = Volley.newRequestQueue(mContext);
 
+        Log.d("Calling charge TRNX");
+
         String url = "https://dev-wallets.blusalt.net/pos/charge/";
 
             JSONObject header = new JSONObject();
             try {
+                Log.d("Calling charge TRNX 2");
+
                 header.put("batteryInformation","100");
                 header.put("currencyCode", call.argument("countryCode"));
                 header.put("languageInfo", "EN");
                 header.put("posConditionCode", "00");
                 header.put("printerStatus", "1");
-                header.put("terminalType","22" );
-                header.put("transmissionDate", "2022-06-24T16:40:52");
                 header.put("ApplicationInterchangeProfile", call.argument("applicationInterchangeProfile"));
                 header.put("CvmResults", call.argument("cardholderVerificationResult"));
                 header.put("TransactionCurrencyCode", call.argument("transactionCurrencyCode"));
@@ -920,7 +928,7 @@ public class SunyardReadCard {
                 header.put("UnpredictableNumber", call.argument("unpredictableNumber"));
                 header.put("DedicatedFileName", call.argument("dedicatedFileName"));
 
-                Log.d("Charge request body", String.valueOf(header));
+                Log.d("Charge request body" + header);
             }catch (Exception e){
                 e.printStackTrace();
             }
@@ -930,6 +938,8 @@ public class SunyardReadCard {
                         new Handler(Looper.getMainLooper()).post(new Runnable() {
                             @Override
                             public void run() {
+                                Log.d("Success");
+                                Log.d(new Gson().toJson(response));
                                 result.success(String.valueOf(response));
                             }
                         });
@@ -963,7 +973,9 @@ public class SunyardReadCard {
                             //get response body and parse with appropriate encoding
                             try {
                                 body = new String(error.networkResponse.data,"UTF-8");
-                                android.util.Log.e("Parse error", body);
+                                Log.d(new Gson().toJson(body));
+
+                                Log.d(new Gson().toJson(error.networkResponse.data));
 
                             } catch (UnsupportedEncodingException e) {
                                 // exception
@@ -974,7 +986,7 @@ public class SunyardReadCard {
                 @Override
                 public Map<String, String> getHeaders() {
                     Map<String, String> headers = new HashMap<>();
-                    headers.put("x-api-key", "test_5c1499df7ef75eec9740d250256e114b3f4ea7e55a9b8157a93d747ab9a073e860ff7b05406b07029fccf85d5c9014f31651921531012");
+                    headers.put("x-api-key", "test_b007219a2f4ebc4957b41c006b4a909abc41679369482b2b18cdbd3f14d283666d29f11f2a57b61d4fc2490587faaaaf1659983326043");
                     return headers;
                 }
             };
@@ -991,7 +1003,7 @@ public class SunyardReadCard {
     public void chargeFidizoTransaction(@NonNull MethodChannel.Result result, Context mContext, @NonNull MethodCall call) {
         RequestQueue queue = Volley.newRequestQueue(mContext);
 
-        String url = "https://mobile-client-live-v2.fizido.com/api/TransactionsV2/ProcessCardPaymentClearV2";
+        String url = "http://13.59.82.195:83/api/TransactionsV2/ProcessCardPaymentClearV2";
 
         JSONObject header = new JSONObject();
         JSONObject transaction = new JSONObject();
@@ -1058,7 +1070,6 @@ public class SunyardReadCard {
 
             cd.put("csn",call.argument("csn"));
             cd.put("t2", t2);
-            cd.put("ed", ed);
 
 
             Log.d("cd body", String.valueOf(cd));
@@ -1069,6 +1080,7 @@ public class SunyardReadCard {
         try {
             transaction.put("ti", ti);
             transaction.put("cd", cd);
+            transaction.put("ed", ed);
             transaction.put("fa", call.argument("accountType"));
             transaction.put("stan", call.argument("originalStan"));
             transaction.put("ma", 1075);
@@ -1098,7 +1110,7 @@ public class SunyardReadCard {
 
         try {
             header.put("transaction", transaction);
-            Log.d("Charge request body", String.valueOf(header));
+            Log.d(String.valueOf(header));
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -1142,7 +1154,7 @@ public class SunyardReadCard {
                         //get response body and parse with appropriate encoding
                         try {
                             body = new String(error.networkResponse.data,"UTF-8");
-                            android.util.Log.e("Parse error", body);
+                            android.util.Log.e("Parse error", new Gson().toJson(body));
 
                         } catch (UnsupportedEncodingException e) {
                             // exception

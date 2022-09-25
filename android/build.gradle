@@ -51,6 +51,10 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.1.0'
     implementation files('libs/SYD-SmartPOS-SDK V1.08.jar')
     implementation files('libs/morefun_mpos_sdk_v2.1.20210628.jar')
+
+    implementation files('libs/horizonpay_smartpossdk_V1.11.220410.jar')
+    implementation files('libs/horizon_utils_V1.9.jar')
+
     implementation 'org.jetbrains:annotations:16.0.1'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
