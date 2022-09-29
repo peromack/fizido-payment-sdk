@@ -655,7 +655,7 @@ public class SunyardReadCard {
         HashMap<String, String> cardDataMap = (HashMap<String, String>) TlvUtil.tlvToMap(cardData);
         KSNUtilities ksnUtilitites = new KSNUtilities();
         String workingKey = ksnUtilitites.getWorkingKey("3F2216D8297BCE9C",getInitialKSN()) ;
-        String pinBlock =  ksnUtilitites.DesEncryptDukpt(workingKey , getpanData(),"3690");
+        String pinBlock =  ksnUtilitites.DesEncryptDukpt(workingKey , getpanData(), cardPin);
         cardDataMap.put("CardPin",pinBlock);
         cardDataMap.put("ksn",ksnUtilitites.getLatestKsn());
         cardDataMap.put("pan",panNumber);
