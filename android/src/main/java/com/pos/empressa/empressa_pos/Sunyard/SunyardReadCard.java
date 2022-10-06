@@ -1042,7 +1042,7 @@ public class SunyardReadCard {
             ed.put("aip", Integer.parseInt(Objects.requireNonNull(call.argument("applicationInterchangeProfile"))));
             ed.put("atc", call.argument("applicationTransactionCounter"));
             ed.put("cm",  call.argument("authorizationRequest"));
-            ed.put("cid", Integer.parseInt(Objects.requireNonNull(call.argument("cryptogramInfoData"))));
+            ed.put("cid", call.argument("cryptogramInfoData"));
             ed.put("cr", Integer.parseInt(Objects.requireNonNull(call.argument("cardholderVerificationResult"))));
             ed.put("iad", call.argument("issuerAppData"));
             ed.put("tcc", Integer.parseInt(Objects.requireNonNull(call.argument("transactionCurrencyCode"))));
@@ -1051,7 +1051,7 @@ public class SunyardReadCard {
             ed.put("tt", Integer.parseInt(Objects.requireNonNull(call.argument("terminalType"))));
             ed.put("tc", call.argument("terminalCapabilities"));
             ed.put("transdate", call.argument("transactionDate"));
-            ed.put("transType", "00");
+            ed.put("transType", call.argument("transactionType"));
             ed.put("un", call.argument("unpredictableNumber"));
             ed.put("dfn", call.argument("dedicatedFileName"));
 
@@ -1069,6 +1069,7 @@ public class SunyardReadCard {
             t2.put("t2", call.argument("cardTrack2"));
 
             cd.put("csn",call.argument("csn"));
+            cd.put("ed", ed);
             cd.put("t2", t2);
 
 
@@ -1080,7 +1081,6 @@ public class SunyardReadCard {
         try {
             transaction.put("ti", ti);
             transaction.put("cd", cd);
-            transaction.put("ed", ed);
             transaction.put("fa", call.argument("accountType"));
             transaction.put("stan", call.argument("originalStan"));
             transaction.put("ma", 1075);
