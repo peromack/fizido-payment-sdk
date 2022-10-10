@@ -73,7 +73,6 @@ public class EmpressaPosPlugin implements FlutterPlugin, MethodCallHandler, Acti
                 break;
             case "initHorizonEmv":
                 MyApplication myApplication = new MyApplication(mContext);
-//                myApplication.initEmv();
                 myApplication.bindDriverService();
                 break;
             case "startPrinter":
