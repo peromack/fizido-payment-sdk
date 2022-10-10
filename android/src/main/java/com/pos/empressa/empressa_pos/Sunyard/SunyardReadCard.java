@@ -918,7 +918,7 @@ public class SunyardReadCard {
                 header.put("AmountAuthorized", call.argument("transactionAmount"));
                 header.put("AmountOther", call.argument("anotherAmount"));
                 header.put("TransactionDate", call.argument("transactionDate"));
-                header.put("CryptogramInformationData", call.argument("cryptogramInfoData"));
+                header.put("CryptogramInformationData", "80");
 
                 header.put("fromAccount", call.argument("accountType"));
                 header.put("ksn", call.argument("pinKsn"));
@@ -1042,7 +1042,7 @@ public class SunyardReadCard {
             ed.put("aip", Integer.parseInt(Objects.requireNonNull(call.argument("applicationInterchangeProfile"))));
             ed.put("atc", call.argument("applicationTransactionCounter"));
             ed.put("cm",  call.argument("authorizationRequest"));
-            ed.put("cid", call.argument("cryptogramInfoData"));
+            ed.put("cid", "80");
             ed.put("cr", Integer.parseInt(Objects.requireNonNull(call.argument("cardholderVerificationResult"))));
             ed.put("iad", call.argument("issuerAppData"));
             ed.put("tcc", Integer.parseInt(Objects.requireNonNull(call.argument("transactionCurrencyCode"))));

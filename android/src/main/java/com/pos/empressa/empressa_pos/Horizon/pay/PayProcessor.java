@@ -699,7 +699,7 @@ public class PayProcessor {
     private void setEmvTransDataExt() {
         Bundle config = new Bundle();
         config.putInt(EmvConstant.EmvTransDataConstants.KERNEL_MODE, 0x01);
-        config.putByte(EmvConstant.EmvTransDataConstants.TRANS_TYPE, (byte) 0x30);
+        config.putByte(EmvConstant.EmvTransDataConstants.TRANS_TYPE, (byte) 0x00);
 
         config.putStringArrayList(EmvConstant.EmvTerminalConstraints.CONFIG, createArrayList("DF81180170", "DF81190118", "DF811B0130"));
         try {
