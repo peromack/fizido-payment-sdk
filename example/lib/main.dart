@@ -12,9 +12,8 @@ import 'package:empressa_pos/pos.dart';
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   // EmpressaPos.initializeMPos();
-  // EmpressaPos.initializeTerminal();
 
-  EmpressaPos.initializeHorizonTerminal();
+  EmpressaPos.initializeTerminal();
   runApp(MyApp());
 }
 
@@ -31,41 +30,6 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-
-  }
-
-  Future<void> chargeTransaction() async {
-
-    Pair<TerminalInfo, TransactionInfo> terminalData = await IccUtils().buildTerminalData(amount: 10, cardDetails: cardDetails);
-
-    Map<String, dynamic> normalizedTerminalData = new Map();
-
-    Map<String, dynamic> firstData = terminalData.first.toJson();
-    Map<String, dynamic> secondData = terminalData.last.toJson();
-
-    Map<String, dynamic> iccData = secondData["iccData"];
-
-    Map<String, dynamic> orgTransData = secondData["originalTransactionInfoData"];
-
-    secondData.remove("iccData");
-    secondData.remove("originalTransactionInfoData");
-
-    normalizedTerminalData.addAll(firstData);
-    normalizedTerminalData.addAll(secondData);
-    normalizedTerminalData.addAll(iccData);
-    normalizedTerminalData.addAll(orgTransData);
-
-    print(normalizedTerminalData["unpredictableNumber"]);
-
-    try {
-
-      await EmpressaPos.sunyardChargeTransaction(normalizedTerminalData);
-      setState(() {
-
-      });
-    } on PlatformException  catch (e) {
-      print(e);
-    }
   }
 
   Future<void> chargeTransactionFidizo() async {
@@ -93,24 +57,7 @@ class _MyAppState extends State<MyApp> {
     normalizedTerminalData["authToken"] = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCIsImN0eSI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IjgwMjk5MDI3MDUtaW5kaXZpZHVhbF9hZ2VudCIsIm5hbWVpZCI6IjIxMTkiLCJmaXJzdC1uYW1lIjoiRWJ1YmUiLCJsYXN0LW5hbWUiOiJPa2VrZSIsInBob25lIjoiODAyOTkwMjcwNSIsInN1YiI6IjIxMTkiLCJoYXMtcGluIjoiVHJ1ZSIsImN1c3RvbWVyLXR5cGUiOiJJbmRpdmlkdWFsX0FnZW50IiwicmVnaXN0cmF0aW9uLXR5cGUiOiJJbmRpdmlkdWFsIiwibmJmIjoxNjYwMjg4NTY5LCJleHAiOjE2NjAyOTAzNjksImlhdCI6MTY2MDI4ODU2OSwiaXNzIjoiQmFja2VuZC5BdXRoZW50aWNhdGlvbiIsImF1ZCI6IkJhY2tlbmRNaWNyb3NlcnZpY2UifQ.592abhphlRx1wGyanxwbJkYJvkMudQmBZpEpso6ZQIU";
 
     try {
-
-      await EmpressaPos.sunyardChargeTransactionFidizo(normalizedTerminalData);
-      setState(() {
-
-      });
-    } on PlatformException  catch (e) {
-      print(e);
-    }
-  }
-
-  Future<void> searchHorizon() async {
-
-    try {
-
-      cardDetails = await EmpressaPos.horizonSearch(100);
-      setState(() {
-
-      });
+      await EmpressaPos.chargeTransactionFidizo(normalizedTerminalData);
     } on PlatformException  catch (e) {
       print(e);
     }
@@ -119,11 +66,8 @@ class _MyAppState extends State<MyApp> {
   Future<void> searchSunyard() async {
 
     try {
-
       cardDetails = await EmpressaPos.search(100);
-      setState(() {
-
-      });
+      setState(() {});
     } on PlatformException  catch (e) {
       print(e);
     }
@@ -138,18 +82,6 @@ class _MyAppState extends State<MyApp> {
         ),
         body: Column(
           children: [
-            // RaisedButton(onPressed: (){
-            //   searchSunyard();
-            // },
-            //   child: Text('Search Atm Card'),
-            //
-            // ),
-            RaisedButton(onPressed: (){
-              chargeTransaction();
-            },
-              child: Text('Pay Charge'),
-
-            ),
             RaisedButton(onPressed: (){
               chargeTransactionFidizo();
             },
@@ -157,9 +89,9 @@ class _MyAppState extends State<MyApp> {
 
             ),
             RaisedButton(onPressed: (){
-              searchHorizon();
+              searchSunyard();
             },
-              child: Text('Search Horizon'),
+              child: Text('Search Sunyard'),
 
             ),
             SizedBox(height: 20,),
