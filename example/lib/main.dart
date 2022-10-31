@@ -14,7 +14,7 @@ void main() {
   // EmpressaPos.initializeMPos();
   // EmpressaPos.initializeTerminal();
 
-  EmpressaPos.initializeHorizonTerminal();
+  // EmpressaPos.initializeHorizonTerminal();
   runApp(MyApp());
 }
 
@@ -116,6 +116,19 @@ class _MyAppState extends State<MyApp> {
     }
   }
 
+  Future<void> searchNexgo() async {
+
+    try {
+
+      cardDetails = await EmpressaPos.nexgoSearch(100);
+      setState(() {
+
+      });
+    } on PlatformException  catch (e) {
+      print(e);
+    }
+  }
+
   Future<void> searchSunyard() async {
 
     try {
@@ -157,9 +170,9 @@ class _MyAppState extends State<MyApp> {
 
             ),
             RaisedButton(onPressed: (){
-              searchHorizon();
+              searchNexgo();
             },
-              child: Text('Search Horizon'),
+              child: Text('Search Nexgo'),
 
             ),
             SizedBox(height: 20,),

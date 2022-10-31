@@ -15,6 +15,7 @@ import com.pos.empressa.empressa_pos.Horizon.HorizonReadCard;
 import com.pos.empressa.empressa_pos.Horizon.MyApplication;
 import com.pos.empressa.empressa_pos.MPos.MPosDeviceConnect;
 import com.pos.empressa.empressa_pos.MPos.MPosApplication;
+import com.pos.empressa.empressa_pos.Nexgo.NexgoReadCard;
 import com.pos.empressa.empressa_pos.Sunyard.SunyardApplication;
 import com.pos.empressa.empressa_pos.Sunyard.SunyardPrinter;
 import com.pos.empressa.empressa_pos.Sunyard.SunyardReadCard;
@@ -40,6 +41,7 @@ public class EmpressaPosPlugin implements FlutterPlugin, MethodCallHandler, Acti
     private MethodChannel channel;
     SunyardReadCard sunyardReadCard;
     HorizonReadCard horizonReadCard;
+    NexgoReadCard nexgoReadCard;
     private Context mContext;
     MPosApplication mPosApplication ;
     MPosDeviceConnect mPosDeviceConnect;
@@ -58,7 +60,7 @@ public class EmpressaPosPlugin implements FlutterPlugin, MethodCallHandler, Acti
     public void onMethodCall(@NonNull MethodCall call, @NonNull Result result) {
         sunyardReadCard = new SunyardReadCard(mContext);
         horizonReadCard = new HorizonReadCard(mContext);
-
+        nexgoReadCard = new NexgoReadCard(mContext);
 
         switch (call.method) {
             case "searchCard":
@@ -94,6 +96,9 @@ public class EmpressaPosPlugin implements FlutterPlugin, MethodCallHandler, Acti
                 break;
             case "horizonSearchCard":
                 horizonReadCard.searchCard(result, call.argument("transactionAmount"));
+                break;
+            case "nexgoSearchCard":
+                nexgoReadCard.searchCard(result, call.argument("transactionAmount"));
                 break;
             case "connectMPos":
                 mPosDeviceConnect.connectDevice(call.argument("bluetoothName"), call.argument("bluetoothMac"),result,mContext);

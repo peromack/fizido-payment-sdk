@@ -2,11 +2,14 @@ group 'com.pos.empressa.empressa_pos'
 version '1.0'
 
 buildscript {
-    ext.kotlin_version = '1.4.32'
+    ext.kotlin_version = '1.5.0'
 
     repositories {
         google()
-        jcenter()
+        mavenCentral()
+        flatDir {
+            dirs 'libs'
+        }
     }
 
     dependencies {
@@ -17,7 +20,7 @@ buildscript {
 rootProject.allprojects {
     repositories {
         google()
-        jcenter()
+        mavenCentral()
     }
 }
 
@@ -32,6 +35,13 @@ android {
         ndk {
             abiFilters 'armeabi-v7a'
         }
+
+        multiDexEnabled true
+    }
+
+    sourceSets.main {
+        jniLibs.srcDir 'libs'
+        jni.srcDirs = [] //disable automatic ndk-build call
     }
 
     lintOptions {
@@ -42,10 +52,15 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
+    repositories {
+        flatDir {
+            dirs 'libs'
+        }
+    }
 }
 
 dependencies {
-
     implementation 'androidx.appcompat:appcompat:1.3.1'
     implementation 'com.google.android.material:material:1.4.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.0'
@@ -55,6 +70,10 @@ dependencies {
     implementation files('libs/horizonpay_smartpossdk_V1.11.220410.jar')
     implementation files('libs/horizon_utils_V1.9.jar')
 
+    implementation 'com.android.support:multidex:1.0.3'
+    implementation files('libs/ISO8583_V1.2.jar')
+    implementation files('libs/spdh_V1.8.jar')
+    api project(':NexgoSmartPosSdk')
     implementation 'org.jetbrains:annotations:16.0.1'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'

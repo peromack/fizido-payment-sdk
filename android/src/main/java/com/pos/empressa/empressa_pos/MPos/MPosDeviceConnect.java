@@ -19,8 +19,6 @@ import com.google.gson.Gson;
 import com.mf.mpos.pub.Controler;
 import com.mf.mpos.pub.result.ConnectPosResult;
 import com.pos.empressa.empressa_pos.MPos.model.BluetoothItem;
-import com.pos.empressa.empressa_pos.MPos.utils.SweetDialogUtils;
-import com.pos.empressa.empressa_pos.R;
 
 
 import java.lang.reflect.Method;

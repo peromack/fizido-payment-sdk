@@ -176,7 +176,26 @@ class KSNUtilities {
         ), "^")
     }
 
-
+    fun DesEncryptDukpt2(workingKey: String, nexgoPinBlock: String): String {
+        println("pinblock $nexgoPinBlock")
+        val keyData = hexStringToByteArray(workingKey)
+        val bout = ByteArrayOutputStream()
+        try {
+            val keySpec: KeySpec = DESKeySpec(keyData)
+            val key: SecretKey = SecretKeyFactory.getInstance("DES").generateSecret(keySpec)
+            val cipher: Cipher = Cipher.getInstance("DES/ECB/PKCS5Padding")
+            cipher.init(Cipher.ENCRYPT_MODE, key)
+            bout.write(cipher.doFinal(hexStringToByteArray(nexgoPinBlock)))
+            //DES  Encryption
+        } catch (e: Exception) {
+            println("Exception .. " + e.message)
+        }
+        return XORorANDorORfunction(
+            workingKey, byteArrayToHexString(bout.toByteArray()).substring(
+                0,
+                16
+            ), "^")
+    }
 }
 
 
