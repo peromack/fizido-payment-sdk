@@ -77,8 +77,8 @@ public class NexgoReadCard extends Application {
 
     String cardPin = "";
 
-    private String pinBlockArray;
-    private String pinKsn;
+    private String pinBlockArray = "";
+    private String pinKsn = "";
 
     MethodChannel.Result results;
 
@@ -361,8 +361,6 @@ public class NexgoReadCard extends Application {
                 cardDataMap.put("pan", cardNo);
                 cardDataMap.put("CardPin",pinBlockArray);
                 cardDataMap.put("ksn",ksnUtilitites.getLatestKsn());
-
-                pinPad.dukptKsnIncrease(0);
 
                 Log.d(NexgoReadCard.class.getName(), ">>>onCompleted :" + cardDataMap + "\n" + ".............." + "\n" +
                         "pinKSn " + pinKsn + "\n" + "pinBlockArray " + pinBlockArray );

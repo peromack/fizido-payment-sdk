@@ -29,9 +29,9 @@ public class NexgoApplication extends FlutterApplication {
 
         int result = deviceEngine.getPinPad().dukptKeyInject(0, DukptKeyTypeEnum.IPEK, iPekByte, iPekByte.length, hexToByteArr(getInitialKSN()));
         if (result == 0) {
-            Toast.makeText(mContext, "Nexgo key init success" + result, Toast.LENGTH_SHORT).show();
+            Toast.makeText(mContext, "key init success " + result, Toast.LENGTH_SHORT).show();
         } else {
-            Toast.makeText(mContext, "Nexgo key init failed " + result, Toast.LENGTH_SHORT).show();
+            Toast.makeText(mContext, "key init failed " + result, Toast.LENGTH_SHORT).show();
         }
     }
 
