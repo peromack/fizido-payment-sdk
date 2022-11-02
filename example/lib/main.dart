@@ -15,6 +15,7 @@ void main() {
   // EmpressaPos.initializeTerminal();
 
   // EmpressaPos.initializeHorizonTerminal();
+  EmpressaPos.initializeNexgoTerminal();
   runApp(MyApp());
 }
 

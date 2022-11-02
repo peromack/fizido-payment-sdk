@@ -48,6 +48,14 @@ class EmpressaPos {
     }
   }
 
+  static Future<void> initializeNexgoTerminal() async {
+    try {
+      var result = await _channel.invokeMethod('initNexgoEmv');
+    } catch (e) {
+      print(e);
+    }
+  }
+
   static Future<void> sunyardChargeTransaction(Map<String, dynamic> normalizedTerminalData) async {
     try {
       var result = await _channel.invokeMethod('chargeSunyardTransaction', normalizedTerminalData);

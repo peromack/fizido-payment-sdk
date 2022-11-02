@@ -17,11 +17,17 @@ import com.nexgo.oaf.apiv3.APIProxy;
 import com.nexgo.oaf.apiv3.DeviceEngine;
 import com.nexgo.oaf.apiv3.SdkResult;
 import com.nexgo.oaf.apiv3.device.pinpad.AlgorithmModeEnum;
+import com.nexgo.oaf.apiv3.device.pinpad.DesAlgorithmModeEnum;
+import com.nexgo.oaf.apiv3.device.pinpad.DukptKeyModeEnum;
+import com.nexgo.oaf.apiv3.device.pinpad.DukptKeyTypeEnum;
+import com.nexgo.oaf.apiv3.device.pinpad.MacAlgorithmModeEnum;
 import com.nexgo.oaf.apiv3.device.pinpad.OnPinPadInputListener;
+import com.nexgo.oaf.apiv3.device.pinpad.PinAlgorithmModeEnum;
 import com.nexgo.oaf.apiv3.device.pinpad.PinKeyboardModeEnum;
 import com.nexgo.oaf.apiv3.device.pinpad.PinPad;
 import com.nexgo.oaf.apiv3.device.pinpad.PinPadKeyCode;
 import com.nexgo.oaf.apiv3.device.pinpad.PinpadLayoutEntity;
+import com.nexgo.oaf.apiv3.device.pinpad.WorkKeyTypeEnum;
 import com.nexgo.oaf.apiv3.device.reader.CardInfoEntity;
 import com.nexgo.oaf.apiv3.device.reader.CardReader;
 import com.nexgo.oaf.apiv3.device.reader.CardSlotTypeEnum;
@@ -49,6 +55,7 @@ import com.xinguodu.ddiinterface.KeyCode;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -64,9 +71,14 @@ public class NexgoReadCard extends Application {
     private Context mContext;
     private EmvUtils emvUtils;
 
+    private PinPad pinPad;
+
     String amount ;
 
     String cardPin = "";
+
+    private String pinBlockArray;
+    private String pinKsn;
 
     MethodChannel.Result results;
 
@@ -84,6 +96,8 @@ public class NexgoReadCard extends Application {
         try{
 
             deviceEngine = APIProxy.getDeviceEngine(mContext);
+
+            pinPad = deviceEngine.getPinPad();
 
             emvHandler2 = deviceEngine.getEmvHandler2("app2");
 
@@ -112,6 +126,9 @@ public class NexgoReadCard extends Application {
         HashSet<CardSlotTypeEnum> slotTypes = new HashSet<>();
         slotTypes.add(CardSlotTypeEnum.ICC1);
         slotTypes.add(CardSlotTypeEnum.RF);
+
+        Toast.makeText(mContext, "Please Insert Card.", Toast.LENGTH_SHORT).show();
+
         cardReader.searchCard(slotTypes, 60, new OnCardInfoListener() {
 
             @Override
@@ -338,13 +355,17 @@ public class NexgoReadCard extends Application {
                 HashMap<String, String> cardDataMap = (HashMap<String, String>) TlvUtil.tlvToMap(tlvData);
 
                 KSNUtilities ksnUtilitites = new KSNUtilities();
-                String workingKey = ksnUtilitites.getWorkingKey("3F2216D8297BCE9C",getInitialKSN()) ;
-                String pinBlock =  ksnUtilitites.DesEncryptDukpt(workingKey , cardNo, cardPin);
-                cardDataMap.put("CardPin",pinBlock);
-                cardDataMap.put("ksn",ksnUtilitites.getLatestKsn());
-                cardDataMap.put("pan", cardNo);
+                String workingKey2 = ksnUtilitites.getWorkingKey("3F2216D8297BCE9C",pinKsn);
+                Log.d(NexgoReadCard.class.getName(),"pinKSn 2" + ksnUtilitites.getLatestKsn());
 
-                Log.d(NexgoReadCard.class.getName(), ">>>onCompleted :" + cardDataMap + "\n" + "..............");
+                cardDataMap.put("pan", cardNo);
+                cardDataMap.put("CardPin",pinBlockArray);
+                cardDataMap.put("ksn",ksnUtilitites.getLatestKsn());
+
+                pinPad.dukptKsnIncrease(0);
+
+                Log.d(NexgoReadCard.class.getName(), ">>>onCompleted :" + cardDataMap + "\n" + ".............." + "\n" +
+                        "pinKSn " + pinKsn + "\n" + "pinBlockArray " + pinBlockArray );
 
                 new Handler(Looper.getMainLooper()).post(new Runnable() {
                     @Override
@@ -545,14 +566,6 @@ public class NexgoReadCard extends Application {
         emvHandler2.setDynamicReaderLimitListForPaywave(dynamicReaderLimitEntity);
     }
 
-    private String leftPad(String str, int size, char padChar) {
-        StringBuilder padded = new StringBuilder(str == null ? "" : str);
-        while (padded.length() < size) {
-            padded.insert(0, padChar);
-        }
-        return padded.toString();
-    }
-
     private void configPaywaveParameters(){
     }
 
@@ -620,21 +633,28 @@ public class NexgoReadCard extends Application {
     private byte[] pinRes = new byte[8];;
 
     private void showInputPin(boolean isOnlinPin) {
-
-        PinPad pinPad = deviceEngine.getPinPad();
+        int INJECTED_PIN_SLOT = 0;
+        if (pinPad.dukptCurrentKsn(INJECTED_PIN_SLOT) == null) {
+            //There is no key injected; cannot continue - show some error to user and break out
+            Log.e("Nexgo", "startInputPin() : cannot continue, No key is injected!");
+            emvHandler2.emvProcessCancel();  //Stop the EMV process, cannot proceed to enter PIN without the injected key
+            return;
+        }
         int[] pinLen = new int[]{0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c};
         pinPad.setPinKeyboardMode(PinKeyboardModeEnum.FIXED);
-        pinPad.setAlgorithmMode(AlgorithmModeEnum.DES);
+        //Set the PINPAD algorithm mode - we want to use DUKPT
+        pinPad.setAlgorithmMode(AlgorithmModeEnum.DUKPT);
         byte[] panBytes = ByteUtils.string2ASCIIByteArray(cardNo);
         if (isOnlinPin) {
             if(cardNo == null){
                 cardNo = emvHandler2.getEmvCardDataInfo().getCardNo();
             }
-            pinPad.inputOfflinePin(pinLen,
-                    60, new OnPinPadInputListener() {
+            pinPad.inputOnlinePin(pinLen,
+                    60, cardNo.getBytes(), INJECTED_PIN_SLOT, PinAlgorithmModeEnum.ISO9564FMT1, new OnPinPadInputListener() {
                         @Override
                         public void onInputResult(int retCode, byte[] data) {
                             Log.d("nexgo", "onInputResult->:" + HexUtil.toString(data));
+                            cardPin = HexUtil.toString(data);
                             Log.d("nexgo", "cardPin->:" + cardPin);
 
                             if (retCode == SdkResult.Success || retCode == SdkResult.PinPad_No_Pin_Input
@@ -642,7 +662,12 @@ public class NexgoReadCard extends Application {
                                 if (data != null) {
                                     byte[] temp = new byte[8];
                                     System.arraycopy(data, 0, temp, 0, 8);
-                                    Log.d("data of copied pin", HexUtil.toString(temp));
+
+                                    pinBlockArray = ByteUtils.byteArray2HexString(data).toUpperCase();                              //Set the pinBlockArray (String) to the return value 'data' (PIN output) for sending to host
+                                    pinKsn = ByteUtils.byteArray2HexString(pinPad.dukptCurrentKsn(0)).toUpperCase();   //Save the pinKsn in case needed to send to host
+
+                                    //Incremenent the KSN counter
+                                    pinPad.dukptKsnIncrease(0);
                                 }else {
                                     Log.d("CArd pin result", "is empty");
                                 }
@@ -654,24 +679,7 @@ public class NexgoReadCard extends Application {
                         }
 
                         @Override
-                        public void onSendKey(byte b) {
-                            if (b == PinPadKeyCode.KEYCODE_0) {
-                                cardPin += "0";
-                            }else  if (b == KeyCode.KEYCODE_1) {
-                                cardPin += "1";
-                            } else if (b == KeyCode.KEYCODE_2) {
-                                cardPin += "2";
-                            }else if (b == KeyCode.KEYCODE_3) {
-                                cardPin += "3";
-                            }else if (b == KeyCode.KEYCODE_4) {
-                                cardPin += "4";
-                            }else if(b == KeyCode.KEYCODE_5) {
-                                cardPin += "5";
-                            }else if (b == KeyCode.KEYCODE_STAR){
-                                cardPin += "*";
-                            }
-                            Log.d("onSendKey", String.valueOf(b));
-                        }
+                        public void onSendKey(byte b) {}
                     });
         } else {
             pinPad.inputOfflinePin(pinLen,
@@ -679,7 +687,6 @@ public class NexgoReadCard extends Application {
                         @Override
                         public void onInputResult(int retCode, byte[] data) {
                             Log.d("nexgo", "onInputResult->:" + HexUtil.toString(data) + " " + retCode);
-                            Log.d("nexgo", "cardPin->:" + cardPin);
 
                             if (retCode == SdkResult.Success || retCode == SdkResult.PinPad_No_Pin_Input
                                     || retCode == SdkResult.PinPad_Input_Cancel) {
@@ -698,24 +705,7 @@ public class NexgoReadCard extends Application {
                         }
 
                         @Override
-                        public void onSendKey(byte b) {
-                            if (b == KeyCode.KEYCODE_0) {
-                                cardPin += "0";
-                            }else  if (b == KeyCode.KEYCODE_1) {
-                                cardPin += "1";
-                            } else if (b == KeyCode.KEYCODE_2) {
-                                cardPin += "2";
-                            }else if (b == KeyCode.KEYCODE_3) {
-                                cardPin += "3";
-                            }else if (b == KeyCode.KEYCODE_4) {
-                                cardPin += "4";
-                            }else if(b == KeyCode.KEYCODE_5) {
-                                cardPin += "5";
-                            }else if (b == KeyCode.KEYCODE_STAR){
-                                cardPin += "*";
-                            }
-                            Log.d("onSendKey", String.valueOf(b));
-                        }
+                        public void onSendKey(byte b) {}
                     });
         }
     }
@@ -798,6 +788,5 @@ public class NexgoReadCard extends Application {
         }
 
     }
-
 }
 

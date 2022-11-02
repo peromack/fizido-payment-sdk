@@ -15,6 +15,7 @@ import com.pos.empressa.empressa_pos.Horizon.HorizonReadCard;
 import com.pos.empressa.empressa_pos.Horizon.MyApplication;
 import com.pos.empressa.empressa_pos.MPos.MPosDeviceConnect;
 import com.pos.empressa.empressa_pos.MPos.MPosApplication;
+import com.pos.empressa.empressa_pos.Nexgo.NexgoApplication;
 import com.pos.empressa.empressa_pos.Nexgo.NexgoReadCard;
 import com.pos.empressa.empressa_pos.Sunyard.SunyardApplication;
 import com.pos.empressa.empressa_pos.Sunyard.SunyardPrinter;
@@ -76,6 +77,10 @@ public class EmpressaPosPlugin implements FlutterPlugin, MethodCallHandler, Acti
             case "initHorizonEmv":
                 MyApplication myApplication = new MyApplication(mContext);
                 myApplication.bindDriverService();
+                break;
+            case "initNexgoEmv":
+                NexgoApplication nApplication = new NexgoApplication(mContext);
+                nApplication.initEmv();
                 break;
             case "startPrinter":
                 SunyardPrinter sunyardPrinter = new SunyardPrinter(mContext);
