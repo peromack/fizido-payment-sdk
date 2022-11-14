@@ -16,7 +16,6 @@ public class NexgoApplication extends FlutterApplication {
     private Context mContext;
 
     private String IPEK = "3F2216D8297BCE9C";
-//    private String KSN = getInitialKSN();
 
     public NexgoApplication(Context mContext) {
         this.mContext = mContext;

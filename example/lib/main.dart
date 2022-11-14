@@ -60,7 +60,7 @@ class _MyAppState extends State<MyApp> {
 
     try {
 
-      await EmpressaPos.sunyardChargeTransaction(normalizedTerminalData);
+      await EmpressaPos.blusaltChargeTransaction(normalizedTerminalData);
       setState(() {
 
       });
@@ -95,20 +95,7 @@ class _MyAppState extends State<MyApp> {
 
     try {
 
-      await EmpressaPos.sunyardChargeTransactionFidizo(normalizedTerminalData);
-      setState(() {
-
-      });
-    } on PlatformException  catch (e) {
-      print(e);
-    }
-  }
-
-  Future<void> searchHorizon() async {
-
-    try {
-
-      cardDetails = await EmpressaPos.horizonSearch(100);
+      await EmpressaPos.fidizoChargeTransaction(normalizedTerminalData);
       setState(() {
 
       });
@@ -130,11 +117,21 @@ class _MyAppState extends State<MyApp> {
     }
   }
 
-  Future<void> searchSunyard() async {
+  Future<void> nexgoPrint() async {
 
     try {
-
-      cardDetails = await EmpressaPos.search(100);
+      await EmpressaPos.nexgoPrint({
+        "originalMinorAmount": 2000,
+        "terminalId": "123456",
+        "merchantId": "Merchant Ikeja Lagos",
+        "originalTransStan": "00003",
+        "transmissionDate": "14-11-2022T22:23:57",
+        "cardPan": "4739483497586458",
+        "cardHolder": "test test",
+        "expiryDate": "12/24",
+        "transactionRef": "859948547949459",
+        "transactionComment": "satisfactory"
+      });
       setState(() {
 
       });
@@ -174,6 +171,12 @@ class _MyAppState extends State<MyApp> {
               searchNexgo();
             },
               child: Text('Search Nexgo'),
+
+            ),
+            RaisedButton(onPressed: (){
+              nexgoPrint();
+            },
+              child: Text('Test Nexgo Print'),
 
             ),
             SizedBox(height: 20,),

@@ -77,6 +77,8 @@ public class NexgoReadCard extends Application {
 
     String cardPin = "";
 
+    private String isOnline = "1";
+
     private String pinBlockArray = "";
     private String pinKsn = "";
 
@@ -117,6 +119,12 @@ public class NexgoReadCard extends Application {
 
         }catch (Exception e) {
             e.printStackTrace();
+            emvHandler2.emvProcessCancel();
+        }
+    }
+
+    public void cancelSearch() {
+        if(emvHandler2 != null) {
             emvHandler2.emvProcessCancel();
         }
     }
@@ -361,6 +369,7 @@ public class NexgoReadCard extends Application {
                 cardDataMap.put("pan", cardNo);
                 cardDataMap.put("CardPin",pinBlockArray);
                 cardDataMap.put("ksn",ksnUtilitites.getLatestKsn());
+                cardDataMap.put("isOnline", isOnline);
 
                 Log.d(NexgoReadCard.class.getName(), ">>>onCompleted :" + cardDataMap + "\n" + ".............." + "\n" +
                         "pinKSn " + pinKsn + "\n" + "pinBlockArray " + pinBlockArray );
@@ -644,6 +653,7 @@ public class NexgoReadCard extends Application {
         pinPad.setAlgorithmMode(AlgorithmModeEnum.DUKPT);
         byte[] panBytes = ByteUtils.string2ASCIIByteArray(cardNo);
         if (isOnlinPin) {
+            isOnline = "0";
             if(cardNo == null){
                 cardNo = emvHandler2.getEmvCardDataInfo().getCardNo();
             }
@@ -689,9 +699,11 @@ public class NexgoReadCard extends Application {
                             if (retCode == SdkResult.Success || retCode == SdkResult.PinPad_No_Pin_Input
                                     || retCode == SdkResult.PinPad_Input_Cancel) {
                                 if (data != null) {
-                                    byte[] temp = new byte[8];
-                                    System.arraycopy(data, 0, temp, 0, 8);
-                                    Log.d("data of copied pin", HexUtil.toString(temp));
+                                    pinKsn = ByteUtils.byteArray2HexString(pinPad.dukptCurrentKsn(0)).toUpperCase();   //Save the pinKsn in case needed to send to host
+
+                                    //Incremenent the KSN counter
+                                    pinPad.dukptKsnIncrease(0);
+
                                 }else {
                                     Log.d("CArd pin result", "is empty");
                                 }
@@ -706,19 +718,6 @@ public class NexgoReadCard extends Application {
                         public void onSendKey(byte b) {}
                     });
         }
-    }
-
-    private String getInitialKSN(){
-        SharedPreferences sharedPref = mContext.getSharedPreferences( "KSNCOUNTER", Context.MODE_PRIVATE);
-        int ksn = sharedPref.getInt("KSN",00001);
-        if(ksn > 9999){
-            ksn = 00000 ;
-        }
-        int latestKSN = ksn + 1 ;
-        SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putInt("KSN",latestKSN);
-        editor.apply();
-        return  "0000000002DDDDE"+ String.format("%05d", latestKSN);
     }
 
     public static String byte2Char(byte[] bytes) {

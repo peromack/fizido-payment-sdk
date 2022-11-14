@@ -10,12 +10,15 @@ import android.os.Build;
 import android.os.RemoteException;
 
 
+import com.pos.empressa.empressa_pos.Blusalt.BlusaltApiService;
+import com.pos.empressa.empressa_pos.Fizido.FizidoApiService;
 import com.pos.empressa.empressa_pos.Horizon.DeviceHelper;
 import com.pos.empressa.empressa_pos.Horizon.HorizonReadCard;
 import com.pos.empressa.empressa_pos.Horizon.MyApplication;
 import com.pos.empressa.empressa_pos.MPos.MPosDeviceConnect;
 import com.pos.empressa.empressa_pos.MPos.MPosApplication;
 import com.pos.empressa.empressa_pos.Nexgo.NexgoApplication;
+import com.pos.empressa.empressa_pos.Nexgo.NexgoPrinter;
 import com.pos.empressa.empressa_pos.Nexgo.NexgoReadCard;
 import com.pos.empressa.empressa_pos.Sunyard.SunyardApplication;
 import com.pos.empressa.empressa_pos.Sunyard.SunyardPrinter;
@@ -40,8 +43,6 @@ public class EmpressaPosPlugin implements FlutterPlugin, MethodCallHandler, Acti
     /// This local reference serves to register the plugin with the Flutter Engine and unregister it
     /// when the Flutter Engine is detached from the Activity
     private MethodChannel channel;
-    SunyardReadCard sunyardReadCard;
-    HorizonReadCard horizonReadCard;
     NexgoReadCard nexgoReadCard;
     private Context mContext;
     MPosApplication mPosApplication ;
@@ -59,48 +60,25 @@ public class EmpressaPosPlugin implements FlutterPlugin, MethodCallHandler, Acti
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onMethodCall(@NonNull MethodCall call, @NonNull Result result) {
-        sunyardReadCard = new SunyardReadCard(mContext);
-        horizonReadCard = new HorizonReadCard(mContext);
         nexgoReadCard = new NexgoReadCard(mContext);
 
         switch (call.method) {
-            case "searchCard":
-                sunyardReadCard.searchCard(result, call.argument("transactionAmount"));
-                break;
-            case "stopSearch":
-                sunyardReadCard.stopSearch();
-                break;
-            case "initEmv":
-                SunyardApplication sunyardApplication = new SunyardApplication();
-                sunyardApplication.initializeApp(mContext);
-                break;
-            case "initHorizonEmv":
-                MyApplication myApplication = new MyApplication(mContext);
-                myApplication.bindDriverService();
-                break;
             case "initNexgoEmv":
                 NexgoApplication nApplication = new NexgoApplication(mContext);
                 nApplication.initEmv();
                 break;
-            case "startPrinter":
-                SunyardPrinter sunyardPrinter = new SunyardPrinter(mContext);
-                Log.d("PrintActivity.class", call.arguments.toString());
-                sunyardPrinter.startPrint(call);
-                break;
-            case "checkSunyardCard":
-                sunyardReadCard.checkCard(result);
+            case "startNexgoPrinter":
+                NexgoPrinter nexgoPrinter = new NexgoPrinter(mContext);
+                nexgoPrinter.nexgoPrint(call);
                 break;
             case "initializeMPos":
               mPosApplication.initializeMPos(mContext) ;
                 break;
-            case "chargeSunyardTransaction":
-                sunyardReadCard.chargeTransaction(result, mContext, call);
+            case "chargeBlusaltTransaction":
+                BlusaltApiService.chargeTransaction(result, mContext, call);
                 break;
-            case "chargeSunyardFidizoTransaction":
-                sunyardReadCard.chargeFidizoTransaction(result, mContext, call);
-                break;
-            case "horizonSearchCard":
-                horizonReadCard.searchCard(result, call.argument("transactionAmount"));
+            case "chargeFidizoTransaction":
+                FizidoApiService.chargeFidizoTransaction(result, mContext, call);
                 break;
             case "nexgoSearchCard":
                 nexgoReadCard.searchCard(result, call.argument("transactionAmount"));
@@ -162,7 +140,7 @@ public class EmpressaPosPlugin implements FlutterPlugin, MethodCallHandler, Acti
 
     @Override
     public void onDetachedFromActivity() {
-        sunyardReadCard.stopSearch();
+        nexgoReadCard.cancelSearch();
         // TODO: your plugin is no longer associated with an Activity. Clean up references.
 
     }
