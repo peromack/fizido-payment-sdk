@@ -44,30 +44,69 @@ public class NexgoPrinter {
     public void nexgoPrint(@NonNull MethodCall call) {
         printer.initPrinter();
         printer.setLetterSpacing(5);
+        printer.appendPrnStr(call.argument("vendorName"), fontNormal, AlignEnum.CENTER);
         printer.appendPrnStr("Transaction Receipt", fontBig, AlignEnum.CENTER);
         printer.appendPrnStr("---------------------------", fontNormal, AlignEnum.LEFT);
-        printer.appendPrnStr("AMOUNT: NGN " +call.argument("originalMinorAmount").toString(), fontNormal, AlignEnum.LEFT);
+        printer.appendPrnStr("AMOUNT: NGN" +call.argument("originalMinorAmount").toString(), fontNormal, AlignEnum.LEFT);
         printer.appendPrnStr("---------------------------", fontNormal, AlignEnum.LEFT);
-        printer.appendPrnStr("TerminalID: "+call.argument("terminalId"), fontNormal, AlignEnum.LEFT);
-        printer.appendPrnStr("MerchantID: "+call.argument("merchantId"), fontNormal, AlignEnum.LEFT);
-        printer.appendPrnStr("Stan: "+call.argument("originalTransStan"), fontNormal, AlignEnum.LEFT);
-        printer.appendPrnStr("Date: "+ call.argument("transmissionDate"), fontNormal, AlignEnum.LEFT);
-        printer.appendPrnStr("Card PAN:    "+call.argument("cardPan"), fontBold, AlignEnum.LEFT);
-        printer.appendPrnStr("Card Holder: "+call.argument("cardHolder"), fontNormal, AlignEnum.LEFT);
-        printer.appendPrnStr("Card Expiry: "+call.argument("expiryDate"), fontNormal, AlignEnum.LEFT);
-        printer.appendPrnStr("Ref: "+call.argument("transactionRef"), fontNormal, AlignEnum.LEFT);
+        printText(call, "merchantName", "Merchant Name");
+        printText(call, "merchantLocation", "Merchant Location");
+        printText(call, "sender", "Sender");
+        printText(call, "receiver", "Receiver");
+        printText(call, "transactionType", "Transaction Type");
+        printText(call, "payee", "Payee");
+        printText(call, "phoneNumber", "Phone Number");
+        printText(call, "service", "Service");
+        printText(call, "beneficiaryName", "Beneficiary Name");
+        printText(call, "bankName", "Bank Name");
+        printText(call, "merchant", "Merchant");
+        printText(call, "accountNumber", "Account Number");
+        printText(call, "description", "Description");
+        printText(call, "bill", "Bill");
+        printText(call, "paymentItem", "Payment Item");
+        printText(call, "billItem", "Bill Item");
+        printText(call, "qty", "Qty");
+        printText(call, "packageName", "Package Name");
+        printText(call, "customerName", "Customer Name");
+        printText(call, "customerId", "Customer Id");
+        printText(call, "customerReference", "Customer Reference");
+        printText(call, "transactionFee", "Transaction Fee");
+        printText(call, "transactionRef", "Reference Number");
+        printText(call, "originalTransStan", "Stan");
+        printText(call, "cardPan", "Card PAN");
+        printText(call, "tokenValue", "Token");
+        printText(call, "expiryDate", "Card Expiry");
+        printText(call, "terminalId", "TerminalID");
+        printText(call, "merchantId", "MerchantID");
+        printText(call, "agent", "Agent");
+        printText(call, "time", "Time");
+        printText(call, "transmissionDate", "Date");
+        printer.appendPrnStr("---------------------------", fontNormal, AlignEnum.LEFT);
         printer.appendPrnStr(call.argument("transactionComment"), fontNormal, AlignEnum.LEFT);
+        printFooter(call, "footer");
         printer.appendPrnStr("\n", fontNormal, AlignEnum.LEFT);
         printer.appendPrnStr("\n", fontNormal, AlignEnum.LEFT);
         printer.appendPrnStr("\n", fontNormal, AlignEnum.LEFT);
-        printer.appendPrnStr("---------------------------", fontNormal, AlignEnum.LEFT);
-        printer.appendPrnStr("I ACKNOWLEDGE SATISFACTORY RECEIPT OF RELATIVE GOODS/SERVICES", fontSmall, AlignEnum.LEFT);
         printer.appendPrnStr("---------------------------", fontNormal, AlignEnum.LEFT);
         printer.startPrint(true, new OnPrintListener() {
             @Override
             public void onPrintResult(final int retCode) {
             }
         });
+    }
+
+    private void printText(@NonNull MethodCall call, String key, String title) {
+        if (call.argument(key) != null) {
+            printer.appendPrnStr(title + ": " + call.argument(key) + "\n", fontNormal, AlignEnum.LEFT);
+        }
+    }
+
+    private void printFooter(@NonNull MethodCall call, String key) {
+        if (call.argument(key) != null) {
+            printer.appendPrnStr(call.argument(key) + "\n\n\n\n", fontNormal, AlignEnum.LEFT);
+        } else {
+            printer.appendPrnStr("Built on Fizido, Powered by Support MFB" + "\n\n\n\n", fontNormal, AlignEnum.LEFT);
+        }
     }
 
 }

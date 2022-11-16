@@ -5,8 +5,8 @@ import 'package:empressa_pos/bluetooth_devices.dart';
 import 'package:empressa_pos/card_details.dart';
 import 'package:flutter/services.dart';
 
-class EmpressaPos {
-  static const MethodChannel _channel = const MethodChannel('empressa_pos');
+class NexgoPos {
+  static const MethodChannel _channel = const MethodChannel('nexgo_pos');
 
 
   static Future<void> initializeNexgoTerminal() async {

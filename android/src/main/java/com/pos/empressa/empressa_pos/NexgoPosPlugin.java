@@ -37,7 +37,7 @@ import io.flutter.plugin.common.MethodChannel.Result;
 /**
  * EmpressaPosPlugin
  */
-public class EmpressaPosPlugin implements FlutterPlugin, MethodCallHandler, ActivityAware {
+public class NexgoPosPlugin implements FlutterPlugin, MethodCallHandler, ActivityAware {
     /// The MethodChannel that will the communication between Flutter and native Android
     ///
     /// This local reference serves to register the plugin with the Flutter Engine and unregister it
@@ -52,7 +52,7 @@ public class EmpressaPosPlugin implements FlutterPlugin, MethodCallHandler, Acti
 
     @Override
     public void onAttachedToEngine(@NonNull FlutterPluginBinding flutterPluginBinding) {
-        channel = new MethodChannel(flutterPluginBinding.getBinaryMessenger(), "empressa_pos");
+        channel = new MethodChannel(flutterPluginBinding.getBinaryMessenger(), "nexgo_pos");
         channel.setMethodCallHandler(this);
 
     }

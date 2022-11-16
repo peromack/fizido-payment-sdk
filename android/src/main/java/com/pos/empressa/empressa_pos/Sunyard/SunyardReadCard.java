@@ -1,29 +1,15 @@
 package com.pos.empressa.empressa_pos.Sunyard;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.DefaultRetryPolicy;
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.TimeoutError;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.HurlStack;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
-import com.google.gson.Gson;
-import com.pos.empressa.empressa_pos.EmpressaPosPlugin;
+import com.pos.empressa.empressa_pos.NexgoPosPlugin;
 import com.pos.empressa.empressa_pos.Sunyard.bean.TlvBean;
 import com.pos.empressa.empressa_pos.Sunyard.util.TlvUtils;
 import com.pos.empressa.empressa_pos.ksnUtil.KSNUtilities;
@@ -49,17 +35,11 @@ import com.socsi.utils.Log;
 import com.socsi.utils.StringUtil;
 import com.socsi.utils.TlvUtil;
 
-import java.io.UnsupportedEncodingException;
-import java.nio.charset.Charset;
-import java.time.Instant;
-import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
-import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import socsi.middleware.emvl2lib.EmvAidCandidate;
 import socsi.middleware.emvl2lib.EmvApi;
@@ -70,8 +50,6 @@ import socsi.middleware.emvl2lib.EmvStartProcessParam;
 import socsi.middleware.emvl2lib.EmvTermConfig;
 
 import static com.socsi.smartposapi.icc.Icc.IC_CARD_ON;
-
-import org.json.JSONObject;
 
 public class SunyardReadCard {
 
@@ -163,7 +141,7 @@ public class SunyardReadCard {
     }
 
     private void startProcess(@NonNull MethodChannel.Result result,int transactionAmount) {
-        com.sunyard.smartposapi.emv2.EmvL2 emvL2 = com.sunyard.smartposapi.emv2.EmvL2.getInstance(mContext, EmpressaPosPlugin.class.getSimpleName());
+        com.sunyard.smartposapi.emv2.EmvL2 emvL2 = com.sunyard.smartposapi.emv2.EmvL2.getInstance(mContext, NexgoPosPlugin.class.getSimpleName());
         emvL2.init();
         com.sunyard.middleware.emvl2lib.EmvStartProcessParam param = new com.sunyard.middleware.emvl2lib.EmvStartProcessParam();
         param.mTransAmt = transactionAmount;
@@ -378,11 +356,11 @@ public class SunyardReadCard {
     }
 
     private void readcard( @NonNull MethodChannel.Result result) {
-        EmvL2.getInstance(mContext, EmpressaPosPlugin.class.getSimpleName()).resetProcess();
+        EmvL2.getInstance(mContext, NexgoPosPlugin.class.getSimpleName()).resetProcess();
         initEmv();
-        EmvTermConfig termConfig = EmvL2.getInstance(mContext, EmpressaPosPlugin.class.getSimpleName()).getTermConfig();
+        EmvTermConfig termConfig = EmvL2.getInstance(mContext, NexgoPosPlugin.class.getSimpleName()).getTermConfig();
         termConfig.setTermType(22);
-        EmvL2.getInstance(mContext, EmpressaPosPlugin.class.getSimpleName()).setTermConfig(termConfig);
+        EmvL2.getInstance(mContext, NexgoPosPlugin.class.getSimpleName()).setTermConfig(termConfig);
         EmvStartProcessParam emvStartProcessParam = new EmvStartProcessParam();
         String SN = null;
         try {
@@ -419,8 +397,8 @@ public class SunyardReadCard {
         //非电子现金接口，强制联机  Non-electronic cash interface, mandatory online
         emvStartProcessParam.mIsQpbocForceOnline = true;
         //init first
-        EmvL2.getInstance(mContext, EmpressaPosPlugin.class.getSimpleName()).init();
-        EmvL2.getInstance(mContext, EmpressaPosPlugin.class.getSimpleName()).startProcess(emvStartProcessParam, new AsyncEmvCallback() {
+        EmvL2.getInstance(mContext, NexgoPosPlugin.class.getSimpleName()).init();
+        EmvL2.getInstance(mContext, NexgoPosPlugin.class.getSimpleName()).startProcess(emvStartProcessParam, new AsyncEmvCallback() {
 
             @Override
             public void confirmTransType(byte[] aid, int oldTransType, EmvL2.ConfirmTransTypeHandler handler) {
@@ -647,7 +625,7 @@ public class SunyardReadCard {
         });
     }
     private void updateICCardData( @NonNull MethodChannel.Result methodResult) {
-        byte[] cardData = getTlvData(mContext, EmpressaPosPlugin.class.getSimpleName(), "5A575F345F20");
+        byte[] cardData = getTlvData(mContext, NexgoPosPlugin.class.getSimpleName(), "5A575F345F20");
 
         if (cardData == null) {
             return;
@@ -674,7 +652,7 @@ public class SunyardReadCard {
         String track2data = cardDataMap.get("57");
         String result = "card no: " + pan.substring(0, 16) + "\ncardHolderName:" + cardHolderName
                 + "\ntrack 2:" + track2data + "\ntlv data:";
-        byte[] sendF55Data = getTlvData(mContext, EmpressaPosPlugin.class.getSimpleName(), "9F269F279F109F379F36959A9C9F025F2A829F1A9F039F339F349F359F1E849F099F419F639F6C9F66917172DF32DF33DF34"); //without: 5F24 + 9F12 + 9F53
+        byte[] sendF55Data = getTlvData(mContext, NexgoPosPlugin.class.getSimpleName(), "9F269F279F109F379F36959A9C9F025F2A829F1A9F039F339F349F359F1E849F099F419F639F6C9F66917172DF32DF33DF34"); //without: 5F24 + 9F12 + 9F53
         List<TlvBean> tlvList = TlvUtils.builderTlvList(StringUtil.byte2HexStr(sendF55Data));
         if (tlvList != null) {
             for (TlvBean tlv : tlvList) {
@@ -714,7 +692,7 @@ public class SunyardReadCard {
     private String getpanData() {
         String panRegx="F";
         String sPan = null;
-        com.sunyard.smartposapi.emv2.EmvL2 emvL2 = com.sunyard.smartposapi.emv2.EmvL2.getInstance(mContext, EmpressaPosPlugin.class.getSimpleName());
+        com.sunyard.smartposapi.emv2.EmvL2 emvL2 = com.sunyard.smartposapi.emv2.EmvL2.getInstance(mContext, NexgoPosPlugin.class.getSimpleName());
         byte[] iccData =  emvL2.getTag(new byte[]{0x5A,0x00}, 1);
         if (iccData==null || iccData.length==0){
             iccData=emvL2.getTag(new byte[]{0x57,0x00},1);
@@ -731,7 +709,7 @@ public class SunyardReadCard {
     }
 
     private void initEmv() {
-        EmvL2.getInstance(mContext, EmpressaPosPlugin.class.getSimpleName()).init();
+        EmvL2.getInstance(mContext, NexgoPosPlugin.class.getSimpleName()).init();
         String[] aids = new String[]{
                 // Verve
                 "9F0607A0000003710001DF0101009F08020140DF1105DC4000A800DF1205DC4004F800DF130500100000009F1B0400000000DF1504F0F0F0F0DF160100DF170100DF14039F3704DF180101DF1906000000010000DF2006001000000000DF21060000000300009F3303E0F0C89F6604620000805F2A0208409F1A020418",
@@ -776,11 +754,11 @@ public class SunyardReadCard {
         };
 
 
-        int ret = EmvL2.getInstance(mContext, EmpressaPosPlugin.class.getSimpleName()).clearAids();
+        int ret = EmvL2.getInstance(mContext, NexgoPosPlugin.class.getSimpleName()).clearAids();
         if (ret != 0) {
             Log.d("EmpressaPosPlugin","clear aids fail");
         }
-        ret = EmvL2.getInstance(mContext, EmpressaPosPlugin.class.getSimpleName()).addAids(aids);
+        ret = EmvL2.getInstance(mContext, NexgoPosPlugin.class.getSimpleName()).addAids(aids);
         if (ret != 0) {
             Log.e("EmpressaPosPlugin", "add aids fail");
         }
@@ -826,11 +804,11 @@ public class SunyardReadCard {
                 "9f0605a0000003339f22010bdf05083230313631323331df060101df070101df0281f8cf9fdf46b356378e9af311b0f981b21a1f22f250fb11f55c958709e3c7241918293483289eae688a094c02c344e2999f315a72841f489e24b1ba0056cfab3b479d0e826452375dcdbb67e97ec2aa66f4601d774feaef775accc621bfeb65fb0053fc5f392aa5e1d4c41a4de9ffdfdf1327c4bb874f1f63a599ee3902fe95e729fd78d4234dc7e6cf1ababaa3f6db29b7f05d1d901d2e76a606a8cbffffecbd918fa2d278bdb43b0434f5d45134be1c2781d157d501ff43e5f1c470967cd57ce53b64d82974c8275937c5d8502a1252a8a5d6088a259b694f98648d9af2cb0efd9d943c69f896d49fa39702162acb5af29b90bade005bc157df040103df0314bd331f9996a490b33c13441066a09ad3feb5f66c",
                 "9f0605a0000000659f220114df05083230313631323331df060101df070101df0281f8aeed55b9ee00e1eceb045f61d2da9a66ab637b43fb5cdbdb22a2fbb25be061e937e38244ee5132f530144a3f268907d8fd648863f5a96fed7e42089e93457adc0e1bc89c58a0db72675fbc47fee9ff33c16ade6d341936b06b6a6f5ef6f66a4edd981df75da8399c3053f430eca342437c23af423a211ac9f58eaf09b0f837de9d86c7109db1646561aa5af0289af5514ac64bc2d9d36a179bb8a7971e2bfa03a9e4b847fd3d63524d43a0e8003547b94a8a75e519df3177d0a60bc0b4bab1ea59a2cbb4d2d62354e926e9c7d3be4181e81ba60f8285a896d17da8c3242481b6c405769a39d547c74ed9ff95a70a796046b5eff36682dc29df040103df0314c0d15f6cd957e491db56dcdd1ca87a03ebe06b7b"
         };
-        ret = EmvL2.getInstance(mContext, EmpressaPosPlugin.class.getSimpleName()).clearCapks();
+        ret = EmvL2.getInstance(mContext, NexgoPosPlugin.class.getSimpleName()).clearCapks();
         if (ret != 0) {
             Log.d("EmpressaPosPlugin","clear capks fail");
         }
-        ret = EmvL2.getInstance(mContext, EmpressaPosPlugin.class.getSimpleName()).addCapks(capks);
+        ret = EmvL2.getInstance(mContext, NexgoPosPlugin.class.getSimpleName()).addCapks(capks);
         if (ret != 0) {
             Log.d("EmpressaPosPlugin","add capks fail");
         }

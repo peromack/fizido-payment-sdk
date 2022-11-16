@@ -15,7 +15,7 @@ void main() {
   // EmpressaPos.initializeTerminal();
 
   // EmpressaPos.initializeHorizonTerminal();
-  EmpressaPos.initializeNexgoTerminal();
+  NexgoPos.initializeNexgoTerminal();
   runApp(MyApp());
 }
 
@@ -60,7 +60,7 @@ class _MyAppState extends State<MyApp> {
 
     try {
 
-      await EmpressaPos.blusaltChargeTransaction(normalizedTerminalData);
+      await NexgoPos.blusaltChargeTransaction(normalizedTerminalData);
       setState(() {
 
       });
@@ -95,7 +95,7 @@ class _MyAppState extends State<MyApp> {
 
     try {
 
-      await EmpressaPos.fidizoChargeTransaction(normalizedTerminalData);
+      await NexgoPos.fidizoChargeTransaction(normalizedTerminalData);
       setState(() {
 
       });
@@ -108,7 +108,7 @@ class _MyAppState extends State<MyApp> {
 
     try {
 
-      cardDetails = await EmpressaPos.nexgoSearch(100);
+      cardDetails = await NexgoPos.nexgoSearch(100);
       setState(() {
 
       });
@@ -120,7 +120,8 @@ class _MyAppState extends State<MyApp> {
   Future<void> nexgoPrint() async {
 
     try {
-      await EmpressaPos.nexgoPrint({
+      await NexgoPos.nexgoPrint({
+        "vendorName": "Lapo Investment",
         "originalMinorAmount": 2000,
         "terminalId": "123456",
         "merchantId": "Merchant Ikeja Lagos",
