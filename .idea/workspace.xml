@@ -4,16 +4,7 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5bcddf7f-5ba6-48c1-bcdb-f03017f36f8d" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/pos/empressa/empressa_pos/EmpressaPosPlugin.java" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/java/com/pos/empressa/empressa_pos/EmpressaPosPlugin.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/pos/empressa/empressa_pos/Nexgo/NexgoApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/java/com/pos/empressa/empressa_pos/Nexgo/NexgoApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/pos/empressa/empressa_pos/Nexgo/NexgoReadCard.java" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/java/com/pos/empressa/empressa_pos/Nexgo/NexgoReadCard.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/pos/empressa/empressa_pos/Sunyard/SunyardReadCard.java" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/java/com/pos/empressa/empressa_pos/Sunyard/SunyardReadCard.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/example/lib/main.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/empressa_pos.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/empressa_pos.dart" afterDir="false" />
-    </list>
+    <list default="true" id="5bcddf7f-5ba6-48c1-bcdb-f03017f36f8d" name="Changes" comment="update nexgo print and other fixes" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -63,6 +54,14 @@
       <option name="presentableId" value="Default" />
       <updated>1666368867073</updated>
     </task>
+    <task id="LOCAL-00001" summary="update nexgo print and other fixes">
+      <created>1668624293687</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1668624293687</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -76,5 +75,9 @@
       </map>
     </option>
     <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="update nexgo print and other fixes" />
+    <option name="LAST_COMMIT_MESSAGE" value="update nexgo print and other fixes" />
   </component>
 </project>
