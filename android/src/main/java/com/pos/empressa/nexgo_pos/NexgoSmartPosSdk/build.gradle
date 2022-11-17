@@ -1,2 +1,4 @@
+package android.src.main.java.com.pos.empressa.nexgo_pos.NexgoSmartPosSdk
+
 configurations.maybeCreate("default")
 artifacts.add("default", file('NexgoSmartPosSdk.aar'))
