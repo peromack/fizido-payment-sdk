@@ -11,9 +11,6 @@ import android.os.Build;
 
 import com.pos.empressa.nexgo_pos.Blusalt.BlusaltApiService;
 import com.pos.empressa.nexgo_pos.Fizido.FizidoApiService;
-import com.pos.empressa.nexgo_pos.Horizon.MyApplication;
-import com.pos.empressa.nexgo_pos.MPos.MPosDeviceConnect;
-import com.pos.empressa.nexgo_pos.MPos.MPosApplication;
 import com.pos.empressa.nexgo_pos.Nexgo.NexgoApplication;
 import com.pos.empressa.nexgo_pos.Nexgo.NexgoPrinter;
 import com.pos.empressa.nexgo_pos.Nexgo.NexgoReadCard;
@@ -38,10 +35,6 @@ public class NexgoPosPlugin implements FlutterPlugin, MethodCallHandler, Activit
     private MethodChannel channel;
     NexgoReadCard nexgoReadCard;
     private Context mContext;
-    MPosApplication mPosApplication ;
-    MPosDeviceConnect mPosDeviceConnect;
-
-    MyApplication hPosApplication;
 
     @Override
     public void onAttachedToEngine(@NonNull FlutterPluginBinding flutterPluginBinding) {
@@ -64,9 +57,6 @@ public class NexgoPosPlugin implements FlutterPlugin, MethodCallHandler, Activit
                 NexgoPrinter nexgoPrinter = new NexgoPrinter(mContext);
                 nexgoPrinter.nexgoPrint(call);
                 break;
-            case "initializeMPos":
-              mPosApplication.initializeMPos(mContext) ;
-                break;
             case "chargeBlusaltTransaction":
                 BlusaltApiService.chargeTransaction(result, mContext, call);
                 break;
@@ -76,20 +66,8 @@ public class NexgoPosPlugin implements FlutterPlugin, MethodCallHandler, Activit
             case "nexgoSearchCard":
                 nexgoReadCard.searchCard(result, call.argument("transactionAmount"));
                 break;
-            case "connectMPos":
-                mPosDeviceConnect.connectDevice(call.argument("bluetoothName"), call.argument("bluetoothMac"),result,mContext);
-                break;
-            case "startMPosDiscovery":
-                mPosDeviceConnect.startDiscovery(result);
-                break;
-            case "removeMPosBondMethods":
-                mPosDeviceConnect.removeBondMethods();
-                break;
-            case "unregisterMPosReceiver":
-                mPosDeviceConnect.unregisterReceiver();
-                break;
-            case "registerMPosReceiver":
-                mPosDeviceConnect.registerReceiver();
+            case "cancelNexgoSearch":
+                nexgoReadCard.cancelSearch();
                 break;
             default:
                 result.notImplemented();
@@ -108,15 +86,6 @@ public class NexgoPosPlugin implements FlutterPlugin, MethodCallHandler, Activit
         // TODO: your plugin is now attached to an Activity
         Activity activity = binding.getActivity();
         mContext = binding.getActivity().getApplicationContext();
-        mPosApplication = new  MPosApplication();
-        mPosApplication.initializeMPos(mContext);
-
-        //Horizon application init
-        hPosApplication = new MyApplication(mContext);
-
-        mPosDeviceConnect = new MPosDeviceConnect(activity);
-
-
     }
 
     @Override

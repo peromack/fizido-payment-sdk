@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -15,7 +16,6 @@ import com.android.volley.TimeoutError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
-import com.socsi.utils.Log;
 
 import org.json.JSONObject;
 
@@ -139,7 +139,7 @@ public class FizidoApiService {
 
         try {
             header.put("transaction", transaction);
-            Log.d(String.valueOf(header));
+            Log.d("tranx", String.valueOf(header));
         }catch (Exception e){
             e.printStackTrace();
         }

@@ -40,9 +40,8 @@ import com.nexgo.oaf.apiv3.emv.OnEmvProcessListener2;
 import com.nexgo.oaf.apiv3.emv.PromptEnum;
 import com.nexgo.oaf.apiv3.emv.UnionPayTransDataEntity;
 import com.pos.empressa.nexgo_pos.Nexgo.utils.EmvUtils;
+import com.pos.empressa.nexgo_pos.Nexgo.utils.TlvUtil;
 import com.pos.empressa.nexgo_pos.ksnUtil.KSNUtilities;
-import com.socsi.utils.HexUtil;
-import com.socsi.utils.TlvUtil;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -651,10 +650,6 @@ public class NexgoReadCard extends Application {
                     60, cardNo.getBytes(), INJECTED_PIN_SLOT, PinAlgorithmModeEnum.ISO9564FMT1, new OnPinPadInputListener() {
                         @Override
                         public void onInputResult(int retCode, byte[] data) {
-                            Log.d("nexgo", "onInputResult->:" + HexUtil.toString(data));
-                            cardPin = HexUtil.toString(data);
-                            Log.d("nexgo", "cardPin->:" + cardPin);
-
                             if (retCode == SdkResult.Success || retCode == SdkResult.PinPad_No_Pin_Input
                                     || retCode == SdkResult.PinPad_Input_Cancel) {
                                 if (data != null) {
@@ -684,8 +679,6 @@ public class NexgoReadCard extends Application {
                     60, new OnPinPadInputListener() {
                         @Override
                         public void onInputResult(int retCode, byte[] data) {
-                            Log.d("nexgo", "onInputResult->:" + HexUtil.toString(data) + " " + retCode);
-
                             if (retCode == SdkResult.Success || retCode == SdkResult.PinPad_No_Pin_Input
                                     || retCode == SdkResult.PinPad_Input_Cancel) {
                                 if (data != null) {

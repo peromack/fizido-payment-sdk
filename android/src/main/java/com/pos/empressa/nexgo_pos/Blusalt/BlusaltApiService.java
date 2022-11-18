@@ -3,6 +3,7 @@ package com.pos.empressa.nexgo_pos.Blusalt;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 
@@ -13,7 +14,6 @@ import com.android.volley.TimeoutError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
-import com.socsi.utils.Log;
 
 import org.json.JSONObject;
 
@@ -25,16 +25,18 @@ import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 
 public class BlusaltApiService {
+    private static String TAG = "Blusalt";
+
     public static void chargeTransaction(@NonNull MethodChannel.Result result, Context mContext, @NonNull MethodCall call) {
         RequestQueue queue = Volley.newRequestQueue(mContext);
 
-        Log.d("Calling charge TRNX");
+        Log.d(TAG, "Calling charge TRNX");
 
         String url = "https://dev-wallets.blusalt.net/pos/charge/";
 
         JSONObject header = new JSONObject();
         try {
-            Log.d("Calling charge TRNX 2");
+            Log.d(TAG, "Calling charge TRNX 2");
 
             header.put("batteryInformation","100");
             header.put("currencyCode", call.argument("countryCode"));
@@ -92,7 +94,7 @@ public class BlusaltApiService {
             header.put("UnpredictableNumber", call.argument("unpredictableNumber"));
             header.put("DedicatedFileName", call.argument("dedicatedFileName"));
 
-            Log.d("Charge request body" + header);
+            Log.d(TAG, "Charge request body" + header);
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -102,8 +104,7 @@ public class BlusaltApiService {
                     new Handler(Looper.getMainLooper()).post(new Runnable() {
                         @Override
                         public void run() {
-                            Log.d("Success");
-                            Log.d(new Gson().toJson(response));
+                            Log.d(TAG, new Gson().toJson(response));
                             result.success(String.valueOf(response));
                         }
                     });
@@ -137,9 +138,9 @@ public class BlusaltApiService {
                         //get response body and parse with appropriate encoding
                         try {
                             body = new String(error.networkResponse.data,"UTF-8");
-                            Log.d(new Gson().toJson(body));
+                            Log.d(TAG, new Gson().toJson(body));
 
-                            Log.d(new Gson().toJson(error.networkResponse.data));
+                            Log.d(TAG, new Gson().toJson(error.networkResponse.data));
 
                         } catch (UnsupportedEncodingException e) {
                             // exception
@@ -150,7 +151,7 @@ public class BlusaltApiService {
             @Override
             public Map<String, String> getHeaders() {
                 Map<String, String> headers = new HashMap<>();
-                headers.put("x-api-key", "test_b007219a2f4ebc4957b41c006b4a909abc41679369482b2b18cdbd3f14d283666d29f11f2a57b61d4fc2490587faaaaf1659983326043");
+                headers.put("x-api-key", call.argument("authToken"));
                 return headers;
             }
         };
