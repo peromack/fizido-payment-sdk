@@ -1,5 +1,5 @@
-import 'package:empressa_pos/bluetooth_devices.dart';
-import 'package:empressa_pos/icc.dart';
+import 'package:nexgo_pos/bluetooth_devices.dart';
+import 'package:nexgo_pos/icc.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:analyzer_plugin/utilities/pair.dart';
@@ -7,7 +7,7 @@ import 'package:message_parser/entities/terminal_info.dart';
 import 'package:message_parser/entities/transaction_info.dart';
 
 import 'package:flutter/services.dart';
-import 'package:empressa_pos/pos.dart';
+import 'package:nexgo_pos/pos.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();

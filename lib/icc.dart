@@ -7,7 +7,7 @@ import 'package:message_parser/entities/original_transaction_info_data.dart';
 import 'package:message_parser/entities/terminal_info.dart';
 import 'package:message_parser/entities/transaction_info.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:empressa_pos/card_details.dart';
+import 'package:nexgo_pos/card_details.dart';
 import 'card_details.dart';
 
 class IccUtils {

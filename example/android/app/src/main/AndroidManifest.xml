@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.pos.empressa.empressa_pos_example">
+    package="com.pos.empressa.nexgo_pos_example">
     <!-- io.flutter.app.FlutterApplication is an android.app.Application that
          calls FlutterMain.startInitialization(this); in its onCreate method.
          In most cases you can leave this as-is, but you if you want to provide
@@ -10,7 +10,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <application
 
-        android:label="empressa_pos_example"
+        android:label="nexgo_pos_example"
         android:icon="@mipmap/ic_launcher"
         android:usesCleartextTraffic="true"
         tools:replace="android:label,android:icon">

@@ -1,4 +1,4 @@
-group 'com.pos.empressa.empressa_pos'
+group 'com.pos.empressa.nexgo_pos'
 version '1.0'
 
 buildscript {

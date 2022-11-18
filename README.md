@@ -1,4 +1,4 @@
-# empressa_pos
+# nexgo_pos
 
 A new Flutter project.
 

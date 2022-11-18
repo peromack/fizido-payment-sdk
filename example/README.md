@@ -1,6 +1,6 @@
-# empressa_pos_example
+# nexgo_pos_example
 
-Demonstrates how to use the empressa_pos plugin.
+Demonstrates how to use the nexgo_pos plugin.
 
 ## Getting Started
 

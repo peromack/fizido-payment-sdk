@@ -1,8 +1,6 @@
 import 'dart:async';
-import 'dart:convert';
 
-import 'package:empressa_pos/bluetooth_devices.dart';
-import 'package:empressa_pos/card_details.dart';
+import 'package:nexgo_pos/card_details.dart';
 import 'package:flutter/services.dart';
 
 class NexgoPos {

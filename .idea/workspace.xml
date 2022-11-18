@@ -4,57 +4,14 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5bcddf7f-5ba6-48c1-bcdb-f03017f36f8d" name="Changes" comment="change aar dependency to use jitpack">
+    <list default="true" id="5bcddf7f-5ba6-48c1-bcdb-f03017f36f8d" name="Changes" comment="remove redundant dependency">
+      <change beforePath="$PROJECT_DIR$/.dart_tool/package_config.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.dart_tool/package_config_subset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.dart_tool/version" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/android/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/libs/SYD-SmartPOS-SDK V1.07-M.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/libs/SYD-SmartPOS-SDK V1.08.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/libs/decoder.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/libs/horizon_utils_V1.9.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/libs/horizonpay_smartpossdk_V1.11.220410.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/libs/morefun_mpos_sdk_v2.1.20210628.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/pos/empressa/nexgo_pos/Blusalt/BlusaltApiService.java" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/java/com/pos/empressa/nexgo_pos/Blusalt/BlusaltApiService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/pos/empressa/nexgo_pos/Fizido/FizidoApiService.java" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/java/com/pos/empressa/nexgo_pos/Fizido/FizidoApiService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/pos/empressa/nexgo_pos/Horizon/DeviceHelper.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/pos/empressa/nexgo_pos/Horizon/HorizonReadCard.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/pos/empressa/nexgo_pos/Horizon/MyApplication.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/pos/empressa/nexgo_pos/Horizon/dialog/AppSelectDialog.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/pos/empressa/nexgo_pos/Horizon/pay/CardReadMode.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/pos/empressa/nexgo_pos/Horizon/pay/CreditCard.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/pos/empressa/nexgo_pos/Horizon/pay/OnlineRespEntitiy.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/pos/empressa/nexgo_pos/Horizon/pay/PayProcessor.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/pos/empressa/nexgo_pos/Horizon/pay/TransactionResultCode.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/pos/empressa/nexgo_pos/Horizon/utils/AidsUtil.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/pos/empressa/nexgo_pos/Horizon/utils/AppLog.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/pos/empressa/nexgo_pos/Horizon/utils/CardUtil.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/pos/empressa/nexgo_pos/Horizon/utils/EmvUtil.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/pos/empressa/nexgo_pos/Horizon/utils/HexUtil.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/pos/empressa/nexgo_pos/Horizon/utils/TlvData.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/pos/empressa/nexgo_pos/Horizon/utils/TlvDataList.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/pos/empressa/nexgo_pos/MPos/MPosApplication.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/pos/empressa/nexgo_pos/MPos/MPosDeviceConnect.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/pos/empressa/nexgo_pos/MPos/model/BluetoothItem.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/pos/empressa/nexgo_pos/MPos/utils/BytesUtil.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/pos/empressa/nexgo_pos/MPos/utils/FileUtil.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/pos/empressa/nexgo_pos/MPos/utils/PermissionHelper.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/pos/empressa/nexgo_pos/MPos/utils/PhoneUtil.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/pos/empressa/nexgo_pos/MPos/utils/RSAUtil.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/pos/empressa/nexgo_pos/MPos/utils/SweetDialogUtils.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/pos/empressa/nexgo_pos/MPos/utils/ToastUtils.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/pos/empressa/nexgo_pos/NexgoPosPlugin.java" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/java/com/pos/empressa/nexgo_pos/NexgoPosPlugin.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/pos/empressa/nexgo_pos/NexgoSmartPosSdk/NexgoSmartPosSdk.aar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/pos/empressa/nexgo_pos/NexgoSmartPosSdk/build.gradle" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/pos/empressa/nexgo_pos/Sunyard/SunyardApplication.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/pos/empressa/nexgo_pos/Sunyard/SunyardPrinter.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/pos/empressa/nexgo_pos/Sunyard/SunyardReadCard.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/pos/empressa/nexgo_pos/Sunyard/bean/LPositon.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/pos/empressa/nexgo_pos/Sunyard/bean/TlvBean.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/pos/empressa/nexgo_pos/Sunyard/util/Base64Util.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/pos/empressa/nexgo_pos/Sunyard/util/BmpUtil.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/pos/empressa/nexgo_pos/Sunyard/util/SilenceInstall.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/pos/empressa/nexgo_pos/Sunyard/util/TlvUtils.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/pos/empressa/nexgo_pos/Sunyard/util/Utils.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/example/lib/main.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.packages" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/empressa_pos.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/empressa_pos.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/icc.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/icc.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -68,6 +25,18 @@
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/example/lib/main.dart" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/android/src/main/java/com/pos/empressa/nexgo_pos/NexgoPosPlugin.java" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/.idea/libraries/Dart_SDK.xml" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/example/android/app/src/main/java/com/pos/empressa/empressa_pos_example/MainActivity.java" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/lib/icc.dart" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/android/build.gradle" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../../../flutter/.pub-cache/git/message_parser-136d4aef9234ef9d263a288f6a18dd527a50363f/lib/entities/transaction_info.dart" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/pubspec.yaml" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/lib/empressa_pos.dart" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/lib/card_details.dart" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="ProjectId" id="2GS4tdriAu2M3RTB9RMoqp8EbYI" />
   <component name="ProjectLevelVcsManager">
@@ -84,7 +53,7 @@
     <property name="cidr.known.project.marker" value="true" />
     <property name="dart.analysis.tool.window.visible" value="false" />
     <property name="io.flutter.reload.alreadyRun" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/android/libs" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../pero_nexgo_pos" />
     <property name="settings.editor.selected.configurable" value="AndroidSdkUpdater" />
     <property name="show.migrate.to.gradle.popup" value="false" />
   </component>
@@ -123,7 +92,14 @@
       <option name="project" value="LOCAL" />
       <updated>1668628896564</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="remove redundant dependency">
+      <created>1668758879925</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1668758879925</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -141,6 +117,7 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="revert commit" />
     <MESSAGE value="change package name" />
-    <option name="LAST_COMMIT_MESSAGE" value="change package name" />
+    <MESSAGE value="remove redundant dependency" />
+    <option name="LAST_COMMIT_MESSAGE" value="remove redundant dependency" />
   </component>
 </project>

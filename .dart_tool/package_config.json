@@ -350,13 +350,13 @@
       "languageVersion": "2.12"
     },
     {
-      "name": "empressa_pos",
+      "name": "nexgo_pos",
       "rootUri": "../",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     }
   ],
-  "generated": "2022-10-22T21:07:17.502523Z",
+  "generated": "2022-11-18T16:54:22.444148Z",
   "generator": "pub",
   "generatorVersion": "2.17.0"
 }
