@@ -6,7 +6,6 @@ import 'package:flutter/services.dart';
 class NexgoPos {
   static const MethodChannel _channel = const MethodChannel('nexgo_pos');
 
-
   static Future<void> initializeNexgoTerminal() async {
     try {
       var result = await _channel.invokeMethod('initNexgoEmv');
@@ -15,7 +14,7 @@ class NexgoPos {
     }
   }
 
-  static Future<void> blusaltChargeTransaction(Map<String, dynamic> normalizedTerminalData) async {
+  static Future<dynamic> blusaltChargeTransaction(Map<String, dynamic> normalizedTerminalData) async {
     try {
       var result = await _channel.invokeMethod('chargeBlusaltTransaction', normalizedTerminalData);
       return result;
@@ -24,7 +23,7 @@ class NexgoPos {
     }
   }
 
-  static Future<void> fidizoChargeTransaction(Map<String, dynamic> normalizedTerminalData) async {
+  static Future<dynamic> fidizoChargeTransaction(Map<String, dynamic> normalizedTerminalData) async {
     try {
       var result = await _channel.invokeMethod('chargeFidizoTransaction', normalizedTerminalData);
       return result;
@@ -36,6 +35,15 @@ class NexgoPos {
   static Future<void> nexgoPrint(Map<String, dynamic> printerDetails) async {
     try {
       var result = await _channel.invokeMethod('startNexgoPrinter', printerDetails);
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  static Future<void> nexgoCancelSearch() async {
+    try {
+      var result = await _channel.invokeMethod('cancelNexgoSearch');
+      return result;
     } catch (e) {
       print(e);
     }
