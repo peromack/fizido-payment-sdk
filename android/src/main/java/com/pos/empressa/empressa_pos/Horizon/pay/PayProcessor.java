@@ -9,6 +9,8 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.os.RemoteException;
 import android.text.TextUtils;
 
@@ -32,6 +34,8 @@ import com.horizonpay.utils.StringUtil;
 import com.pos.empressa.empressa_pos.BuildConfig;
 import com.pos.empressa.empressa_pos.Horizon.DeviceHelper;
 import android.util.Log;
+import android.widget.Toast;
+
 import com.pos.empressa.empressa_pos.Horizon.utils.EmvUtil;
 import com.pos.empressa.empressa_pos.Horizon.utils.HexUtil;
 import com.pos.empressa.empressa_pos.Horizon.utils.TlvData;
@@ -83,15 +87,14 @@ public class PayProcessor {
     private Context mContext;
     private CreditCard creditCard;
 
-    public PayProcessor(Context context) {
-        mContext = context;
-    }
+    Handler handler = new Handler(Looper.getMainLooper());
 
-    public PayProcessor() {
+    public PayProcessor(Context context) {
         try {
             mCardReader = DeviceHelper.getCardReader();
             mEmvL2 = DeviceHelper.getEmvHandler();
             mPinPad = DeviceHelper.getPinpad();
+            mContext = context;
         } catch (RemoteException e) {
             e.printStackTrace();
         }
@@ -367,6 +370,12 @@ public class PayProcessor {
         }
     }
 
+    private void ToastHelper(String text) {
+        handler.post(
+                () -> Toast.makeText(mContext, text, Toast.LENGTH_SHORT).show()
+        );
+    }
+
     private String onlineProc() throws RemoteException {
         StringBuilder builder = new StringBuilder();
         String arqcTlv = mEmvL2.getTlvByTags(EmvUtil.arqcTLVTags);
@@ -606,11 +615,13 @@ public class PayProcessor {
                 public void onCancel() throws RemoteException {
                     Log.d(LOG_TAG, "inputOnlinePin onCancel: ");
                     mEmvL2.requestPinResp(null, false);
+                    ToastHelper("Pin input cancel");
                 }
 
                 @Override
                 public void onError(int errorCode) throws RemoteException {
                     Log.d(LOG_TAG, "onError: code:" + errorCode);
+                    ToastHelper("Pin input error");
                     mEmvL2.requestPinResp(null, false);
                 }
             });
@@ -657,12 +668,14 @@ public class PayProcessor {
                 @Override
                 public void onCancel() throws RemoteException {
                     Log.d(LOG_TAG, "inputOfflinePIN onCancel: ");
+                    ToastHelper("Pin input cancel");
                     mEmvL2.requestPinResp(null, false);
                 }
 
                 @Override
                 public void onError(int errorCode) throws RemoteException {
                     Log.e(LOG_TAG, "onError: code:" + errorCode);
+                    ToastHelper("Pin input error");
                     mEmvL2.requestPinResp(null, false);
                 }
             });

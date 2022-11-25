@@ -9,6 +9,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.RemoteException;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
@@ -34,6 +35,7 @@ import io.flutter.plugin.common.MethodChannel;
 
 public class HorizonReadCard {
     private final String TAG = HorizonReadCard.class.getName();
+    Handler handler = new Handler(Looper.getMainLooper());
     private PayProcessor payProcessor;
     IAidlEmvL2 mEmvL2;
     private IAidlPinpad mPinPad;
@@ -44,7 +46,7 @@ public class HorizonReadCard {
     private String pan;
 
 
-    private final Context mContext;
+    private Context mContext;
 
     public HorizonReadCard(Context mContext) {
         this.mContext = mContext;
@@ -56,18 +58,20 @@ public class HorizonReadCard {
             mPinPad = DeviceHelper.getPinpad();
             isSupport = mEmvL2.isSupport();
 
-            payProcessor = new PayProcessor();
+            payProcessor = new PayProcessor(mContext);
 
             if (!isSupport) {
-                ToastUtils.showShort("Error: Api not support");
+                ToastHelper("Error: Api not support");
                 return;
             }
+
+            ToastHelper("Enter your card");
 
             payProcessor.pay(transactionAmount, new PayProcessor.PayProcessorListener() {
                 @Override
                 public void onRetry(int retryFlag) {
                     if (retryFlag == 0) {
-                        Log.d(TAG, "Please Insert/Tap Card ");
+                        Log.d(TAG, "Please Insert/Tap Card");
                     } else {
                         Log.d(TAG, ">>>onRetry");
                     }
@@ -230,6 +234,12 @@ public class HorizonReadCard {
         }
     }
 
+    private void ToastHelper(String text) {
+        handler.post(
+                () -> Toast.makeText(mContext, text, Toast.LENGTH_SHORT).show()
+        );
+    }
+
     private void getClearPin(String data) {
         char[] ary = data.toCharArray();
         StringBuilder cardPins = new StringBuilder();
@@ -267,12 +277,14 @@ public class HorizonReadCard {
         return ksn;
     }
 
-    private void stopEmvProcess() {
+    public void stopEmvProcess() {
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
             public void run() {
                 try {
-                    mEmvL2.stopEmvProcess();
+                    if (mEmvL2 != null) {
+                        mEmvL2.stopEmvProcess();
+                    }
                 } catch (RemoteException | NullPointerException e) {
                     e.printStackTrace();
                 }

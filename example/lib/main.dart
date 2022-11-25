@@ -56,10 +56,11 @@ class _MyAppState extends State<MyApp> {
     normalizedTerminalData.addAll(orgTransData);
 
     print(normalizedTerminalData["unpredictableNumber"]);
+    normalizedTerminalData["authToken"] = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCIsImN0eSI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IjgwMjk5MDI3MDUtaW5kaXZpZHVhbF9hZ2VudCIsIm5hbWVpZCI6IjIxMTkiLCJmaXJzdC1uYW1lIjoiRWJ1YmUiLCJsYXN0LW5hbWUiOiJPa2VrZSIsInBob25lIjoiODAyOTkwMjcwNSIsInN1YiI6IjIxMTkiLCJoYXMtcGluIjoiVHJ1ZSIsImN1c3RvbWVyLXR5cGUiOiJJbmRpdmlkdWFsX0FnZW50IiwicmVnaXN0cmF0aW9uLXR5cGUiOiJJbmRpdmlkdWFsIiwibmJmIjoxNjYwMjg4NTY5LCJleHAiOjE2NjAyOTAzNjksImlhdCI6MTY2MDI4ODU2OSwiaXNzIjoiQmFja2VuZC5BdXRoZW50aWNhdGlvbiIsImF1ZCI6IkJhY2tlbmRNaWNyb3NlcnZpY2UifQ.592abhphlRx1wGyanxwbJkYJvkMudQmBZpEpso6ZQIU";
 
     try {
 
-      await EmpressaPos.sunyardChargeTransaction(normalizedTerminalData);
+      await EmpressaPos.chargeBlusaltTransaction(normalizedTerminalData);
       setState(() {
 
       });
@@ -94,7 +95,7 @@ class _MyAppState extends State<MyApp> {
 
     try {
 
-      await EmpressaPos.sunyardChargeTransactionFidizo(normalizedTerminalData);
+      await EmpressaPos.chargeTransactionFidizo(normalizedTerminalData);
       setState(() {
 
       });
@@ -116,11 +117,23 @@ class _MyAppState extends State<MyApp> {
     }
   }
 
-  Future<void> searchSunyard() async {
-
+  Future<void> printHorizon() async {
     try {
-
-      cardDetails = await EmpressaPos.search(100);
+      await EmpressaPos.horizonPrint(
+          {
+            "vendorName": "Lapo Investment",
+            "originalMinorAmount": 2000,
+            "terminalId": "123456",
+            "merchantId": "Merchant Ikeja Lagos",
+            "originalTransStan": "00003",
+            "transmissionDate": "14-11-2022T22:23:57",
+            "cardPan": "4739483497586458",
+            "cardHolder": "test test",
+            "expiryDate": "12/24",
+            "transactionRef": "859948547949459",
+            "transactionComment": "satisfactory"
+          }
+      );
       setState(() {
 
       });
@@ -160,6 +173,12 @@ class _MyAppState extends State<MyApp> {
               searchHorizon();
             },
               child: Text('Search Horizon'),
+
+            ),
+            RaisedButton(onPressed: (){
+              printHorizon();
+            },
+              child: Text('Print Horizon'),
 
             ),
             SizedBox(height: 20,),

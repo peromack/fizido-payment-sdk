@@ -7,17 +7,14 @@ import androidx.annotation.RequiresApi;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
-import android.os.RemoteException;
 
 
+import com.pos.empressa.empressa_pos.Blusalt.BlusaltApiService;
+import com.pos.empressa.empressa_pos.Fizido.FizidoApiService;
 import com.pos.empressa.empressa_pos.Horizon.DeviceHelper;
+import com.pos.empressa.empressa_pos.Horizon.HorizonPrinter;
 import com.pos.empressa.empressa_pos.Horizon.HorizonReadCard;
 import com.pos.empressa.empressa_pos.Horizon.MyApplication;
-import com.pos.empressa.empressa_pos.MPos.MPosDeviceConnect;
-import com.pos.empressa.empressa_pos.MPos.MPosApplication;
-import com.pos.empressa.empressa_pos.Sunyard.SunyardApplication;
-import com.pos.empressa.empressa_pos.Sunyard.SunyardPrinter;
-import com.pos.empressa.empressa_pos.Sunyard.SunyardReadCard;
 import com.socsi.utils.Log;
 
 import io.flutter.embedding.engine.plugins.activity.ActivityAware;
@@ -38,11 +35,8 @@ public class EmpressaPosPlugin implements FlutterPlugin, MethodCallHandler, Acti
     /// This local reference serves to register the plugin with the Flutter Engine and unregister it
     /// when the Flutter Engine is detached from the Activity
     private MethodChannel channel;
-    SunyardReadCard sunyardReadCard;
     HorizonReadCard horizonReadCard;
     private Context mContext;
-    MPosApplication mPosApplication ;
-    MPosDeviceConnect mPosDeviceConnect;
 
     MyApplication hPosApplication;
 
@@ -56,59 +50,30 @@ public class EmpressaPosPlugin implements FlutterPlugin, MethodCallHandler, Acti
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onMethodCall(@NonNull MethodCall call, @NonNull Result result) {
-        sunyardReadCard = new SunyardReadCard(mContext);
         horizonReadCard = new HorizonReadCard(mContext);
 
 
         switch (call.method) {
-            case "searchCard":
-                sunyardReadCard.searchCard(result, call.argument("transactionAmount"));
-                break;
-            case "stopSearch":
-                sunyardReadCard.stopSearch();
-                break;
-            case "initEmv":
-                SunyardApplication sunyardApplication = new SunyardApplication();
-                sunyardApplication.initializeApp(mContext);
+            case "stopHorizonSearch":
+                horizonReadCard.stopEmvProcess();
                 break;
             case "initHorizonEmv":
                 MyApplication myApplication = new MyApplication(mContext);
                 myApplication.bindDriverService();
                 break;
-            case "startPrinter":
-                SunyardPrinter sunyardPrinter = new SunyardPrinter(mContext);
+            case "startHorizonPrinter":
+                HorizonPrinter horizonPrinter = new HorizonPrinter(mContext);
                 Log.d("PrintActivity.class", call.arguments.toString());
-                sunyardPrinter.startPrint(call);
+                horizonPrinter.print(call);
                 break;
-            case "checkSunyardCard":
-                sunyardReadCard.checkCard(result);
+            case "chargeBlusaltTransaction":
+                BlusaltApiService.chargeTransaction(result, mContext, call);
                 break;
-            case "initializeMPos":
-              mPosApplication.initializeMPos(mContext) ;
-                break;
-            case "chargeSunyardTransaction":
-                sunyardReadCard.chargeTransaction(result, mContext, call);
-                break;
-            case "chargeSunyardFidizoTransaction":
-                sunyardReadCard.chargeFidizoTransaction(result, mContext, call);
+            case "chargeFidizoTransaction":
+                FizidoApiService.chargeFidizoTransaction(result, mContext, call);
                 break;
             case "horizonSearchCard":
                 horizonReadCard.searchCard(result, call.argument("transactionAmount"));
-                break;
-            case "connectMPos":
-                mPosDeviceConnect.connectDevice(call.argument("bluetoothName"), call.argument("bluetoothMac"),result,mContext);
-                break;
-            case "startMPosDiscovery":
-                mPosDeviceConnect.startDiscovery(result);
-                break;
-            case "removeMPosBondMethods":
-                mPosDeviceConnect.removeBondMethods();
-                break;
-            case "unregisterMPosReceiver":
-                mPosDeviceConnect.unregisterReceiver();
-                break;
-            case "registerMPosReceiver":
-                mPosDeviceConnect.registerReceiver();
                 break;
             default:
                 result.notImplemented();
@@ -127,15 +92,9 @@ public class EmpressaPosPlugin implements FlutterPlugin, MethodCallHandler, Acti
         // TODO: your plugin is now attached to an Activity
         Activity activity = binding.getActivity();
         mContext = binding.getActivity().getApplicationContext();
-        mPosApplication = new  MPosApplication();
-        mPosApplication.initializeMPos(mContext);
 
         //Horizon application init
         hPosApplication = new MyApplication(mContext);
-
-        mPosDeviceConnect = new MPosDeviceConnect(activity);
-
-
     }
 
     @Override
@@ -152,7 +111,7 @@ public class EmpressaPosPlugin implements FlutterPlugin, MethodCallHandler, Acti
 
     @Override
     public void onDetachedFromActivity() {
-        sunyardReadCard.stopSearch();
+        horizonReadCard.stopEmvProcess();
         // TODO: your plugin is no longer associated with an Activity. Clean up references.
 
     }
