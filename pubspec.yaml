@@ -1,4 +1,4 @@
-name: empressa_pos
+name: horizon_pos
 description: A new Flutter project.
 version: 0.0.1
 author: Amos Godwin
@@ -32,10 +32,10 @@ flutter:
   plugin:
     platforms:
       android:
-        package: com.pos.empressa.empressa_pos
-        pluginClass: EmpressaPosPlugin
+        package: com.pos.empressa.horizon_pos
+        pluginClass: HorizonPosPlugin
       ios:
-        pluginClass: EmpressaPosPlugin
+        pluginClass: HorizonPosPlugin
 
   # To add assets to your plugin package, add an assets section, like this:
   # assets:

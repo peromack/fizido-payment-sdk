@@ -1,3 +1,3 @@
 
 export 'card_details.dart';
-export 'empressa_pos.dart';
+export 'horizon_pos.dart';

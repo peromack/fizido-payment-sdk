@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.pos.empressa.empressa_pos">
+    package="com.pos.empressa.horizon_pos">
 <!--    <application android:name=".Horizon.MyApplication"-->
 <!--        android:usesCleartextTraffic="true"-->
 <!--        tools:targetApi="m"-->

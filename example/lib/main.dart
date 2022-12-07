@@ -1,5 +1,5 @@
-import 'package:empressa_pos/bluetooth_devices.dart';
-import 'package:empressa_pos/icc.dart';
+import 'package:horizon_pos/bluetooth_devices.dart';
+import 'package:horizon_pos/icc.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:analyzer_plugin/utilities/pair.dart';
@@ -7,14 +7,14 @@ import 'package:message_parser/entities/terminal_info.dart';
 import 'package:message_parser/entities/transaction_info.dart';
 
 import 'package:flutter/services.dart';
-import 'package:empressa_pos/pos.dart';
+import 'package:horizon_pos/pos.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   // EmpressaPos.initializeMPos();
   // EmpressaPos.initializeTerminal();
 
-  EmpressaPos.initializeHorizonTerminal();
+  HorizonPos.initializeHorizonTerminal();
   runApp(MyApp());
 }
 
@@ -60,7 +60,7 @@ class _MyAppState extends State<MyApp> {
 
     try {
 
-      await EmpressaPos.chargeBlusaltTransaction(normalizedTerminalData);
+      await HorizonPos.chargeBlusaltTransaction(normalizedTerminalData);
       setState(() {
 
       });
@@ -95,7 +95,7 @@ class _MyAppState extends State<MyApp> {
 
     try {
 
-      await EmpressaPos.chargeTransactionFidizo(normalizedTerminalData);
+      await HorizonPos.chargeTransactionFidizo(normalizedTerminalData);
       setState(() {
 
       });
@@ -108,7 +108,7 @@ class _MyAppState extends State<MyApp> {
 
     try {
 
-      cardDetails = await EmpressaPos.horizonSearch(100);
+      cardDetails = await HorizonPos.horizonSearch(100);
       setState(() {
 
       });
@@ -119,7 +119,7 @@ class _MyAppState extends State<MyApp> {
 
   Future<void> printHorizon() async {
     try {
-      await EmpressaPos.horizonPrint(
+      await HorizonPos.horizonPrint(
           {
             "vendorName": "Lapo Investment",
             "originalMinorAmount": 2000,

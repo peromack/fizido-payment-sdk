@@ -1,6 +1,6 @@
-# empressa_pos_example
+# horizon_pos_example
 
-Demonstrates how to use the empressa_pos plugin.
+Demonstrates how to use the horizon_pos plugin.
 
 ## Getting Started
 

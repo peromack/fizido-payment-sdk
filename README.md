@@ -1,4 +1,4 @@
-# empressa_pos
+# horizon_pos
 
 A new Flutter project.
 
