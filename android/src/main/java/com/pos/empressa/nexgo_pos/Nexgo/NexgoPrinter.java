@@ -46,9 +46,9 @@ public class NexgoPrinter {
         printer.setLetterSpacing(5);
         printer.appendPrnStr(call.argument("vendorName"), fontNormal, AlignEnum.CENTER);
         printer.appendPrnStr("Transaction Receipt", fontBig, AlignEnum.CENTER);
-        printer.appendPrnStr("---------------------------------------------", fontNormal, AlignEnum.CENTER);
+        printer.appendPrnStr("--------------------------------", fontNormal, AlignEnum.CENTER);
         printer.appendPrnStr("AMOUNT: NGN" +call.argument("originalMinorAmount").toString(), fontNormal, AlignEnum.LEFT);
-        printer.appendPrnStr("---------------------------------------------", fontNormal, AlignEnum.CENTER);
+        printer.appendPrnStr("--------------------------------", fontNormal, AlignEnum.CENTER);
         printText(call, "merchantName", "Merchant Name");
         printText(call, "merchantLocation", "Merchant Location");
         printText(call, "sender", "Sender");
@@ -84,11 +84,11 @@ public class NexgoPrinter {
         printText(call, "agent", "Agent");
         printText(call, "time", "Time");
         printText(call, "transmissionDate", "Date");
-        printer.appendPrnStr("---------------------------------------------", fontNormal, AlignEnum.CENTER);
+        printer.appendPrnStr("--------------------------------", fontNormal, AlignEnum.CENTER);
         printer.appendPrnStr(call.argument("transactionComment"), fontNormal, AlignEnum.CENTER);
         printFooter(call, "footer");
         printer.appendPrnStr("\n", fontNormal, AlignEnum.LEFT);
-        printer.appendPrnStr("---------------------------------------------", fontNormal, AlignEnum.CENTER);
+        printer.appendPrnStr("--------------------------------", fontNormal, AlignEnum.CENTER);
         printer.startPrint(true, new OnPrintListener() {
             @Override
             public void onPrintResult(final int retCode) {
@@ -104,9 +104,9 @@ public class NexgoPrinter {
 
     private void printFooter(@NonNull MethodCall call, String key) {
         if (call.argument(key) != null) {
-            printer.appendPrnStr(call.argument(key) + "\n\n\n\n", fontNormal, AlignEnum.CENTER);
+            printer.appendPrnStr(call.argument(key) + "\n\n", fontNormal, AlignEnum.CENTER);
         } else {
-            printer.appendPrnStr("Built on Fizido, Powered by Support MFB" + "\n\n\n\n", fontNormal, AlignEnum.CENTER);
+            printer.appendPrnStr("Built on Fizido, Powered by Support MFB" + "\n\n", fontNormal, AlignEnum.CENTER);
         }
     }
 
