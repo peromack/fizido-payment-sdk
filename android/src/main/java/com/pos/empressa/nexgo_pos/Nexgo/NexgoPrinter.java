@@ -85,7 +85,7 @@ public class NexgoPrinter {
         printText(call, "time", "Time");
         printText(call, "transmissionDate", "Date");
         printer.appendPrnStr("---------------------------", fontNormal, AlignEnum.LEFT);
-        printer.appendPrnStr(call.argument("transactionComment"), fontNormal, AlignEnum.LEFT);
+        printer.appendPrnStr(call.argument("transactionComment"), fontNormal, AlignEnum.CENTER);
         printFooter(call, "footer");
         printer.appendPrnStr("\n", fontNormal, AlignEnum.LEFT);
         printer.appendPrnStr("---------------------------", fontNormal, AlignEnum.LEFT);
