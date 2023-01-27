@@ -59,6 +59,9 @@ public class NexgoPrinter {
         printText(call, "service", "Service");
         printText(call, "beneficiaryName", "Beneficiary Name");
         printText(call, "bankName", "Bank Name");
+        printText(call, "senderAccountName", "Sender");
+        printText(call, "senderBankName", "Sender Bank");
+        printText(call, "senderAccountNumber", "Sender Account");
         printText(call, "merchant", "Merchant");
         printText(call, "accountNumber", "Account Number");
         printText(call, "description", "Description");
@@ -103,9 +106,9 @@ public class NexgoPrinter {
 
     private void printFooter(@NonNull MethodCall call, String key) {
         if (call.argument(key) != null) {
-            printer.appendPrnStr(call.argument(key) + "\n\n\n\n", fontNormal, AlignEnum.LEFT);
+            printer.appendPrnStr(call.argument(key) + "\n\n\n\n", fontNormal, AlignEnum.CENTER);
         } else {
-            printer.appendPrnStr("Built on Fizido, Powered by Support MFB" + "\n\n\n\n", fontNormal, AlignEnum.LEFT);
+            printer.appendPrnStr("Built on Fizido, Powered by Support MFB" + "\n\n\n\n", fontNormal, AlignEnum.CENTER);
         }
     }
 
