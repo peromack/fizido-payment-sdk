@@ -47,7 +47,7 @@ public class NexgoPrinter {
         printer.appendPrnStr(call.argument("vendorName"), fontNormal, AlignEnum.CENTER);
         printer.appendPrnStr("Transaction Receipt", fontBig, AlignEnum.CENTER);
         printer.appendPrnStr("--------------------------------", fontNormal, AlignEnum.CENTER);
-        printer.appendPrnStr("AMOUNT: NGN" +call.argument("originalMinorAmount").toString(), fontNormal, AlignEnum.LEFT);
+        printer.appendPrnStr("AMOUNT: NGN" +call.argument("originalMinorAmount").toString(), fontNormal, AlignEnum.CENTER);
         printer.appendPrnStr("--------------------------------", fontNormal, AlignEnum.CENTER);
         printText(call, "merchantName", "Merchant Name");
         printText(call, "merchantLocation", "Merchant Location");
@@ -98,7 +98,7 @@ public class NexgoPrinter {
 
     private void printText(@NonNull MethodCall call, String key, String title) {
         if (call.argument(key) != null) {
-            printer.appendPrnStr(title + ": " + call.argument(key) + "\n\n", fontNormal, AlignEnum.LEFT);
+            printer.appendPrnStr(title + ": " + call.argument(key) + "\n", fontNormal, AlignEnum.LEFT);
         }
     }
 
@@ -106,7 +106,7 @@ public class NexgoPrinter {
         if (call.argument(key) != null) {
             printer.appendPrnStr(call.argument(key) + "\n\n", fontNormal, AlignEnum.CENTER);
         } else {
-            printer.appendPrnStr("Built on Fizido, Powered by Support MFB" + "\n\n", fontNormal, AlignEnum.CENTER);
+            printer.appendPrnStr("Built on Fizido, Powered by Support MFB" + "\n\n", fontNormal, AlignEnum.LEFT);
         }
     }
 
