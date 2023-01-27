@@ -88,8 +88,6 @@ public class NexgoPrinter {
         printer.appendPrnStr(call.argument("transactionComment"), fontNormal, AlignEnum.LEFT);
         printFooter(call, "footer");
         printer.appendPrnStr("\n", fontNormal, AlignEnum.LEFT);
-        printer.appendPrnStr("\n", fontNormal, AlignEnum.LEFT);
-        printer.appendPrnStr("\n", fontNormal, AlignEnum.LEFT);
         printer.appendPrnStr("---------------------------", fontNormal, AlignEnum.LEFT);
         printer.startPrint(true, new OnPrintListener() {
             @Override
