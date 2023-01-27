@@ -98,7 +98,7 @@ public class NexgoPrinter {
 
     private void printText(@NonNull MethodCall call, String key, String title) {
         if (call.argument(key) != null) {
-            printer.appendPrnStr(title + ": " + call.argument(key) + "\n", fontNormal, AlignEnum.LEFT);
+            printer.appendPrnStr(title + ": " + call.argument(key) + "\n\n", fontNormal, AlignEnum.LEFT);
         }
     }
 
