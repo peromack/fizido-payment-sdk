@@ -1,4 +1,4 @@
-package com.pos.empressa.nexgo_pos.ksnUtil
+package com.pos.empressa.sunmi_pos.ksnUtil
 
 import java.io.ByteArrayOutputStream
 import java.security.spec.KeySpec

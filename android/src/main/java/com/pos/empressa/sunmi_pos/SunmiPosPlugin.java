@@ -1,4 +1,4 @@
-package com.pos.empressa.nexgo_pos;
+package com.pos.empressa.sunmi_pos;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -9,11 +9,11 @@ import android.content.Context;
 import android.os.Build;
 
 
-import com.pos.empressa.nexgo_pos.Blusalt.BlusaltApiService;
-import com.pos.empressa.nexgo_pos.Fizido.FizidoApiService;
-import com.pos.empressa.nexgo_pos.Nexgo.NexgoApplication;
-import com.pos.empressa.nexgo_pos.Nexgo.NexgoPrinter;
-import com.pos.empressa.nexgo_pos.Nexgo.NexgoReadCard;
+import com.pos.empressa.sunmi_pos.Blusalt.BlusaltApiService;
+import com.pos.empressa.sunmi_pos.Fizido.FizidoApiService;
+import com.pos.empressa.sunmi_pos.Nexgo.NexgoApplication;
+import com.pos.empressa.sunmi_pos.Nexgo.NexgoPrinter;
+import com.pos.empressa.sunmi_pos.Nexgo.NexgoReadCard;
 
 import io.flutter.embedding.engine.plugins.activity.ActivityAware;
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding;
@@ -25,9 +25,9 @@ import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
 
 /**
- * EmpressaPosPlugin
+ * SunmiPosPlugin
  */
-public class NexgoPosPlugin implements FlutterPlugin, MethodCallHandler, ActivityAware {
+public class SunmiPosPlugin implements FlutterPlugin, MethodCallHandler, ActivityAware {
     /// The MethodChannel that will the communication between Flutter and native Android
     ///
     /// This local reference serves to register the plugin with the Flutter Engine and unregister it
@@ -38,7 +38,7 @@ public class NexgoPosPlugin implements FlutterPlugin, MethodCallHandler, Activit
 
     @Override
     public void onAttachedToEngine(@NonNull FlutterPluginBinding flutterPluginBinding) {
-        channel = new MethodChannel(flutterPluginBinding.getBinaryMessenger(), "nexgo_pos");
+        channel = new MethodChannel(flutterPluginBinding.getBinaryMessenger(), "sunmi_pos");
         channel.setMethodCallHandler(this);
 
     }

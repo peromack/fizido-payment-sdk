@@ -1,4 +1,4 @@
-package com.pos.empressa.nexgo_pos.Fizido;
+package com.pos.empressa.sunmi_pos.Fizido;
 
 import android.content.Context;
 import android.os.Build;

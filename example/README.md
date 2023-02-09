@@ -1,6 +1,6 @@
-# nexgo_pos_example
+# sunmi_pos_example
 
-Demonstrates how to use the nexgo_pos plugin.
+Demonstrates how to use the sunmi_pos plugin.
 
 ## Getting Started
 

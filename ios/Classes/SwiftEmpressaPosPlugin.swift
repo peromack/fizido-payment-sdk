@@ -3,7 +3,7 @@ import UIKit
 
 public class SwiftEmpressaPosPlugin: NSObject, FlutterPlugin {
   public static func register(with registrar: FlutterPluginRegistrar) {
-    let channel = FlutterMethodChannel(name: "nexgo_pos", binaryMessenger: registrar.messenger())
+    let channel = FlutterMethodChannel(name: "sunmi_pos", binaryMessenger: registrar.messenger())
     let instance = SwiftEmpressaPosPlugin()
     registrar.addMethodCallDelegate(instance, channel: channel)
   }

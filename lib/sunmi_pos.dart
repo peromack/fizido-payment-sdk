@@ -1,10 +1,10 @@
 import 'dart:async';
 
-import 'package:nexgo_pos/card_details.dart';
+import 'package:sunmi_pos/card_details.dart';
 import 'package:flutter/services.dart';
 
 class NexgoPos {
-  static const MethodChannel _channel = const MethodChannel('nexgo_pos');
+  static const MethodChannel _channel = const MethodChannel('sunmi_pos');
 
   static Future<void> initializeNexgoTerminal() async {
     try {

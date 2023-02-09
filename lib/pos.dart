@@ -1,3 +1,3 @@
 
 export 'card_details.dart';
-export 'nexgo_pos.dart';
+export 'sunmi_pos.dart';

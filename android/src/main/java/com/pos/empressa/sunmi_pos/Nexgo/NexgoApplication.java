@@ -1,4 +1,4 @@
-package com.pos.empressa.nexgo_pos.Nexgo;
+package com.pos.empressa.sunmi_pos.Nexgo;
 
 import android.content.Context;
 import android.content.SharedPreferences;

@@ -1,4 +1,4 @@
-name: nexgo_pos
+name: sunmi_pos
 description: A new Flutter project.
 version: 0.0.1
 author: Amos Godwin
@@ -32,10 +32,10 @@ flutter:
   plugin:
     platforms:
       android:
-        package: com.pos.empressa.nexgo_pos
-        pluginClass: NexgoPosPlugin
+        package: com.pos.empressa.sunmi_pos
+        pluginClass: SunmiPosPlugin
       ios:
-        pluginClass: NexgoPosPlugin
+        pluginClass: SunmiPosPlugin
 
   # To add assets to your plugin package, add an assets section, like this:
   # assets:

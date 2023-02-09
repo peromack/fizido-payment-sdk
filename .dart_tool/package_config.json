@@ -350,13 +350,13 @@
       "languageVersion": "2.12"
     },
     {
-      "name": "nexgo_pos",
+      "name": "sunmi_pos",
       "rootUri": "../",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     }
   ],
-  "generated": "2022-11-18T16:54:22.444148Z",
+  "generated": "2023-02-09T04:42:03.598125Z",
   "generator": "pub",
   "generatorVersion": "2.17.0"
 }

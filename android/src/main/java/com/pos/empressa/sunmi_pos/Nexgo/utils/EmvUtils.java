@@ -1,4 +1,4 @@
-package com.pos.empressa.nexgo_pos.Nexgo.utils;
+package com.pos.empressa.sunmi_pos.Nexgo.utils;
 
 import android.content.Context;
 import android.util.Log;

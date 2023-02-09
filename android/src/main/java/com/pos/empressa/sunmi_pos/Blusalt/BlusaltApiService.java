@@ -1,4 +1,4 @@
-package com.pos.empressa.nexgo_pos.Blusalt;
+package com.pos.empressa.sunmi_pos.Blusalt;
 
 import android.content.Context;
 import android.os.Handler;

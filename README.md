@@ -1,4 +1,4 @@
-# nexgo_pos
+# sunmi_pos
 
 A new Flutter project.
 

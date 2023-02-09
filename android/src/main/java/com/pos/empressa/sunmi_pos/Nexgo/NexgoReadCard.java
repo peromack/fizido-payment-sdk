@@ -1,4 +1,4 @@
-package com.pos.empressa.nexgo_pos.Nexgo;
+package com.pos.empressa.sunmi_pos.Nexgo;
 
 import android.app.Application;
 import android.content.Context;
@@ -39,9 +39,9 @@ import com.nexgo.oaf.apiv3.emv.EmvTransConfigurationEntity;
 import com.nexgo.oaf.apiv3.emv.OnEmvProcessListener2;
 import com.nexgo.oaf.apiv3.emv.PromptEnum;
 import com.nexgo.oaf.apiv3.emv.UnionPayTransDataEntity;
-import com.pos.empressa.nexgo_pos.Nexgo.utils.EmvUtils;
-import com.pos.empressa.nexgo_pos.Nexgo.utils.TlvUtil;
-import com.pos.empressa.nexgo_pos.ksnUtil.KSNUtilities;
+import com.pos.empressa.sunmi_pos.Nexgo.utils.EmvUtils;
+import com.pos.empressa.sunmi_pos.Nexgo.utils.TlvUtil;
+import com.pos.empressa.sunmi_pos.ksnUtil.KSNUtilities;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
