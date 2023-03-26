@@ -14,6 +14,9 @@ import com.pos.empressa.sunmi_pos.Fizido.FizidoApiService;
 import com.pos.empressa.sunmi_pos.Nexgo.NexgoApplication;
 import com.pos.empressa.sunmi_pos.Nexgo.NexgoPrinter;
 import com.pos.empressa.sunmi_pos.Nexgo.NexgoReadCard;
+import com.pos.empressa.sunmi_pos.Sunmi.SunmiApplication;
+import com.pos.empressa.sunmi_pos.Sunmi.SunmiPrinter;
+import com.pos.empressa.sunmi_pos.Sunmi.SunmiReadCard;
 
 import io.flutter.embedding.engine.plugins.activity.ActivityAware;
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding;
@@ -33,7 +36,7 @@ public class SunmiPosPlugin implements FlutterPlugin, MethodCallHandler, Activit
     /// This local reference serves to register the plugin with the Flutter Engine and unregister it
     /// when the Flutter Engine is detached from the Activity
     private MethodChannel channel;
-    NexgoReadCard nexgoReadCard;
+    SunmiReadCard sunmiReadCard;
     private Context mContext;
 
     @Override
@@ -46,16 +49,16 @@ public class SunmiPosPlugin implements FlutterPlugin, MethodCallHandler, Activit
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onMethodCall(@NonNull MethodCall call, @NonNull Result result) {
-        nexgoReadCard = new NexgoReadCard(mContext);
+        sunmiReadCard = new SunmiReadCard(mContext);
 
         switch (call.method) {
-            case "initNexgoEmv":
-                NexgoApplication nApplication = new NexgoApplication(mContext);
-                nApplication.initEmv();
+            case "initSunmiEmv":
+                SunmiApplication sunmiApplication = new SunmiApplication(mContext);
+                sunmiApplication.setupTerminal();
                 break;
-            case "startNexgoPrinter":
-                NexgoPrinter nexgoPrinter = new NexgoPrinter(mContext);
-                nexgoPrinter.nexgoPrint(call);
+            case "startSunmiPrinter":
+                SunmiPrinter sunmiPrinter = new SunmiPrinter(mContext);
+                sunmiPrinter.sunmiPrint(call);
                 break;
             case "chargeBlusaltTransaction":
                 BlusaltApiService.chargeTransaction(result, mContext, call);
@@ -63,11 +66,11 @@ public class SunmiPosPlugin implements FlutterPlugin, MethodCallHandler, Activit
             case "chargeFidizoTransaction":
                 FizidoApiService.chargeFidizoTransaction(result, mContext, call);
                 break;
-            case "nexgoSearchCard":
-                nexgoReadCard.searchCard(result, call.argument("transactionAmount"));
+            case "sunmiSearchCard":
+                sunmiReadCard.searchCard(result, call.argument("transactionAmount"));
                 break;
-            case "cancelNexgoSearch":
-                nexgoReadCard.cancelSearch();
+            case "cancelSunmiSearch":
+                sunmiReadCard.cancelCheckCard();
                 break;
             default:
                 result.notImplemented();
@@ -102,7 +105,7 @@ public class SunmiPosPlugin implements FlutterPlugin, MethodCallHandler, Activit
 
     @Override
     public void onDetachedFromActivity() {
-        nexgoReadCard.cancelSearch();
+        sunmiReadCard.cancelCheckCard();
         // TODO: your plugin is no longer associated with an Activity. Clean up references.
 
     }

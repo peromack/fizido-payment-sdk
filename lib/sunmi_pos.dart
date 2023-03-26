@@ -3,12 +3,12 @@ import 'dart:async';
 import 'package:sunmi_pos/card_details.dart';
 import 'package:flutter/services.dart';
 
-class NexgoPos {
+class SunmiPos {
   static const MethodChannel _channel = const MethodChannel('sunmi_pos');
 
-  static Future<void> initializeNexgoTerminal() async {
+  static Future<void> initializeSunmiTerminal() async {
     try {
-      var result = await _channel.invokeMethod('initNexgoEmv');
+      var result = await _channel.invokeMethod('initSunmiEmv');
     } catch (e) {
       print(e);
     }
@@ -32,28 +32,28 @@ class NexgoPos {
     }
   }
 
-  static Future<void> nexgoPrint(Map<String, dynamic> printerDetails) async {
+  static Future<void> sunmiPrint(Map<String, dynamic> printerDetails) async {
     try {
-      var result = await _channel.invokeMethod('startNexgoPrinter', printerDetails);
+      var result = await _channel.invokeMethod('startSunmiPrinter', printerDetails);
     } catch (e) {
       print(e);
     }
   }
 
-  static Future<void> nexgoCancelSearch() async {
+  static Future<void> sunmiCancelSearch() async {
     try {
-      var result = await _channel.invokeMethod('cancelNexgoSearch');
+      var result = await _channel.invokeMethod('cancelSunmiSearch');
       return result;
     } catch (e) {
       print(e);
     }
   }
 
-  static Future<CardDetails?> nexgoSearch(int transactionAmount) async {
+  static Future<CardDetails?> sunmiSearch(int transactionAmount) async {
     CardDetails? cardDetails;
     try{
       var result = await _channel
-          .invokeMethod('nexgoSearchCard', {"transactionAmount": transactionAmount});
+          .invokeMethod('sunmiSearchCard', {"transactionAmount": transactionAmount});
       var cardResponse = Map<String, String>.from(result);
       cardDetails = CardDetails.fromJson(cardResponse);
       var track2Data = cardDetails.the57!;

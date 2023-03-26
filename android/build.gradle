@@ -62,6 +62,12 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.1.0'
 
     implementation 'com.android.support:multidex:1.0.3'
+
+    implementation 'com.github.Okekeprince1:Sumni-Pay-JitPack:v0.0.1'
+    implementation 'com.sunmi:printerlibrary:1.0.7'
+
+    api 'co.paystack.android.design.widget:pinpad:1.0.8'
+
     implementation files('libs/ISO8583_V1.2.jar')
     implementation files('libs/spdh_V1.8.jar')
     implementation 'com.github.Okekeprince1:testing_jitpack:v0.0.4'

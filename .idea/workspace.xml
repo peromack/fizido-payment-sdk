@@ -4,14 +4,15 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5bcddf7f-5ba6-48c1-bcdb-f03017f36f8d" name="Changes" comment="remove redundant dependency">
-      <change beforePath="$PROJECT_DIR$/.dart_tool/package_config.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.dart_tool/package_config_subset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.dart_tool/version" beforeDir="false" />
+    <list default="true" id="14d946ce-11e9-4c06-9baf-dc5eb664a6ee" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.packages" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/empressa_pos.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/empressa_pos.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/icc.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/icc.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/android/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/AndroidManifest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/pos/empressa/sunmi_pos/Fizido/FizidoApiService.java" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/java/com/pos/empressa/sunmi_pos/Fizido/FizidoApiService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/pos/empressa/sunmi_pos/SunmiPosPlugin.java" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/java/com/pos/empressa/sunmi_pos/SunmiPosPlugin.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/example/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/example/lib/main.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/sunmi_pos.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/sunmi_pos.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -19,50 +20,28 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="Git.Settings">
-    <option name="RECENT_BRANCH_BY_REPOSITORY">
-      <map>
-        <entry key="$PROJECT_DIR$" value="sunyardFizido_01" />
-      </map>
-    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="HighlightingSettingsPerFile">
-    <setting file="file://$PROJECT_DIR$/example/lib/main.dart" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/android/src/main/java/com/pos/empressa/nexgo_pos/NexgoPosPlugin.java" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/.idea/libraries/Dart_SDK.xml" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/example/android/app/src/main/java/com/pos/empressa/empressa_pos_example/MainActivity.java" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/lib/icc.dart" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/android/build.gradle" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/../../../flutter/.pub-cache/git/message_parser-136d4aef9234ef9d263a288f6a18dd527a50363f/lib/entities/transaction_info.dart" root0="SKIP_INSPECTION" />
-    <setting file="file://$PROJECT_DIR$/pubspec.yaml" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/lib/empressa_pos.dart" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/lib/card_details.dart" root0="FORCE_HIGHLIGHTING" />
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
   </component>
-  <component name="ProjectId" id="2GS4tdriAu2M3RTB9RMoqp8EbYI" />
-  <component name="ProjectLevelVcsManager">
-    <ConfirmationsSetting value="1" id="Add" />
-  </component>
+  <component name="ProjectId" id="2NT7a0hW7L8cLeRfHvHPocBfWxj" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">
-    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
-    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
-    <property name="RunOnceActivity.cidr.known.project.marker" value="true" />
-    <property name="cidr.known.project.marker" value="true" />
-    <property name="dart.analysis.tool.window.visible" value="false" />
-    <property name="io.flutter.reload.alreadyRun" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../pero_nexgo_pos" />
-    <property name="settings.editor.selected.configurable" value="AndroidSdkUpdater" />
-    <property name="show.migrate.to.gradle.popup" value="false" />
-  </component>
-  <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="C:\Users\Okeke Chidiebube\sunyard_empressa_pos\android\libs" />
-      <recent name="C:\Users\Okeke Chidiebube\sunyard_empressa_pos\example\android" />
-    </key>
-  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.cidr.known.project.marker": "true",
+    "cidr.known.project.marker": "true",
+    "dart.analysis.tool.window.visible": "false",
+    "io.flutter.reload.alreadyRun": "true",
+    "show.migrate.to.gradle.popup": "false"
+  }
+}]]></component>
   <component name="RunManager">
     <configuration name="main.dart" type="FlutterRunConfigurationType" factoryName="Flutter">
       <option name="filePath" value="$PROJECT_DIR$/example/lib/main.dart" />
@@ -72,52 +51,12 @@
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="5bcddf7f-5ba6-48c1-bcdb-f03017f36f8d" name="Changes" comment="" />
-      <created>1666368867073</created>
+      <changelist id="14d946ce-11e9-4c06-9baf-dc5eb664a6ee" name="Changes" comment="" />
+      <created>1679676277806</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1666368867073</updated>
+      <updated>1679676277806</updated>
     </task>
-    <task id="LOCAL-00001" summary="revert commit">
-      <created>1668627946761</created>
-      <option name="number" value="00001" />
-      <option name="presentableId" value="LOCAL-00001" />
-      <option name="project" value="LOCAL" />
-      <updated>1668627946761</updated>
-    </task>
-    <task id="LOCAL-00002" summary="change package name">
-      <created>1668628896564</created>
-      <option name="number" value="00002" />
-      <option name="presentableId" value="LOCAL-00002" />
-      <option name="project" value="LOCAL" />
-      <updated>1668628896564</updated>
-    </task>
-    <task id="LOCAL-00003" summary="remove redundant dependency">
-      <created>1668758879925</created>
-      <option name="number" value="00003" />
-      <option name="presentableId" value="LOCAL-00003" />
-      <option name="project" value="LOCAL" />
-      <updated>1668758879925</updated>
-    </task>
-    <option name="localTasksCounter" value="4" />
     <servers />
-  </component>
-  <component name="Vcs.Log.Tabs.Properties">
-    <option name="TAB_STATES">
-      <map>
-        <entry key="MAIN">
-          <value>
-            <State />
-          </value>
-        </entry>
-      </map>
-    </option>
-    <option name="oldMeFiltersMigrated" value="true" />
-  </component>
-  <component name="VcsManagerConfiguration">
-    <MESSAGE value="revert commit" />
-    <MESSAGE value="change package name" />
-    <MESSAGE value="remove redundant dependency" />
-    <option name="LAST_COMMIT_MESSAGE" value="remove redundant dependency" />
   </component>
 </project>

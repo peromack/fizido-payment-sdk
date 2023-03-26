@@ -15,7 +15,7 @@ void main() {
   // EmpressaPos.initializeTerminal();
 
   // EmpressaPos.initializeHorizonTerminal();
-  NexgoPos.initializeNexgoTerminal();
+  SunmiPos.initializeSunmiTerminal();
   runApp(MyApp());
 }
 
@@ -61,7 +61,7 @@ class _MyAppState extends State<MyApp> {
 
     try {
 
-      await NexgoPos.blusaltChargeTransaction(normalizedTerminalData);
+      await SunmiPos.blusaltChargeTransaction(normalizedTerminalData);
       setState(() {
 
       });
@@ -96,7 +96,7 @@ class _MyAppState extends State<MyApp> {
 
     try {
 
-      await NexgoPos.fidizoChargeTransaction(normalizedTerminalData);
+      await SunmiPos.fidizoChargeTransaction(normalizedTerminalData);
       setState(() {
 
       });
@@ -105,11 +105,11 @@ class _MyAppState extends State<MyApp> {
     }
   }
 
-  Future<void> searchNexgo() async {
+  Future<void> searchSunmi() async {
 
     try {
 
-      cardDetails = await NexgoPos.nexgoSearch(100);
+      cardDetails = await SunmiPos.sunmiSearch(100);
       setState(() {
 
       });
@@ -121,7 +121,7 @@ class _MyAppState extends State<MyApp> {
   Future<void> nexgoPrint() async {
 
     try {
-      await NexgoPos.nexgoPrint({
+      await SunmiPos.sunmiPrint({
         "vendorName": "Lapo Investment",
         "originalMinorAmount": 2000,
         "terminalId": "123456",
@@ -170,9 +170,9 @@ class _MyAppState extends State<MyApp> {
 
             ),
             RaisedButton(onPressed: (){
-              searchNexgo();
+              searchSunmi();
             },
-              child: Text('Search Nexgo'),
+              child: Text('Search Sunmi'),
 
             ),
             RaisedButton(onPressed: (){

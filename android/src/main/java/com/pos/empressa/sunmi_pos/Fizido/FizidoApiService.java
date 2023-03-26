@@ -130,7 +130,12 @@ public class FizidoApiService {
             pd.put("ksnd", 605);
             pd.put("pinType", "Dukpt");
             pd.put("ksn", call.argument("pinKsn"));
-            pd.put("pinBlock", call.argument("cardPIN"));
+
+            String trxCardPin = call.argument("cardPIN");
+            Log.d("trxCardPin length", trxCardPin);
+            if(trxCardPin.length() > 0) {
+                pd.put("pinBlock", call.argument("cardPIN"));
+            }
 
             Log.d("pd body", String.valueOf(pd));
         }catch (Exception e){
@@ -183,7 +188,14 @@ public class FizidoApiService {
                         //get response body and parse with appropriate encoding
                         try {
                             body = new String(error.networkResponse.data,"UTF-8");
-                            android.util.Log.e("Parse error", new Gson().toJson(body));
+                            Log.e("Parse error", new Gson().toJson(body));
+                            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    result.error("2-0-3", statusCode, body);
+
+                                }
+                            });
 
                         } catch (UnsupportedEncodingException e) {
                             // exception
