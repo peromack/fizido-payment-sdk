@@ -1,6 +1,8 @@
 package com.pos.empressa.sunmi_pos.Sunmi;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Handler;
 import android.os.Looper;
 
@@ -9,6 +11,8 @@ import androidx.annotation.NonNull;
 import com.pos.empressa.sunmi_pos.Sunmi.utils.ToastUtil;
 import com.sunmi.peripheral.printer.InnerResultCallbcak;
 import com.sunmi.peripheral.printer.SunmiPrinterService;
+
+import java.util.Objects;
 
 import io.flutter.plugin.common.MethodCall;
 
@@ -43,7 +47,9 @@ public class SunmiPrinter {
             if (!checkPrint()) {
                 return;
             }
+
             printHeaderCenter("\n");
+            printLogo(call, "logo");
             printHeaderCenter(call.argument("vendorName"));
             printHeaderCenter("****Customer Copy****");
             printHeaderCenter("Transaction Receipt");
@@ -142,7 +148,11 @@ public class SunmiPrinter {
         if (call.argument(key) != null) {
             try {
                 sunmiPrinterService.setAlignment(1, innerResultCallback);
-                sunmiPrinterService.printText(title + ": " + call.argument(key) + "\n", innerResultCallback);
+                if(Objects.equals(title, "Transaction")) {
+                    sunmiPrinterService.printText(title + " " + call.argument(key) + "\n", innerResultCallback);
+                } else {
+                    sunmiPrinterService.printText(title + ": " + call.argument(key) + "\n", innerResultCallback);
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -155,6 +165,18 @@ public class SunmiPrinter {
             sunmiPrinterService.printText(header + "\n", innerResultCallback);
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    private void printLogo(MethodCall call, String key) {
+        byte[] byteArray = call.argument(key);
+        if (byteArray != null) {
+            try {
+                Bitmap bitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
+                sunmiPrinterService.printBitmap(bitmap, innerResultCallback);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
