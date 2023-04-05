@@ -20,7 +20,7 @@ public class SunmiPrinter {
     private ToastUtil toastUtil;
     private Handler mHandler = new Handler(Looper.getMainLooper());
 
-    public SunmiPrinter (Context mContext) {
+    public SunmiPrinter(Context mContext) {
         initializePrinter();
         this.mContext = mContext;
         toastUtil = new ToastUtil(mContext);
@@ -44,7 +44,7 @@ public class SunmiPrinter {
                 return;
             }
             printHeaderCenter("\n");
-            printHeaderCenter("vendorName");
+            printHeaderCenter(call.argument("vendorName"));
             printHeaderCenter("Transaction Receipt");
             printHeaderCenter("--------------------------------");
             printTextCenter(call, "originalMinorAmount", "AMOUNT");
@@ -96,7 +96,7 @@ public class SunmiPrinter {
     private final InnerResultCallbcak innerResultCallback = new InnerResultCallbcak() {
         @Override
         public void onRunResult(boolean isSuccess) {
-            if(isSuccess) {
+            if (isSuccess) {
                 mHandler.post(() -> toastUtil.toast.showToast("print success."));
             } else {
                 mHandler.post(() -> toastUtil.toast.showToast("print error."));
@@ -104,7 +104,8 @@ public class SunmiPrinter {
         }
 
         @Override
-        public void onReturnString(String result) {}
+        public void onReturnString(String result) {
+        }
 
         @Override
         public void onRaiseException(int code, String msg) {
@@ -166,7 +167,7 @@ public class SunmiPrinter {
                 sunmiPrinterService.printText("Built on Fizido" + "\n\n\n\n", innerResultCallback);
                 sunmiPrinterService.printText("Powered by Support MFB" + "\n\n\n\n", innerResultCallback);
             }
-        } catch (Exception e ){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
