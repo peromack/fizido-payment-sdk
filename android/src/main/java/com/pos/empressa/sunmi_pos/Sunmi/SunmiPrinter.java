@@ -47,7 +47,7 @@ public class SunmiPrinter {
             sunmiPrinterService.printText(call.argument("vendorName") + "\n", innerResultCallbcak);
             sunmiPrinterService.printText("Transaction Receipt" + "\n", innerResultCallbcak);
             sunmiPrinterService.printText("---------------------------" + "\n", innerResultCallbcak);
-            sunmiPrinterService.printText("AMOUNT: NGN" +call.argument("originalMinorAmount").toString() + "\n", innerResultCallbcak);
+            sunmiPrinterService.printText("AMOUNT: NGN" + call.argument("originalMinorAmount").toString() + "\n", innerResultCallbcak);
             sunmiPrinterService.printText("---------------------------" + "\n", innerResultCallbcak);
             printText(call, "merchantName", "Merchant Name");
             printText(call, "merchantLocation", "Merchant Location");
@@ -59,6 +59,9 @@ public class SunmiPrinter {
             printText(call, "service", "Service");
             printText(call, "beneficiaryName", "Beneficiary Name");
             printText(call, "bankName", "Bank Name");
+            printText(call, "senderAccountName", "Sender");
+            printText(call, "senderBankName", "Sender Bank");
+            printText(call, "senderAccountNumber", "Sender Account");
             printText(call, "merchant", "Merchant");
             printText(call, "accountNumber", "Account Number");
             printText(call, "description", "Description");
@@ -82,7 +85,7 @@ public class SunmiPrinter {
             printText(call, "time", "Time");
             printText(call, "transmissionDate", "Date");
             sunmiPrinterService.printText("---------------------------" + "\n", innerResultCallbcak);
-            sunmiPrinterService.printText("Comment: " + call.argument("transactionComment") + "\n", innerResultCallbcak);
+            sunmiPrinterService.printText("Transaction " + call.argument("transactionComment") + "\n", innerResultCallbcak);
             printFooter(call);
             sunmiPrinterService.printText("\n", innerResultCallbcak);
             sunmiPrinterService.printText("\n", innerResultCallbcak);
