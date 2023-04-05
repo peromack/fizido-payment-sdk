@@ -43,60 +43,57 @@ public class SunmiPrinter {
             if (!checkPrint()) {
                 return;
             }
-            sunmiPrinterService.printText("\n", innerResultCallbcak);
-            sunmiPrinterService.printText(call.argument("vendorName") + "\n", innerResultCallbcak);
-            sunmiPrinterService.printText("Transaction Receipt" + "\n", innerResultCallbcak);
-            sunmiPrinterService.printText("---------------------------" + "\n", innerResultCallbcak);
-            sunmiPrinterService.printText("AMOUNT: NGN" + call.argument("originalMinorAmount").toString() + "\n", innerResultCallbcak);
-            sunmiPrinterService.printText("---------------------------" + "\n", innerResultCallbcak);
-            printText(call, "merchantName", "Merchant Name");
-            printText(call, "merchantLocation", "Merchant Location");
-            printText(call, "sender", "Sender");
-            printText(call, "receiver", "Receiver");
-            printText(call, "transactionType", "Transaction Type");
-            printText(call, "payee", "Payee");
-            printText(call, "phoneNumber", "Phone Number");
-            printText(call, "service", "Service");
-            printText(call, "beneficiaryName", "Beneficiary Name");
-            printText(call, "bankName", "Bank Name");
-            printText(call, "senderAccountName", "Sender");
-            printText(call, "senderBankName", "Sender Bank");
-            printText(call, "senderAccountNumber", "Sender Account");
-            printText(call, "merchant", "Merchant");
-            printText(call, "accountNumber", "Account Number");
-            printText(call, "description", "Description");
-            printText(call, "bill", "Bill");
-            printText(call, "paymentItem", "Payment Item");
-            printText(call, "billItem", "Bill Item");
-            printText(call, "qty", "Qty");
-            printText(call, "packageName", "Package Name");
-            printText(call, "customerName", "Customer Name");
-            printText(call, "customerId", "Customer Id");
-            printText(call, "customerReference", "Customer Reference");
-            printText(call, "transactionFee", "Transaction Fee");
-            printText(call, "transactionRef", "Reference Number");
-            printText(call, "originalTransStan", "Stan");
-            printText(call, "cardPan", "Card PAN");
-            printText(call, "tokenValue", "Token");
-            printText(call, "expiryDate", "Card Expiry");
-            printText(call, "terminalId", "TerminalID");
-            printText(call, "merchantId", "MerchantID");
-            printText(call, "agent", "Agent");
-            printText(call, "time", "Time");
-            printText(call, "transmissionDate", "Date");
-            sunmiPrinterService.printText("---------------------------" + "\n", innerResultCallbcak);
-            sunmiPrinterService.printText("Transaction " + call.argument("transactionComment") + "\n", innerResultCallbcak);
+            printHeaderCenter("\n");
+            printHeaderCenter("vendorName");
+            printHeaderCenter("Transaction Receipt");
+            printHeaderCenter("--------------------------------");
+            printTextCenter(call, "originalMinorAmount", "AMOUNT");
+            printHeaderCenter("--------------------------------");
+            printTextLeft(call, "merchantName", "Merchant Name");
+            printTextLeft(call, "merchantLocation", "Merchant Location");
+            printTextLeft(call, "sender", "Sender");
+            printTextLeft(call, "receiver", "Receiver");
+            printTextLeft(call, "transactionType", "Transaction Type");
+            printTextLeft(call, "payee", "Payee");
+            printTextLeft(call, "phoneNumber", "Phone Number");
+            printTextLeft(call, "service", "Service");
+            printTextLeft(call, "beneficiaryName", "Beneficiary Name");
+            printTextLeft(call, "bankName", "Bank Name");
+            printTextLeft(call, "merchant", "Merchant");
+            printTextLeft(call, "accountNumber", "Account Number");
+            printTextLeft(call, "description", "Description");
+            printTextLeft(call, "bill", "Bill");
+            printTextLeft(call, "paymentItem", "Payment Item");
+            printTextLeft(call, "billItem", "Bill Item");
+            printTextLeft(call, "qty", "Qty");
+            printTextLeft(call, "packageName", "Package Name");
+            printTextLeft(call, "customerName", "Customer Name");
+            printTextLeft(call, "customerId", "Customer Id");
+            printTextLeft(call, "customerReference", "Customer Reference");
+            printTextLeft(call, "transactionFee", "Transaction Fee");
+            printTextLeft(call, "transactionRef", "Reference Number");
+            printTextLeft(call, "originalTransStan", "Stan");
+            printTextLeft(call, "cardPan", "Card PAN");
+            printTextLeft(call, "tokenValue", "Token");
+            printTextLeft(call, "expiryDate", "Card Expiry");
+            printTextLeft(call, "terminalId", "TerminalID");
+            printTextLeft(call, "merchantId", "MerchantID");
+            printTextLeft(call, "agent", "Agent");
+            printTextLeft(call, "time", "Time");
+            printTextLeft(call, "transmissionDate", "Date");
+            printHeaderCenter("--------------------------------");
+            printTextCenter(call, "transactionComment", "Transaction");
             printFooter(call);
-            sunmiPrinterService.printText("\n", innerResultCallbcak);
-            sunmiPrinterService.printText("\n", innerResultCallbcak);
-            sunmiPrinterService.printText("\n", innerResultCallbcak);
-            sunmiPrinterService.printText("---------------------------" + "\n", innerResultCallbcak);
+            printHeaderCenter("\n");
+            printHeaderCenter("\n");
+            printHeaderCenter("\n");
+            sunmiPrinterService.printText("--------------------------------" + "\n", innerResultCallback);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private final InnerResultCallbcak innerResultCallbcak = new InnerResultCallbcak() {
+    private final InnerResultCallbcak innerResultCallback = new InnerResultCallbcak() {
         @Override
         public void onRunResult(boolean isSuccess) {
             if(isSuccess) {
@@ -121,19 +118,53 @@ public class SunmiPrinter {
     private void printText(@NonNull MethodCall call, String key, String title) {
         if (call.argument(key) != null) {
             try {
-                sunmiPrinterService.printText(title + ": " + call.argument(key) + "\n", innerResultCallbcak);
+                sunmiPrinterService.printText(title + ": " + call.argument(key) + "\n", innerResultCallback);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
     }
 
+    private void printTextLeft(@NonNull MethodCall call, String key, String title) {
+        if (call.argument(key) != null) {
+            try {
+                sunmiPrinterService.setAlignment(0, innerResultCallback);
+                sunmiPrinterService.printText(title + ": " + call.argument(key) + "\n", innerResultCallback);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void printTextCenter(@NonNull MethodCall call, String key, String title) {
+        if (call.argument(key) != null) {
+            try {
+                sunmiPrinterService.setAlignment(1, innerResultCallback);
+                sunmiPrinterService.printText(title + ": " + call.argument(key) + "\n", innerResultCallback);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void printHeaderCenter(String header) {
+        try {
+            sunmiPrinterService.setAlignment(1, innerResultCallback);
+            sunmiPrinterService.printText(header + "\n", innerResultCallback);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     private void printFooter(@NonNull MethodCall call) {
         try {
             if (call.argument("footer") != null) {
-                sunmiPrinterService.printText(call.argument("footer") + "\n\n\n\n", innerResultCallbcak);
+                sunmiPrinterService.setAlignment(1, innerResultCallback);
+                sunmiPrinterService.printText(call.argument("footer") + "\n\n\n\n", innerResultCallback);
             } else {
-                sunmiPrinterService.printText("Built on Fizido, Powered by Support MFB" + "\n\n\n\n", innerResultCallbcak);
+                sunmiPrinterService.setAlignment(1, innerResultCallback);
+                sunmiPrinterService.printText("Built on Fizido" + "\n\n\n\n", innerResultCallback);
+                sunmiPrinterService.printText("Powered by Support MFB" + "\n\n\n\n", innerResultCallback);
             }
         } catch (Exception e ){
             e.printStackTrace();
