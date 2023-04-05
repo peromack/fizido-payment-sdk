@@ -45,6 +45,7 @@ public class SunmiPrinter {
             }
             printHeaderCenter("\n");
             printHeaderCenter(call.argument("vendorName"));
+            printHeaderCenter("****Customer Copy****");
             printHeaderCenter("Transaction Receipt");
             printHeaderCenter("--------------------------------");
             printTextCenter(call, "originalMinorAmount", "AMOUNT");
