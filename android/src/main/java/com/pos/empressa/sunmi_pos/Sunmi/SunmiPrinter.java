@@ -173,7 +173,16 @@ public class SunmiPrinter {
         if (byteArray != null) {
             try {
                 Bitmap bitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
-                sunmiPrinterService.printBitmap(bitmap, innerResultCallback);
+                int originalWidth = bitmap.getWidth();
+                int originalHeight = bitmap.getHeight();
+
+                float aspectRatio = (float) originalWidth / (float) originalHeight;
+
+                int newWidth = 384;
+                int newHeight = Math.round(newWidth / aspectRatio);
+
+                Bitmap resizedBitmap = Bitmap.createScaledBitmap(bitmap, newWidth, newHeight, false);
+                sunmiPrinterService.printBitmap(resizedBitmap, innerResultCallback);
             } catch (Exception e) {
                 e.printStackTrace();
             }
