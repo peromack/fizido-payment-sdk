@@ -5,24 +5,21 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Handler;
 import android.os.Looper;
-
 import androidx.annotation.NonNull;
-
+import io.flutter.plugin.common.MethodCall;
 import com.pos.empressa.sunmi_pos.Sunmi.utils.ToastUtil;
 import com.sunmi.peripheral.printer.InnerResultCallbcak;
 import com.sunmi.peripheral.printer.SunmiPrinterService;
-
 import java.util.Objects;
 
-import io.flutter.plugin.common.MethodCall;
 
 public class SunmiPrinter {
 
     private Context mContext;
     private SunmiPrinterService sunmiPrinterService;
 
-    private ToastUtil toastUtil;
-    private Handler mHandler = new Handler(Looper.getMainLooper());
+    private final ToastUtil toastUtil;
+    private final Handler mHandler = new Handler(Looper.getMainLooper());
 
     public SunmiPrinter(Context mContext) {
         initializePrinter();
@@ -100,13 +97,21 @@ public class SunmiPrinter {
         }
     }
 
+    private boolean is = true;
     private final InnerResultCallbcak innerResultCallback = new InnerResultCallbcak() {
         @Override
         public void onRunResult(boolean isSuccess) {
-            if (isSuccess) {
-                mHandler.post(() -> toastUtil.toast.showToast("print success."));
-            } else {
-                mHandler.post(() -> toastUtil.toast.showToast("print error."));
+            if(is){
+                try {
+                    if (isSuccess) {
+                        mHandler.post(() -> toastUtil.toast.showToast("print success."));
+                    } else {
+                        mHandler.post(() -> toastUtil.toast.showToast("print error."));
+                    }
+                    is = false;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
 
@@ -169,26 +174,36 @@ public class SunmiPrinter {
     }
 
     private void printLogo(MethodCall call, String key) {
-        byte[] byteArray = call.argument(key);
-        if (byteArray != null) {
+        byte[] imageData = call.argument(key);
+        int defaultDimension = 220;
+        if (imageData != null) {
             try {
-                Bitmap bitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
-                int originalWidth = bitmap.getWidth();
-                int originalHeight = bitmap.getHeight();
+                Bitmap bitmap = BitmapFactory.decodeByteArray(imageData, 0, imageData.length);
+                Bitmap scaledBitmap;
+                String width = call.argument("width");
+                String height = call.argument("height");
+                if(width != null && height != null) {
+                    int widthInt = Integer.parseInt(width);
+                    int heightInt = Integer.parseInt(height);
+                    scaledBitmap = Bitmap.createScaledBitmap(bitmap, widthInt, heightInt, false);
+                } else if (width == null && height != null) {
+                    int heightInt = Integer.parseInt(height);
+                    scaledBitmap = Bitmap.createScaledBitmap(bitmap, defaultDimension, heightInt, false);
+                } else if (width != null) {
+                    int widthInt = Integer.parseInt(width);
+                    scaledBitmap = Bitmap.createScaledBitmap(bitmap, widthInt, defaultDimension, false);
+                } else {
+                    scaledBitmap = Bitmap.createScaledBitmap(bitmap, defaultDimension, defaultDimension, false);
+                }
 
-                float aspectRatio = (float) originalWidth / (float) originalHeight;
-
-                int newWidth = 384;
-                int newHeight = Math.round(newWidth / aspectRatio);
-
-                Bitmap resizedBitmap = Bitmap.createScaledBitmap(bitmap, newWidth, newHeight, false);
-                sunmiPrinterService.printBitmap(resizedBitmap, innerResultCallback);
+                sunmiPrinterService.setAlignment(1, innerResultCallback);
+                sunmiPrinterService.printBitmapCustom(scaledBitmap, 1, innerResultCallback);
+                sunmiPrinterService.lineWrap(4, null);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
     }
-
     private void printFooter(@NonNull MethodCall call) {
         try {
             if (call.argument("footer") != null) {

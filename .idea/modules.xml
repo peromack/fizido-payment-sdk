@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/sunyard_empressa_pos.iml" filepath="$PROJECT_DIR$/.idea/sunyard_empressa_pos.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/fizido-payment-sdk.iml" filepath="$PROJECT_DIR$/.idea/fizido-payment-sdk.iml" />
     </modules>
   </component>
 </project>

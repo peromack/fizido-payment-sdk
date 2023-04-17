@@ -19,6 +19,7 @@ rootProject.allprojects {
         google()
         mavenCentral()
         maven { url 'https://jitpack.io' }
+        maven { url 'https://jcenter.bintray.com/' }
     }
 }
 
@@ -65,6 +66,7 @@ dependencies {
 
     implementation 'com.github.Okekeprince1:Sumni-Pay-JitPack:v0.0.1'
     implementation 'com.sunmi:printerlibrary:1.0.7'
+    implementation 'com.sunmi:sunmiui:1.1.27'
 
     api 'co.paystack.android.design.widget:pinpad:1.0.8'
 

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:typed_data';
 
 import 'package:analyzer_plugin/utilities/pair.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +9,7 @@ import 'package:message_parser/entities/transaction_info.dart';
 import 'package:sunmi_pos/bluetooth_devices.dart';
 import 'package:sunmi_pos/icc.dart';
 import 'package:sunmi_pos/pos.dart';
+import 'package:sunmi_pos/string_extension.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -113,7 +115,10 @@ class _MyAppState extends State<MyApp> {
 
   Future<void> nexgoPrint() async {
     try {
+      final Uint8List bitmap = await 'assets/images/sunmi.png'.toBitmap();
+
       await SunmiPos.sunmiPrint({
+        "logo": bitmap,
         "vendorName": "Lapo Investment",
         "originalMinorAmount": 2000,
         "terminalId": "123456",
@@ -124,7 +129,9 @@ class _MyAppState extends State<MyApp> {
         "cardHolder": "test test",
         "expiryDate": "12/24",
         "transactionRef": "859948547949459",
-        "transactionComment": "satisfactory"
+        "transactionComment": "satisfactory",
+        "width": "220",
+        "height": "220"
       });
       setState(() {});
     } on PlatformException catch (e) {
@@ -141,12 +148,9 @@ class _MyAppState extends State<MyApp> {
         ),
         body: Column(
           children: [
-            // RaisedButton(onPressed: (){
-            //   searchSunyard();
-            // },
-            //   child: Text('Search Atm Card'),
-            //
-            // ),
+            Image(
+              image: AssetImage('assets/images/sunmi.png'),
+            ),
             TextButton(
               onPressed: () {
                 chargeTransaction();
