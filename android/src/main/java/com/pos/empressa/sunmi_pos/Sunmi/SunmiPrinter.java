@@ -46,6 +46,7 @@ public class SunmiPrinter {
             }
 
             printHeaderCenter("\n");
+
             printLogo(call, "logo");
             printHeaderCenter(call.argument("vendorName"));
             printHeaderCenter("****Customer Copy****");
@@ -198,7 +199,6 @@ public class SunmiPrinter {
 
                 sunmiPrinterService.setAlignment(1, innerResultCallback);
                 sunmiPrinterService.printBitmapCustom(scaledBitmap, 1, innerResultCallback);
-                sunmiPrinterService.lineWrap(4, null);
             } catch (Exception e) {
                 e.printStackTrace();
             }
