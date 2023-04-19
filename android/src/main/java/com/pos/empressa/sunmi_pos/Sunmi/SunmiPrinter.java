@@ -46,8 +46,9 @@ public class SunmiPrinter {
             }
 
             printHeaderCenter("\n");
+
             printLogo(call, "logo");
-            printHeaderCenter(call.argument("vendorName"));
+//            printHeaderCenter(call.argument("vendorName"));
             printHeaderCenter("****Customer Copy****");
             printHeaderCenter("Transaction Receipt");
             printHeaderCenter("--------------------------------");
@@ -200,8 +201,8 @@ public class SunmiPrinter {
                 }
 
                 sunmiPrinterService.setAlignment(1, innerResultCallback);
-                sunmiPrinterService.printBitmapCustom(scaledBitmap, 1, innerResultCallback);
-                sunmiPrinterService.lineWrap(4, null);
+                sunmiPrinterService.printBitmapCustom(scaledBitmap, 2, innerResultCallback);
+                sunmiPrinterService.lineWrap(1, innerResultCallback);
             } catch (Exception e) {
                 e.printStackTrace();
             }
