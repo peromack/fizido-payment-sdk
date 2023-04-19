@@ -198,7 +198,7 @@ public class SunmiPrinter {
                 }
 
                 sunmiPrinterService.setAlignment(1, innerResultCallback);
-                sunmiPrinterService.printBitmapCustom(scaledBitmap, 1, innerResultCallback);
+                sunmiPrinterService.printBitmapCustom(scaledBitmap, 2, innerResultCallback);
                 sunmiPrinterService.lineWrap(1, innerResultCallback);
             } catch (Exception e) {
                 e.printStackTrace();
