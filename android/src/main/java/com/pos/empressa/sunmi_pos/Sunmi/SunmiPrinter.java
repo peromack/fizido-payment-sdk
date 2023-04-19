@@ -212,11 +212,11 @@ public class SunmiPrinter {
         try {
             if (call.argument("footer") != null) {
                 sunmiPrinterService.setAlignment(1, innerResultCallback);
-                sunmiPrinterService.printText(call.argument("footer") + "\n\n\n\n", innerResultCallback);
+                sunmiPrinterService.printText(call.argument("footer") + "\n\n", innerResultCallback);
             } else {
                 sunmiPrinterService.setAlignment(1, innerResultCallback);
                 sunmiPrinterService.printText("Built on Fizido" + "\n\n\n\n", innerResultCallback);
-                sunmiPrinterService.printText("Powered by Support MFB" + "\n\n\n\n", innerResultCallback);
+                sunmiPrinterService.printText("Powered by Support MFB" + "\n\n\", innerResultCallback);
             }
         } catch (Exception e) {
             e.printStackTrace();
