@@ -216,7 +216,7 @@ public class SunmiPrinter {
             } else {
                 sunmiPrinterService.setAlignment(1, innerResultCallback);
                 sunmiPrinterService.printText("Built on Fizido" + "\n\n\n\n", innerResultCallback);
-                sunmiPrinterService.printText("Powered by Support MFB" + "\n\n\", innerResultCallback);
+                sunmiPrinterService.printText("Powered by Support MFB" + "\n\n\n\n", innerResultCallback);
             }
         } catch (Exception e) {
             e.printStackTrace();
