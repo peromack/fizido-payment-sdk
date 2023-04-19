@@ -75,6 +75,9 @@ public class SunmiPrinter {
             printTextLeft(call, "customerId", "Customer Id");
             printTextLeft(call, "customerReference", "Customer Reference");
             printTextLeft(call, "transactionFee", "Transaction Fee");
+            printTextLeft(call, "senderAccountName", "Sender");
+            printTextLeft(call, "senderBankName", "Sender Bank");
+            printTextLeft(call, "senderAccountNumber", "Sender Account");
             printTextLeft(call, "transactionRef", "Reference Number");
             printTextLeft(call, "originalTransStan", "Stan");
             printTextLeft(call, "cardPan", "Card PAN");
