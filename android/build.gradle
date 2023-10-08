@@ -64,7 +64,8 @@ dependencies {
     implementation 'com.android.support:multidex:1.0.3'
     implementation files('libs/ISO8583_V1.2.jar')
     implementation files('libs/spdh_V1.8.jar')
-    implementation 'com.github.Okekeprince1:testing_jitpack:v0.0.4'
+//    implementation 'com.github.Okekeprince1:testing_jitpack:v0.0.4'
+    implementation 'com.github.Okekeprince1:nexgo_jitpack:v0.0.1'
     implementation 'org.jetbrains:annotations:16.0.1'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
