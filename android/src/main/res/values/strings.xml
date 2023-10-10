@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="app_1">app 1</string>
     <string name="app_name">MposDemo</string>
     <string name="search_bluetooth">Search Bluetooth</string>
     <string name="last_connect">Last Connect</string>
