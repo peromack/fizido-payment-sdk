@@ -1,13 +1,19 @@
 package com.pos.empressa.nexgo_pos.Nexgo;
 
+import android.app.AlertDialog;
 import android.app.Application;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ListView;
+import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.gson.Gson;
 import com.nexgo.common.ByteUtils;
@@ -41,6 +47,7 @@ import com.nexgo.oaf.apiv3.emv.PromptEnum;
 import com.nexgo.oaf.apiv3.emv.UnionPayTransDataEntity;
 import com.pos.empressa.nexgo_pos.Nexgo.utils.EmvUtils;
 import com.pos.empressa.nexgo_pos.Nexgo.utils.TlvUtil;
+import com.pos.empressa.nexgo_pos.R;
 import com.pos.empressa.nexgo_pos.ksnUtil.KSNUtilities;
 
 import java.text.SimpleDateFormat;
@@ -50,10 +57,11 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import io.flutter.plugin.common.MethodChannel;
 
-public class NexgoReadCard extends Application {
+public class NexgoReadCard extends AppCompatActivity {
     private DeviceEngine deviceEngine;
     private EmvHandler2 emvHandler2;
     private String cardNo;
@@ -205,7 +213,32 @@ public class NexgoReadCard extends Application {
         emvHandler2.emvProcess(transData, new OnEmvProcessListener2() {
             @Override
             public void onSelApp(final List<String> appNameList, List<CandidateAppInfoEntity> appInfoList, boolean isFirstSelect) {
-                Log.d("nexgo", "onAfterFinalSelectedApp->");
+                Log.d("Read Card", "Calling Select App");
+                new Handler(Looper.getMainLooper()).post(() -> {
+                    View dv = getLayoutInflater().inflate(R.layout.dialog_app_list, null);
+                    final AlertDialog alertDialog = new AlertDialog.Builder(mContext).setView(dv).create();
+                    ListView lv = (ListView) dv.findViewById(R.id.aidlistView);
+                    List<Map<String, String>> listItem = new ArrayList<>();
+                    for (int i = 0; i < appNameList.size(); i++) {
+                        Map<String, String> map = new HashMap<>();
+                        map.put("appIdx", (i + 1) + "");
+                        map.put("appName", appNameList.get(i));
+                        listItem.add(map);
+                    }
+                    SimpleAdapter adapter = new SimpleAdapter(mContext,
+                            listItem,
+                            R.layout.app_list_item,
+                            new String[]{"appIdx", "appName"},
+                            new int[]{R.id.tv_appIndex, R.id.tv_appName});
+                    lv.setAdapter(adapter);
+                    lv.setOnItemClickListener((parent, view, position, id) -> {
+                        emvHandler2.onSetSelAppResponse(position + 1);
+                        alertDialog.dismiss();
+                        alertDialog.cancel();
+                    });
+                    alertDialog.setCanceledOnTouchOutside(false);
+                    alertDialog.show();
+                });
             }
 
             @Override
