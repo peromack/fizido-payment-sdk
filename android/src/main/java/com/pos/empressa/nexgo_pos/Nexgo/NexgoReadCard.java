@@ -217,10 +217,10 @@ public class NexgoReadCard extends Application {
                             configPaypassParameter(aid);
                         }else if(ByteUtils.byteArray2HexString(aid).toUpperCase().contains("A000000003")){
                             //Paywave
-//                    configPaywaveParameters();
+                            configPaywaveParameters();
                         }else if(ByteUtils.byteArray2HexString(aid).toUpperCase().contains("A000000025")){
                             //ExpressPay
-//                    configExpressPayParameter();
+                            configExpressPayParameter();
                         }else if(ByteUtils.byteArray2HexString(aid).toUpperCase().contains("A000000541")){
                             //configPureContactlessParameter();
                         }else if(ByteUtils.byteArray2HexString(aid).toUpperCase().contains("A000000065")){
@@ -563,6 +563,16 @@ public class NexgoReadCard extends Application {
     }
 
     private void configPaywaveParameters(){
+        byte[] TTQ ;
+        byte[] kernelTTQ = emvHandler2.getTlv(ByteUtils.hexString2ByteArray("9F66"), EmvDataSourceEnum.FROM_KERNEL);
+        Log.d("nexgo",  "configPaywaveParameters, TTQ" + ByteUtils.byteArray2HexString(kernelTTQ));
+        //default TTQ value
+        TTQ = ByteUtils.hexString2ByteArray("36004000");
+        kernelTTQ[0] = TTQ[0];
+        kernelTTQ[2] = TTQ[2];
+        kernelTTQ[3] = TTQ[3];
+
+        emvHandler2.setTlv(ByteUtils.hexString2ByteArray("9F66"), kernelTTQ);
     }
 
 
