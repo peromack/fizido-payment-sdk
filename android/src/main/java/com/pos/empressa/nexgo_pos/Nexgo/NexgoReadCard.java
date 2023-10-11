@@ -716,6 +716,7 @@ public class NexgoReadCard extends AppCompatActivity {
                                 Log.d("nexgo", "pin enter failed");
                                 emvHandler2.onSetPinInputResponse(false, false);
                             }
+                            pinPad.
                         }
                         @Override
                         public void onSendKey(byte b) {}
