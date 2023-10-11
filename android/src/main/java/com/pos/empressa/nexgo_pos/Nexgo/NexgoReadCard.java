@@ -711,13 +711,12 @@ public class NexgoReadCard extends AppCompatActivity {
                                 }else {
                                     Log.d("CArd pin result", "is empty");
                                 }
-                                emvHandler2.onSetPinInputResponse(retCode != SdkResult.PinPad_Input_Cancel, retCode == SdkResult.PinPad_No_Pin_Input);
+                                emvHandler2.onSetPinInputResponse(retCode != SdkResult.PinPad_Input_Cancel, retCode != SdkResult.PinPad_No_Pin_Input);
                             } else {
                                 Log.d("nexgo", "pin enter failed");
                                 emvHandler2.onSetPinInputResponse(false, false);
                             }
                         }
-
                         @Override
                         public void onSendKey(byte b) {}
                     });
@@ -737,7 +736,7 @@ public class NexgoReadCard extends AppCompatActivity {
                                 }else {
                                     Log.d("CArd pin result", "is empty");
                                 }
-                                emvHandler2.onSetPinInputResponse(retCode != SdkResult.PinPad_Input_Cancel, retCode == SdkResult.PinPad_No_Pin_Input);
+                                emvHandler2.onSetPinInputResponse(retCode != SdkResult.PinPad_Input_Cancel, retCode != SdkResult.PinPad_No_Pin_Input);
                             } else {
                                 Log.d("nexgo", "pin enter failed");
                                 emvHandler2.onSetPinInputResponse(false, false);
