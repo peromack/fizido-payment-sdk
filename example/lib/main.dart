@@ -184,7 +184,7 @@ class _MyAppState extends State<MyApp> {
                       // connectDevices(bluetoothName: bluetoothDevices[index].name,bluetoothMac: bluetoothDevices[index].address);
                     },
                     child: Text(
-                        '${bluetoothDevices[index].name + bluetoothDevices[index].address}'));
+                        '${bluetoothDevices[index].name! + bluetoothDevices[index].address}'));
               },
               separatorBuilder: (BuildContext context, int index) {
                 return SizedBox(
