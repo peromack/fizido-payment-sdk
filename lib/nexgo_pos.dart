@@ -49,6 +49,15 @@ class NexgoPos {
     }
   }
 
+  static Future<void> checkNexgoCard() async {
+    try {
+      var result = await _channel.invokeMethod('checkNexgoCard');
+      return result;
+    } catch (e) {
+      print(e);
+    }
+  }
+
   static Future<CardDetails?> nexgoSearch(int transactionAmount) async {
     CardDetails? cardDetails;
     try{

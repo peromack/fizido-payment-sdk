@@ -1,15 +1,14 @@
 package com.pos.empressa.nexgo_pos.Nexgo;
 
 import android.app.AlertDialog;
-import android.app.Application;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -26,14 +25,13 @@ import com.nexgo.oaf.apiv3.device.pinpad.OnPinPadInputListener;
 import com.nexgo.oaf.apiv3.device.pinpad.PinAlgorithmModeEnum;
 import com.nexgo.oaf.apiv3.device.pinpad.PinKeyboardModeEnum;
 import com.nexgo.oaf.apiv3.device.pinpad.PinPad;
+import com.nexgo.oaf.apiv3.device.pinpad.PinPadKeyCode;
 import com.nexgo.oaf.apiv3.device.reader.CardInfoEntity;
 import com.nexgo.oaf.apiv3.device.reader.CardReader;
 import com.nexgo.oaf.apiv3.device.reader.CardSlotTypeEnum;
 import com.nexgo.oaf.apiv3.device.reader.OnCardInfoListener;
-import com.nexgo.oaf.apiv3.emv.AidEntity;
 import com.nexgo.oaf.apiv3.emv.AmexTransDataEntity;
 import com.nexgo.oaf.apiv3.emv.CandidateAppInfoEntity;
-import com.nexgo.oaf.apiv3.emv.CapkEntity;
 import com.nexgo.oaf.apiv3.emv.DynamicReaderLimitEntity;
 import com.nexgo.oaf.apiv3.emv.EmvDataSourceEnum;
 import com.nexgo.oaf.apiv3.emv.EmvEntryModeEnum;
@@ -53,6 +51,7 @@ import com.pos.empressa.nexgo_pos.ksnUtil.KSNUtilities;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -71,6 +70,10 @@ public class NexgoReadCard extends AppCompatActivity {
 
     private PinPad pinPad;
 
+    private String pwdText;
+    private TextView pwdTv;
+    private AlertDialog pwdAlertDialog;
+
     String amount ;
 
     String cardPin = "";
@@ -87,6 +90,7 @@ public class NexgoReadCard extends AppCompatActivity {
 
     private boolean isExpressPaySeePhoneTapCardAgain = false;
 
+    private int fallBackRetries = 0;
 
     public NexgoReadCard (Context mContext) {
         this.mContext = mContext;
@@ -95,7 +99,9 @@ public class NexgoReadCard extends AppCompatActivity {
     public void searchCard(@NonNull MethodChannel.Result result, int transactionAmount) {
         try{
 
-            deviceEngine = APIProxy.getDeviceEngine(mContext);
+            if (deviceEngine == null) {
+                deviceEngine = APIProxy.getDeviceEngine(mContext);
+            }
 
             pinPad = deviceEngine.getPinPad();
 
@@ -307,8 +313,7 @@ public class NexgoReadCard extends AppCompatActivity {
                 Log.d("nexgo",  "onCardHolderInputPin isOnlinePin = " + isOnlinePin);
                 Log.d("nexgo",  "onCardHolderInputPin leftTimes = " + leftTimes);
 
-                showInputPin(isOnlinePin);
-
+                runOnUiThread(() -> showInputPin(isOnlinePin, leftTimes));
             }
 
 
@@ -317,7 +322,6 @@ public class NexgoReadCard extends AppCompatActivity {
                 Log.d("nexgo",  "onRemoveCard" );
 
                 emvHandler2.onSetRemoveCardResponse();
-                emvHandler2.emvProcessCancel();
             }
 
 
@@ -363,7 +367,7 @@ public class NexgoReadCard extends AppCompatActivity {
 
             @Override
             public void onFinish(final int retCode, EmvProcessResultEntity entity) {
-                Log.d("nexgo", "onFinish" + "retCode :" + retCode );
+                Log.d("nexgo", "onFinish" + "retCode :" + retCode ); //-8014
 
                 boolean flag = false;
                 byte[] aid = emvHandler2.getTlv(new byte[]{0x4F}, EmvDataSourceEnum.FROM_KERNEL);
@@ -434,16 +438,11 @@ public class NexgoReadCard extends AppCompatActivity {
                 byte[] tlv_50 = emvHandler2.getTlv(new byte[]{(byte) 0x50}, EmvDataSourceEnum.FROM_KERNEL);
                 Log.d("nexgo", "tlv_50--" + ByteUtils.byteArray2HexString(tlv_50));
 
-//        runOnUiThread(new Runnable() {
-//            @Override
-//            public void run() {
-//                Toast.makeText(EmvActivity2.this, retCode + "", Toast.LENGTH_SHORT).show();
-//            }
-//        });
-
                 switch (retCode){
                     case SdkResult.Emv_Success_Arpc_Fail:
                     case SdkResult.Success:
+                        fallBackRetries = 0;
+                        break;
                     case SdkResult.Emv_Script_Fail:
                         //online approve
                         break;
@@ -461,6 +460,11 @@ public class NexgoReadCard extends AppCompatActivity {
                     case SdkResult.Emv_Candidatelist_Empty:// Application have no aid list
                     case SdkResult.Emv_FallBack://  FallBack ,chip card reset failed
                         //fallback process
+//                        TODO(Read card again)
+                        if (fallBackRetries < 2) {
+                            readcard(result, transData);
+                            fallBackRetries += 1;
+                        }
                         break;
 
                     case SdkResult.Emv_Arpc_Fail: //
@@ -675,7 +679,7 @@ public class NexgoReadCard extends AppCompatActivity {
 
     private byte[] pinRes = new byte[8];;
 
-    private void showInputPin(boolean isOnlinPin) {
+    private void showInputPin(boolean isOnlinPin, int leftTimes) {
         int INJECTED_PIN_SLOT = 0;
         if (pinPad.dukptCurrentKsn(INJECTED_PIN_SLOT) == null) {
             //There is no key injected; cannot continue - show some error to user and break out
@@ -684,68 +688,75 @@ public class NexgoReadCard extends AppCompatActivity {
             return;
         }
         int[] pinLen = new int[]{0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c};
-        pinPad.setPinKeyboardMode(PinKeyboardModeEnum.FIXED);
+        pinPad.setPinKeyboardMode(PinKeyboardModeEnum.RANDOM);
         //Set the PINPAD algorithm mode - we want to use DUKPT
         pinPad.setAlgorithmMode(AlgorithmModeEnum.DUKPT);
         byte[] panBytes = ByteUtils.string2ASCIIByteArray(cardNo);
+        View dv = getLayoutInflater().inflate(R.layout.pin_key_layout, null);
+
+        pwdAlertDialog = new AlertDialog.Builder(mContext).setView(dv).create();
+        pwdTv = dv.findViewById(R.id.pin_tv);
+
+        TextView amount = dv.findViewById(R.id.amount_tv);
+        TextView triesLeft = dv.findViewById(R.id.tries_left_tv);
+        amount.setText(this.amount);
+        triesLeft.setText(String.valueOf(leftTimes));
+        pwdAlertDialog.setCanceledOnTouchOutside(false);
+        pwdAlertDialog.show();
+
+        OnPinPadInputListener pinPadInputListener =  new OnPinPadInputListener() {
+            @Override
+            public void onInputResult(int retCode, byte[] data) {
+                if (retCode == SdkResult.Success || retCode == SdkResult.PinPad_No_Pin_Input
+                        || retCode == SdkResult.PinPad_Input_Cancel) {
+                    if (pwdAlertDialog != null) {
+                        pwdAlertDialog.dismiss();
+                    }
+                    if (data != null) {
+                        if (isOnlinPin) {
+                            byte[] temp = new byte[8];
+                            System.arraycopy(data, 0, temp, 0, 8);
+
+                            pinBlockArray = ByteUtils.byteArray2HexString(data).toUpperCase();                              //Set the pinBlockArray (String) to the return value 'data' (PIN output) for sending to host
+                            pinKsn = ByteUtils.byteArray2HexString(pinPad.dukptCurrentKsn(0)).toUpperCase();   //Save the pinKsn in case needed to send to host
+                        } else {
+                            pinKsn = ByteUtils.byteArray2HexString(pinPad.dukptCurrentKsn(0)).toUpperCase();   //Save the pinKsn in case needed to send to host
+
+                            pinPad.dukptKsnIncrease(0);
+                        }
+
+                        //Incremenent the KSN counter
+                        pinPad.dukptKsnIncrease(0);
+                    }else {
+                        Log.d("CArd pin result", "is empty");
+                    }
+                    emvHandler2.onSetPinInputResponse(retCode != SdkResult.PinPad_Input_Cancel, retCode == SdkResult.PinPad_No_Pin_Input);
+                } else {
+                    Log.d("nexgo", "pin enter failed");
+                    emvHandler2.onSetPinInputResponse(false, false);
+                }
+            }
+
+            @Override
+            public void onSendKey(byte b) {
+                runOnUiThread(() -> {
+                    if (b == PinPadKeyCode.KEYCODE_CLEAR) {
+                        pwdText = "";
+                    } else {
+                        pwdText += "* ";
+                    }
+                    pwdTv.setText(pwdText);
+                });
+            }
+        };
         if (isOnlinPin) {
             isOnline = "0";
             if(cardNo == null){
                 cardNo = emvHandler2.getEmvCardDataInfo().getCardNo();
             }
-            pinPad.inputOnlinePin(pinLen,
-                    60, cardNo.getBytes(), INJECTED_PIN_SLOT, PinAlgorithmModeEnum.ISO9564FMT1, new OnPinPadInputListener() {
-                        @Override
-                        public void onInputResult(int retCode, byte[] data) {
-                            if (retCode == SdkResult.Success || retCode == SdkResult.PinPad_No_Pin_Input
-                                    || retCode == SdkResult.PinPad_Input_Cancel) {
-                                if (data != null) {
-                                    byte[] temp = new byte[8];
-                                    System.arraycopy(data, 0, temp, 0, 8);
-
-                                    pinBlockArray = ByteUtils.byteArray2HexString(data).toUpperCase();                              //Set the pinBlockArray (String) to the return value 'data' (PIN output) for sending to host
-                                    pinKsn = ByteUtils.byteArray2HexString(pinPad.dukptCurrentKsn(0)).toUpperCase();   //Save the pinKsn in case needed to send to host
-
-                                    //Incremenent the KSN counter
-                                    pinPad.dukptKsnIncrease(0);
-                                }else {
-                                    Log.d("CArd pin result", "is empty");
-                                }
-                                emvHandler2.onSetPinInputResponse(retCode != SdkResult.PinPad_Input_Cancel, retCode != SdkResult.PinPad_No_Pin_Input);
-                            } else {
-                                Log.d("nexgo", "pin enter failed");
-                                emvHandler2.onSetPinInputResponse(false, false);
-                            }
-                        }
-                        @Override
-                        public void onSendKey(byte b) {}
-                    });
+            pinPad.inputOnlinePin(pinLen, 60, cardNo.getBytes(), INJECTED_PIN_SLOT, PinAlgorithmModeEnum.ISO9564FMT1, pinPadInputListener);
         } else {
-            pinPad.inputOfflinePin(pinLen,
-                    60, new OnPinPadInputListener() {
-                        @Override
-                        public void onInputResult(int retCode, byte[] data) {
-                            if (retCode == SdkResult.Success || retCode == SdkResult.PinPad_No_Pin_Input
-                                    || retCode == SdkResult.PinPad_Input_Cancel) {
-                                if (data != null) {
-                                    pinKsn = ByteUtils.byteArray2HexString(pinPad.dukptCurrentKsn(0)).toUpperCase();   //Save the pinKsn in case needed to send to host
-
-                                    //Incremenent the KSN counter
-                                    pinPad.dukptKsnIncrease(0);
-
-                                }else {
-                                    Log.d("CArd pin result", "is empty");
-                                }
-                                emvHandler2.onSetPinInputResponse(retCode != SdkResult.PinPad_Input_Cancel, retCode != SdkResult.PinPad_No_Pin_Input);
-                            } else {
-                                Log.d("nexgo", "pin enter failed");
-                                emvHandler2.onSetPinInputResponse(false, false);
-                            }
-                        }
-
-                        @Override
-                        public void onSendKey(byte b) {}
-                    });
+            pinPad.inputOfflinePin(pinLen, 60, pinPadInputListener);
         }
     }
 
@@ -782,16 +793,6 @@ public class NexgoReadCard extends AppCompatActivity {
 
         emvHandler2.delAllAid();
         if(emvHandler2.getAidListNum() <= 0){
-//            List<AidEntity> aidEntityList = emvUtils.getAidList();
-//            Log.d("aid value", String.valueOf(aidEntityList));
-//            if (aidEntityList == null) {
-//                Log.d("nexgo", "initAID failed");
-//                return;
-//            }
-//
-//            int i = emvHandler2.setAidParaList(aidEntityList);
-//            Log.d("nexgo", "setAidParaList 1" + i);
-
             String[] newAids = new String[]{
                     // Verve
                     "9F0607A0000003710001DF0101009F08020140DF1105DC4000A800DF1205DC4004F800DF130500100000009F1B0400000000DF1504F0F0F0F0DF160100DF170100DF14039F3704DF180101DF1906000000010000DF2006001000000000DF21060000000300009F3303E0F0C89F6604620000805F2A0208409F1A020418",
@@ -853,16 +854,6 @@ public class NexgoReadCard extends AppCompatActivity {
         int capk_num = emvHandler2.getCapkListNum();
         Log.d("nexgo", "capk_num " + capk_num);
         if(capk_num <= 0){
-//            List<CapkEntity> capkEntityList = emvUtils.getCapkList();
-//            Log.d("capk value", String.valueOf(capkEntityList));
-//            if (capkEntityList == null) {
-//                Log.d("nexgo", "initCAPK failed");
-//                return;
-//            }
-//            int j = emvHandler2.setCAPKList(capkEntityList);
-//            Log.d("nexgo", "setCAPKList 1" + j);
-
-
             String[] newCapks = new String[]{
 
                     // Verve Capk
@@ -919,5 +910,39 @@ public class NexgoReadCard extends AppCompatActivity {
         }
 
     }
+
+    public void checkCard(@NonNull MethodChannel.Result result) {
+        if (deviceEngine == null) {
+            deviceEngine = APIProxy.getDeviceEngine(mContext);
+        }
+
+        CardReader cardReader =  deviceEngine.getCardReader();
+        HashSet<CardSlotTypeEnum> slotTypes = new HashSet<>();
+        slotTypes.add(CardSlotTypeEnum.ICC1);
+        slotTypes.add(CardSlotTypeEnum.RF);
+
+        runOnUiThread(() -> cardReader.searchCard(slotTypes, 60, new OnCardInfoListener() {
+
+            @Override
+            public void onCardInfo(int i, CardInfoEntity cardInfoEntity) {
+                if (i == SdkResult.Success) {
+                    result.success(i);
+                } else {
+                    result.error("Error", "No Card", null);
+                }
+            }
+
+            @Override
+            public void onSwipeIncorrect() {
+                result.error("Error", "Not Supported", null);
+            }
+
+            @Override
+            public void onMultipleCards() {
+                result.error("Error", "Not Supported", null);
+            }
+        }));
+    }
+
 }
 

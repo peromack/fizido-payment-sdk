@@ -66,6 +66,9 @@ public class NexgoPosPlugin implements FlutterPlugin, MethodCallHandler, Activit
             case "nexgoSearchCard":
                 nexgoReadCard.searchCard(result, call.argument("transactionAmount"));
                 break;
+            case "checkNexgoCard":
+                nexgoReadCard.checkCard(result);
+                break;
             case "cancelNexgoSearch":
                 nexgoReadCard.cancelSearch();
                 break;
