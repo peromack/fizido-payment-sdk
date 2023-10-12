@@ -404,18 +404,6 @@ public class NexgoReadCard extends AppCompatActivity {
                 Log.d(NexgoReadCard.class.getName(), ">>>onCompleted :" + cardDataMap + "\n" + ".............." + "\n" +
                         "pinKSn " + pinKsn + "\n" + "pinBlockArray " + pinBlockArray );
 
-                new Handler(Looper.getMainLooper()).post(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            result.success(cardDataMap);
-
-                        } catch (NullPointerException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                });
-
                 //get CVM result
                 Log.d("nexgo", "getEmvCvmResult:" + emvHandler2.getEmvCvmResult());
 
@@ -441,7 +429,17 @@ public class NexgoReadCard extends AppCompatActivity {
                 switch (retCode){
                     case SdkResult.Emv_Success_Arpc_Fail:
                     case SdkResult.Success:
-                        fallBackRetries = 0;
+                        new Handler(Looper.getMainLooper()).post(new Runnable() {
+                            @Override
+                            public void run() {
+                                try {
+                                    fallBackRetries = 0;
+                                    result.success(cardDataMap);
+                                } catch (NullPointerException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        });
                         break;
                     case SdkResult.Emv_Script_Fail:
                         //online approve
