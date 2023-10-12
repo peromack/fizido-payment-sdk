@@ -708,10 +708,12 @@ public class NexgoReadCard extends AppCompatActivity {
         // Set the PINPAD algorithm mode - we want to use DUKPT
         pinPad.setAlgorithmMode(AlgorithmModeEnum.DUKPT);
         byte[] panBytes = ByteUtils.string2ASCIIByteArray(cardNo);
-        mContext.runOnUiThread(() -> {
-            View dv = mContext.getLayoutInflater().inflate(R.layout.pin_key_layout, null);
 
-            pwdAlertDialog = new AlertDialog.Builder(mContext).setView(dv).create();
+        this.runOnUiThread(() -> {
+
+            View dv = this.getLayoutInflater().inflate(R.layout.pin_key_layout, null);
+
+            pwdAlertDialog = new AlertDialog.Builder(this).setView(dv).create();
             pwdTv = dv.findViewById(R.id.pin_tv);
 
             TextView amount = dv.findViewById(R.id.amount_tv);
