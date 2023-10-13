@@ -209,5 +209,6 @@
         ROM: One download is permanent.<br>
         </font>]]></Data>
     </string>
+    <string name="enter_pin">Enter Pin</string>
 
 </resources>

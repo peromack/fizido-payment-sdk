@@ -36,6 +36,9 @@ public class NexgoPosPlugin implements FlutterPlugin, MethodCallHandler, Activit
     NexgoReadCard nexgoReadCard;
     private Context mContext;
 
+    private  Activity activity;
+
+
     @Override
     public void onAttachedToEngine(@NonNull FlutterPluginBinding flutterPluginBinding) {
         channel = new MethodChannel(flutterPluginBinding.getBinaryMessenger(), "nexgo_pos");
@@ -46,7 +49,7 @@ public class NexgoPosPlugin implements FlutterPlugin, MethodCallHandler, Activit
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onMethodCall(@NonNull MethodCall call, @NonNull Result result) {
-        nexgoReadCard = new NexgoReadCard(mContext);
+        nexgoReadCard = new NexgoReadCard(mContext, activity);
 
         switch (call.method) {
             case "initNexgoEmv":
@@ -87,7 +90,7 @@ public class NexgoPosPlugin implements FlutterPlugin, MethodCallHandler, Activit
     @Override
     public void onAttachedToActivity(@NonNull @org.jetbrains.annotations.NotNull ActivityPluginBinding binding) {
         // TODO: your plugin is now attached to an Activity
-        Activity activity = binding.getActivity();
+        activity = binding.getActivity();
         mContext = binding.getActivity().getApplicationContext();
     }
 

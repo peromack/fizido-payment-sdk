@@ -49,12 +49,13 @@ class NexgoPos {
     }
   }
 
-  static Future<void> checkNexgoCard() async {
+  static Future<bool?> checkNexgoCard() async {
     try {
-      var result = await _channel.invokeMethod('checkNexgoCard');
+      var result = await _channel.invokeMethod('checkNexgoCard'); //if true there is card otherwise no card.
       return result;
     } catch (e) {
       print(e);
+      return null;
     }
   }
 

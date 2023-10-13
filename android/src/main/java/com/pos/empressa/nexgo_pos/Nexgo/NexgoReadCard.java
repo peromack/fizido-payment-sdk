@@ -1,11 +1,15 @@
 package com.pos.empressa.nexgo_pos.Nexgo;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
@@ -66,11 +70,13 @@ public class NexgoReadCard extends AppCompatActivity {
     private EmvHandler2 emvHandler2;
     private String cardNo;
     private Context mContext;
+
+    private final Activity mActivity;
     private EmvUtils emvUtils;
 
     private PinPad pinPad;
 
-    private String pwdText;
+    private String pwdText = "";
     private TextView pwdTv;
     private AlertDialog pwdAlertDialog;
 
@@ -92,8 +98,9 @@ public class NexgoReadCard extends AppCompatActivity {
 
     private int fallBackRetries = 0;
 
-    public NexgoReadCard (Context mContext) {
+    public NexgoReadCard (Context mContext, Activity activity) {
         this.mContext = mContext;
+        this.mActivity = activity;
     }
 
     public void searchCard(@NonNull MethodChannel.Result result, int transactionAmount) {
@@ -147,6 +154,7 @@ public class NexgoReadCard extends AppCompatActivity {
             public void onCardInfo(int retCode, CardInfoEntity cardInfo) {
                 if (retCode == SdkResult.Success && cardInfo != null) {
                     mExistSlot = cardInfo.getCardExistslot();
+                    Log.d("nexgo", "====mExistSlot" + mExistSlot.toString());
                     EmvTransConfigurationEntity transData = new EmvTransConfigurationEntity();
                     transData.setTransAmount(amount);
 //            transData.setCashbackAmount("000000000100"); //if support cashback amount
@@ -368,6 +376,9 @@ public class NexgoReadCard extends AppCompatActivity {
             @Override
             public void onFinish(final int retCode, EmvProcessResultEntity entity) {
                 Log.d("nexgo", "onFinish" + "retCode :" + retCode ); //-8014
+                if (pwdAlertDialog != null) {
+                    pwdAlertDialog.dismiss();
+                }
 
                 boolean flag = false;
                 byte[] aid = emvHandler2.getTlv(new byte[]{0x4F}, EmvDataSourceEnum.FROM_KERNEL);
@@ -429,6 +440,7 @@ public class NexgoReadCard extends AppCompatActivity {
                 switch (retCode){
                     case SdkResult.Emv_Success_Arpc_Fail:
                     case SdkResult.Success:
+                        Log.d("nexgo", "success");
                         new Handler(Looper.getMainLooper()).post(new Runnable() {
                             @Override
                             public void run() {
@@ -459,6 +471,8 @@ public class NexgoReadCard extends AppCompatActivity {
                     case SdkResult.Emv_FallBack://  FallBack ,chip card reset failed
                         //fallback process
 //                        TODO(Read card again)
+                        Log.d("nexgo", "fallback retrying");
+
                         if (fallBackRetries < 2) {
                             readcard(result, transData);
                             fallBackRetries += 1;
@@ -690,15 +704,20 @@ public class NexgoReadCard extends AppCompatActivity {
         //Set the PINPAD algorithm mode - we want to use DUKPT
         pinPad.setAlgorithmMode(AlgorithmModeEnum.DUKPT);
         byte[] panBytes = ByteUtils.string2ASCIIByteArray(cardNo);
-        View dv = getLayoutInflater().inflate(R.layout.pin_key_layout, null);
 
-        pwdAlertDialog = new AlertDialog.Builder(mContext).setView(dv).create();
+        LayoutInflater inflater = LayoutInflater.from(mActivity);
+        View dv = inflater.inflate(R.layout.pin_key_layout, null);
+
+        pwdAlertDialog = new AlertDialog.Builder(mActivity, R.style.CustomAlertDialogStyle).setView(dv).create();
         pwdTv = dv.findViewById(R.id.pin_tv);
 
         TextView amount = dv.findViewById(R.id.amount_tv);
-        TextView triesLeft = dv.findViewById(R.id.tries_left_tv);
         amount.setText(this.amount);
-        triesLeft.setText(String.valueOf(leftTimes));
+        if(!isOnlinPin){
+            TextView triesLeft = dv.findViewById(R.id.tries_left_tv);
+            triesLeft.setText(leftTimes + "tries left");
+            triesLeft.setVisibility(View.VISIBLE);
+        }
         pwdAlertDialog.setCanceledOnTouchOutside(false);
         pwdAlertDialog.show();
 
@@ -915,31 +934,8 @@ public class NexgoReadCard extends AppCompatActivity {
         }
 
         CardReader cardReader =  deviceEngine.getCardReader();
-        HashSet<CardSlotTypeEnum> slotTypes = new HashSet<>();
-        slotTypes.add(CardSlotTypeEnum.ICC1);
-        slotTypes.add(CardSlotTypeEnum.RF);
-
-        runOnUiThread(() -> cardReader.searchCard(slotTypes, 60, new OnCardInfoListener() {
-
-            @Override
-            public void onCardInfo(int i, CardInfoEntity cardInfoEntity) {
-                if (i == SdkResult.Success) {
-                    result.success(i);
-                } else {
-                    result.error("Error", "No Card", null);
-                }
-            }
-
-            @Override
-            public void onSwipeIncorrect() {
-                result.error("Error", "Not Supported", null);
-            }
-
-            @Override
-            public void onMultipleCards() {
-                result.error("Error", "Not Supported", null);
-            }
-        }));
+        boolean cardExist = cardReader.isCardExist(CardSlotTypeEnum.ICC1);
+        runOnUiThread(() -> result.success(cardExist));
     }
 
 }

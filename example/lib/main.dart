@@ -102,6 +102,19 @@ class _MyAppState extends State<MyApp> {
     }
   }
 
+  Future<void> checkNexgoCard() async {
+    try {
+      var cardExist = await NexgoPos.checkNexgoCard();
+      if(cardExist != null) {
+        print("Card Exist Result ====> " + cardExist.toString());
+      }
+      setState(() {});
+    } on PlatformException catch (e) {
+      print(e);
+    }
+  }
+
+
   Future<void> searchNexgo() async {
     try {
       cardDetails = await NexgoPos.nexgoSearch(100);
@@ -164,6 +177,12 @@ class _MyAppState extends State<MyApp> {
                 searchNexgo();
               },
               child: Text('Search Nexgo'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                checkNexgoCard();
+              },
+              child: Text('Check Card'),
             ),
             ElevatedButton(
               onPressed: () {

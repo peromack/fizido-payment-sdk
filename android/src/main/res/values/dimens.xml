@@ -7,4 +7,9 @@
     <dimen name="normal_text_size">15sp</dimen>
     <dimen name="small_text_size">12sp</dimen>
     <dimen name="normal_margin">10dp</dimen>
+    <dimen name="dialog_width">350dp</dimen>
+    <dimen name="dialog_margin_bottom">55dp</dimen>
+
+    <dimen name="dialog_min_width_major">80%</dimen>
+    <dimen name="dialog_min_width_minor">80%</dimen>
 </resources>
