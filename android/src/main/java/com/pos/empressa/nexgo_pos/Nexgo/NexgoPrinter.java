@@ -24,12 +24,14 @@ public class NexgoPrinter {
     private final int FONT_SIZE_BIG = 24;
     private FontEntity fontSmall = new FontEntity(DotMatrixFontEnum.CH_SONG_20X20, DotMatrixFontEnum.ASC_SONG_8X16);
     private FontEntity fontNormal = new FontEntity(DotMatrixFontEnum.CH_SONG_24X24, DotMatrixFontEnum.ASC_SONG_12X24);
-    private FontEntity fontBold = new FontEntity(DotMatrixFontEnum.CH_SONG_24X24, DotMatrixFontEnum.ASC_SONG_BOLD_16X24);
-    private FontEntity fontBig = new FontEntity(DotMatrixFontEnum.CH_SONG_24X24, DotMatrixFontEnum.ASC_SONG_12X24, false, true);
+    private FontEntity fontBold = new FontEntity(DotMatrixFontEnum.CH_SONG_24X24,
+            DotMatrixFontEnum.ASC_SONG_BOLD_16X24);
+    private FontEntity fontBig = new FontEntity(DotMatrixFontEnum.CH_SONG_24X24, DotMatrixFontEnum.ASC_SONG_12X24,
+            false, true);
 
     private Context mContext;
 
-    public NexgoPrinter (Context mContext) {
+    public NexgoPrinter(Context mContext) {
         initializePrinter(mContext);
         this.mContext = mContext;
     }
@@ -40,14 +42,13 @@ public class NexgoPrinter {
         printer.setTypeface(Typeface.DEFAULT);
     }
 
-
     public void nexgoPrint(@NonNull MethodCall call) {
         printer.initPrinter();
         printer.setLetterSpacing(5);
         printer.appendPrnStr(call.argument("vendorName"), fontNormal, AlignEnum.CENTER);
         printer.appendPrnStr("Transaction Receipt", fontBig, AlignEnum.CENTER);
         printer.appendPrnStr("--------------------------------", fontNormal, AlignEnum.CENTER);
-        printer.appendPrnStr("AMOUNT: NGN" +call.argument("originalMinorAmount").toString(), fontNormal, AlignEnum.CENTER);
+        printer.appendPrnStr("NGN" + call.argument("originalMinorAmount").toString(), fontNormal, AlignEnum.CENTER);
         printer.appendPrnStr("--------------------------------", fontNormal, AlignEnum.CENTER);
         printText(call, "merchantName", "Merchant Name");
         printText(call, "merchantLocation", "Merchant Location");
