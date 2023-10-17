@@ -7,6 +7,7 @@ import android.os.Looper;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.nexgo.common.ByteUtils;
 import com.nexgo.oaf.apiv3.APIProxy;
 import com.nexgo.oaf.apiv3.DeviceEngine;
 import com.nexgo.oaf.apiv3.device.pinpad.DukptKeyTypeEnum;
@@ -33,16 +34,15 @@ public class NexgoApplication extends FlutterApplication {
         byte[] iPekByte = hexToByteArr(IPEK);
 
         PinPad pinPad = deviceEngine.getPinPad();
-        if (pinPad.dukptCurrentKsn(INJECTED_PIN_SLOT) != null) {
-            int i = pinPad.dukptKeyInject(0, DukptKeyTypeEnum.IPEK, iPekByte, iPekByte.length, hexToByteArr(getInitialKSN()));
-            new Handler(Looper.getMainLooper()).post(() -> {
-                if (i == 0) {
-                    Toast.makeText(mContext, "key init success " + i, Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(mContext, "key init failed " + i, Toast.LENGTH_SHORT).show();
-                }
-                result.success(i);
-            });
+        byte[] currentKSN = pinPad.dukptCurrentKsn(INJECTED_PIN_SLOT);
+        if (currentKSN == null) {
+            injectKSN(pinPad, iPekByte, result);
+        } else {
+            String hexStringKSN = ByteUtils.byteArray2HexString(currentKSN);
+            char lastChar = hexStringKSN.charAt(hexStringKSN.length() - 1);
+            if (lastChar == 'A') {
+                injectKSN(pinPad, iPekByte, result);
+            }
         }
     }
 
@@ -69,5 +69,17 @@ public class NexgoApplication extends FlutterApplication {
         editor.putInt("KSN",latestKSN);
         editor.apply();
         return  "0000000002DDDDE"+ String.format("%05d", latestKSN);
+    }
+
+    private void injectKSN(PinPad pinPad, byte[] iPekByte, MethodChannel.Result result) {
+        int i = pinPad.dukptKeyInject(0, DukptKeyTypeEnum.IPEK, iPekByte, iPekByte.length, hexToByteArr(getInitialKSN()));
+        new Handler(Looper.getMainLooper()).post(() -> {
+            if (i == 0) {
+                Toast.makeText(mContext, "key init success " + i, Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(mContext, "key init failed " + i, Toast.LENGTH_SHORT).show();
+            }
+            result.success(i);
+        });
     }
 }
