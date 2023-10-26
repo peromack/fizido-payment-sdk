@@ -48,7 +48,7 @@ public class NexgoPrinter {
         printer.appendPrnStr(call.argument("vendorName"), fontNormal, AlignEnum.CENTER);
         printer.appendPrnStr("Transaction Receipt", fontBig, AlignEnum.CENTER);
         printer.appendPrnStr("--------------------------------", fontNormal, AlignEnum.CENTER);
-        printer.appendPrnStr("NGN" + call.argument("originalMinorAmount").toString(), fontNormal, AlignEnum.CENTER);
+        printer.appendPrnStr("NGN " + call.argument("originalMinorAmount").toString(), fontNormal, AlignEnum.CENTER);
         printer.appendPrnStr("--------------------------------", fontNormal, AlignEnum.CENTER);
         printText(call, "merchantName", "Merchant Name");
         printText(call, "merchantLocation", "Merchant Location");
