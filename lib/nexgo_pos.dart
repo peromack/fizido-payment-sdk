@@ -9,6 +9,7 @@ class NexgoPos {
   static Future<void> initializeNexgoTerminal() async {
     try {
       var result = await _channel.invokeMethod('initNexgoEmv');
+      //If result is not zero, the terminate key injection failed
     } catch (e) {
       print(e);
     }

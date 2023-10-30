@@ -54,7 +54,7 @@ public class NexgoPosPlugin implements FlutterPlugin, MethodCallHandler, Activit
         switch (call.method) {
             case "initNexgoEmv":
                 NexgoApplication nApplication = new NexgoApplication(mContext);
-                nApplication.initEmv();
+                nApplication.initEmv(result);
                 break;
             case "startNexgoPrinter":
                 NexgoPrinter nexgoPrinter = new NexgoPrinter(mContext);

@@ -8,10 +8,6 @@ import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
-import android.widget.ListView;
-import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,6 +21,7 @@ import com.nexgo.oaf.apiv3.APIProxy;
 import com.nexgo.oaf.apiv3.DeviceEngine;
 import com.nexgo.oaf.apiv3.SdkResult;
 import com.nexgo.oaf.apiv3.device.pinpad.AlgorithmModeEnum;
+import com.nexgo.oaf.apiv3.device.pinpad.DukptKeyTypeEnum;
 import com.nexgo.oaf.apiv3.device.pinpad.OnPinPadInputListener;
 import com.nexgo.oaf.apiv3.device.pinpad.PinAlgorithmModeEnum;
 import com.nexgo.oaf.apiv3.device.pinpad.PinKeyboardModeEnum;
@@ -52,16 +49,15 @@ import com.pos.empressa.nexgo_pos.Nexgo.utils.TlvUtil;
 import com.pos.empressa.nexgo_pos.R;
 import com.pos.empressa.nexgo_pos.ksnUtil.KSNUtilities;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 import io.flutter.plugin.common.MethodChannel;
 
@@ -229,31 +225,6 @@ public class NexgoReadCard extends AppCompatActivity {
             @Override
             public void onSelApp(final List<String> appNameList, List<CandidateAppInfoEntity> appInfoList, boolean isFirstSelect) {
                 Log.d("Read Card", "Calling Select App");
-                new Handler(Looper.getMainLooper()).post(() -> {
-                    View dv = getLayoutInflater().inflate(R.layout.dialog_app_list, null);
-                    final AlertDialog alertDialog = new AlertDialog.Builder(mContext).setView(dv).create();
-                    ListView lv = (ListView) dv.findViewById(R.id.aidlistView);
-                    List<Map<String, String>> listItem = new ArrayList<>();
-                    for (int i = 0; i < appNameList.size(); i++) {
-                        Map<String, String> map = new HashMap<>();
-                        map.put("appIdx", (i + 1) + "");
-                        map.put("appName", appNameList.get(i));
-                        listItem.add(map);
-                    }
-                    SimpleAdapter adapter = new SimpleAdapter(mContext,
-                            listItem,
-                            R.layout.app_list_item,
-                            new String[]{"appIdx", "appName"},
-                            new int[]{R.id.tv_appIndex, R.id.tv_appName});
-                    lv.setAdapter(adapter);
-                    lv.setOnItemClickListener((parent, view, position, id) -> {
-                        emvHandler2.onSetSelAppResponse(position + 1);
-                        alertDialog.dismiss();
-                        alertDialog.cancel();
-                    });
-                    alertDialog.setCanceledOnTouchOutside(false);
-                    alertDialog.show();
-                });
             }
 
             @Override
@@ -712,10 +683,10 @@ public class NexgoReadCard extends AppCompatActivity {
         pwdTv = dv.findViewById(R.id.pin_tv);
 
         TextView amount = dv.findViewById(R.id.amount_tv);
-        amount.setText(this.amount);
+        amount.setText(formatAmount(Integer.parseInt(this.amount)));
         if(!isOnlinPin){
             TextView triesLeft = dv.findViewById(R.id.tries_left_tv);
-            triesLeft.setText(leftTimes + "tries left");
+            triesLeft.setText(String.format("%d tries left", leftTimes));
             triesLeft.setVisibility(View.VISIBLE);
         }
         pwdAlertDialog.setCanceledOnTouchOutside(false);
@@ -724,26 +695,27 @@ public class NexgoReadCard extends AppCompatActivity {
         OnPinPadInputListener pinPadInputListener =  new OnPinPadInputListener() {
             @Override
             public void onInputResult(int retCode, byte[] data) {
+                pwdText = "";
+                if (pwdAlertDialog != null) {
+                    pwdAlertDialog.dismiss();
+                }
                 if (retCode == SdkResult.Success || retCode == SdkResult.PinPad_No_Pin_Input
                         || retCode == SdkResult.PinPad_Input_Cancel) {
-                    if (pwdAlertDialog != null) {
-                        pwdAlertDialog.dismiss();
-                    }
                     if (data != null) {
                         if (isOnlinPin) {
                             byte[] temp = new byte[8];
                             System.arraycopy(data, 0, temp, 0, 8);
 
-                            pinBlockArray = ByteUtils.byteArray2HexString(data).toUpperCase();                              //Set the pinBlockArray (String) to the return value 'data' (PIN output) for sending to host
-                            pinKsn = ByteUtils.byteArray2HexString(pinPad.dukptCurrentKsn(0)).toUpperCase();   //Save the pinKsn in case needed to send to host
-                        } else {
-                            pinKsn = ByteUtils.byteArray2HexString(pinPad.dukptCurrentKsn(0)).toUpperCase();   //Save the pinKsn in case needed to send to host
+                            pinBlockArray = ByteUtils.byteArray2HexString(data).toUpperCase();  //Set the pinBlockArray (String) to the return value 'data' (PIN output) for sending to host
+                            pinKsn = ByteUtils.byteArray2HexString(pinPad.dukptCurrentKsn(0));   //Save the pinKsn in case needed to send to host
 
-                            pinPad.dukptKsnIncrease(0);
+                            char lastChar = pinKsn.charAt(pinKsn.length() - 1);
+                            if (lastChar == '9') {
+                                injectKSN(pinPad);
+                            } else {
+                                pinPad.dukptKsnIncrease(0); //Incremenent the KSN counter
+                            }
                         }
-
-                        //Incremenent the KSN counter
-                        pinPad.dukptKsnIncrease(0);
                     }else {
                         Log.d("CArd pin result", "is empty");
                     }
@@ -936,6 +908,32 @@ public class NexgoReadCard extends AppCompatActivity {
         CardReader cardReader =  deviceEngine.getCardReader();
         boolean cardExist = cardReader.isCardExist(CardSlotTypeEnum.ICC1);
         runOnUiThread(() -> result.success(cardExist));
+    }
+
+    private void injectKSN(PinPad pinPad) {
+        byte[] iPekByte = hexToByteArr("3F2216D8297BCE9C");
+        int i = pinPad.dukptKeyInject(0, DukptKeyTypeEnum.IPEK, iPekByte, iPekByte.length, hexToByteArr(getKSN()));
+        Log.d("nexgo", "key inject " + i);
+    }
+
+    private byte[] hexToByteArr(String hexString) {
+        if(hexString == null) return null;
+        byte[] byteArray = new byte[hexString.length() / 2];
+        for (int i = 0; i < byteArray.length; i++) {
+            int index = i * 2;
+            int j = Integer.parseInt(hexString.substring(index, index + 2), 16);
+            byteArray[i] = (byte) j;
+        }
+
+        return byteArray;
+    }
+    private String getKSN() {
+        return "0000000002DDDDE00001";
+    }
+
+    private String formatAmount(int amount) {
+        DecimalFormat decimalFormat = new DecimalFormat("#,###");
+        return "₦ " + decimalFormat.format(amount);
     }
 
 }

@@ -2,13 +2,19 @@ package com.pos.empressa.nexgo_pos.Nexgo;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Handler;
+import android.os.Looper;
+import android.util.Log;
 import android.widget.Toast;
 
+import com.nexgo.common.ByteUtils;
 import com.nexgo.oaf.apiv3.APIProxy;
 import com.nexgo.oaf.apiv3.DeviceEngine;
 import com.nexgo.oaf.apiv3.device.pinpad.DukptKeyTypeEnum;
+import com.nexgo.oaf.apiv3.device.pinpad.PinPad;
 
 import io.flutter.app.FlutterApplication;
+import io.flutter.plugin.common.MethodChannel;
 
 public class NexgoApplication extends FlutterApplication {
 
@@ -20,16 +26,23 @@ public class NexgoApplication extends FlutterApplication {
         this.mContext = mContext;
     }
 
-    public void initEmv() {
+    public void initEmv(MethodChannel.Result result) {
         DeviceEngine deviceEngine = APIProxy.getDeviceEngine(mContext);
+
+        int INJECTED_PIN_SLOT = 0;
 
         byte[] iPekByte = hexToByteArr(IPEK);
 
-        int result = deviceEngine.getPinPad().dukptKeyInject(0, DukptKeyTypeEnum.IPEK, iPekByte, iPekByte.length, hexToByteArr(getInitialKSN()));
-        if (result == 0) {
-            Toast.makeText(mContext, "key init success " + result, Toast.LENGTH_SHORT).show();
+        PinPad pinPad = deviceEngine.getPinPad();
+        byte[] currentKSN = pinPad.dukptCurrentKsn(INJECTED_PIN_SLOT);
+        if (currentKSN == null) {
+            injectKSN(pinPad, iPekByte, result);
         } else {
-            Toast.makeText(mContext, "key init failed " + result, Toast.LENGTH_SHORT).show();
+            String hexStringKSN = ByteUtils.byteArray2HexString(currentKSN);
+            char lastChar = hexStringKSN.charAt(hexStringKSN.length() - 1);
+            if (lastChar == 'A') {
+                injectKSN(pinPad, iPekByte, result);
+            }
         }
     }
 
@@ -56,5 +69,17 @@ public class NexgoApplication extends FlutterApplication {
         editor.putInt("KSN",latestKSN);
         editor.apply();
         return  "0000000002DDDDE"+ String.format("%05d", latestKSN);
+    }
+
+    private void injectKSN(PinPad pinPad, byte[] iPekByte, MethodChannel.Result result) {
+        int i = pinPad.dukptKeyInject(0, DukptKeyTypeEnum.IPEK, iPekByte, iPekByte.length, hexToByteArr(getInitialKSN()));
+        new Handler(Looper.getMainLooper()).post(() -> {
+            if (i == 0) {
+                Toast.makeText(mContext, "key init success " + i, Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(mContext, "key init failed " + i, Toast.LENGTH_SHORT).show();
+            }
+            result.success(i);
+        });
     }
 }
