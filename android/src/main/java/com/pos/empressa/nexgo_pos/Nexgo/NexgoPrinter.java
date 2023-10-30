@@ -97,10 +97,47 @@ public class NexgoPrinter {
         });
     }
 
+    public void nexgoPrintTransactionSummary(@NonNull MethodCall call) {
+        printer.initPrinter();
+        printer.setLetterSpacing(5);
+        printer.appendPrnStr(call.argument("vendorName"), fontNormal, AlignEnum.CENTER);
+        printer.appendPrnStr("Transaction Receipt", fontBig, AlignEnum.CENTER);
+        printer.appendPrnStr("--------------------------------", fontNormal, AlignEnum.CENTER);
+        printer.appendPrnStr("End of Day Report", fontNormal, AlignEnum.CENTER);
+        printer.appendPrnStr("--------------------------------", fontNormal, AlignEnum.CENTER);
+        printText(call, "merchantName", "Merchant Name");
+        printText(call, "merchantLocation", "Merchant Location");
+        printText(call, "time", "Report Time");
+        printText(call, "totalTransactionAmount", "Total");
+        printText(call, "totalTransactionCount", "Count");
+        printer.appendPrnStr("--------------------------------", fontNormal, AlignEnum.CENTER);
+        printer.appendPrnStr("Summary breakdown", fontNormal, AlignEnum.CENTER);
+        printer.appendPrnStr("--------------------------------", fontNormal, AlignEnum.CENTER);
+        // Print pos payment
+        printer.appendPrnStr(call.argument("transactionType"), fontNormal, AlignEnum.LEFT);
+        printer.appendPrnStr("Count: " + call.argument("transactionCount").toString() + "\n", fontNormal,
+                AlignEnum.LEFT);
+        printer.appendPrnStr("Value: " + "NGN " + call.argument("transactionCount").toString() + "\n", fontNormal,
+                AlignEnum.LEFT);
+        printer.appendPrnStr("--------------------------------", fontNormal, AlignEnum.CENTER);
+        printFooter(call, "footer");
+        printer.appendPrnStr("\n", fontNormal, AlignEnum.LEFT);
+        printer.appendPrnStr("--------------------------------", fontNormal, AlignEnum.CENTER);
+        printer.startPrint(true, new OnPrintListener() {
+            @Override
+            public void onPrintResult(final int retCode) {
+            }
+        });
+    }
+
     private void printText(@NonNull MethodCall call, String key, String title) {
         if (call.argument(key) != null) {
             printer.appendPrnStr(title + ": " + call.argument(key) + "\n", fontNormal, AlignEnum.LEFT);
         }
+    }
+
+    private void printTitle(@NonNull MethodCall call, String key) {
+        printer.appendPrnStr(call.argument(key), fontNormal, AlignEnum.LEFT);
     }
 
     private void printFooter(@NonNull MethodCall call, String key) {
