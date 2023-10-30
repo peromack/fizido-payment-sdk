@@ -5,13 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5bcddf7f-5ba6-48c1-bcdb-f03017f36f8d" name="Changes" comment="remove redundant dependency">
-      <change beforePath="$PROJECT_DIR$/.dart_tool/package_config.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.dart_tool/package_config_subset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.dart_tool/version" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Flutter_Plugins.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Flutter_Plugins.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.packages" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/empressa_pos.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/empressa_pos.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/icc.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/icc.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -27,16 +23,17 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="file://$PROJECT_DIR$/example/lib/main.dart" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/android/src/main/java/com/pos/empressa/nexgo_pos/NexgoPosPlugin.java" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/.idea/libraries/Dart_SDK.xml" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/example/android/app/src/main/java/com/pos/empressa/empressa_pos_example/MainActivity.java" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/lib/icc.dart" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/android/build.gradle" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/../../../flutter/.pub-cache/git/message_parser-136d4aef9234ef9d263a288f6a18dd527a50363f/lib/entities/transaction_info.dart" root0="SKIP_INSPECTION" />
-    <setting file="file://$PROJECT_DIR$/pubspec.yaml" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/lib/empressa_pos.dart" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/android/src/main/java/com/pos/empressa/nexgo_pos/NexgoPosPlugin.java" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/example/android/app/src/main/java/com/pos/empressa/empressa_pos_example/MainActivity.java" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/example/lib/main.dart" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/lib/card_details.dart" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/lib/icc.dart" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/pubspec.yaml" root0="FORCE_HIGHLIGHTING" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
   </component>
   <component name="ProjectId" id="2GS4tdriAu2M3RTB9RMoqp8EbYI" />
   <component name="ProjectLevelVcsManager">
@@ -46,17 +43,16 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">
-    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
-    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
-    <property name="RunOnceActivity.cidr.known.project.marker" value="true" />
-    <property name="cidr.known.project.marker" value="true" />
-    <property name="dart.analysis.tool.window.visible" value="false" />
-    <property name="io.flutter.reload.alreadyRun" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../pero_nexgo_pos" />
-    <property name="settings.editor.selected.configurable" value="AndroidSdkUpdater" />
-    <property name="show.migrate.to.gradle.popup" value="false" />
-  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.cidr.known.project.marker": "true",
+    "cidr.known.project.marker": "true",
+    "dart.analysis.tool.window.visible": "false",
+    "show.migrate.to.gradle.popup": "false"
+  }
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\Okeke Chidiebube\sunyard_empressa_pos\android\libs" />
@@ -112,7 +108,6 @@
         </entry>
       </map>
     </option>
-    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="revert commit" />
