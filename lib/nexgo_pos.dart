@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:nexgo_pos/card_details.dart';
 import 'package:flutter/services.dart';
+import 'package:nexgo_pos/card_details.dart';
 
 class NexgoPos {
   static const MethodChannel _channel = const MethodChannel('nexgo_pos');
@@ -15,18 +15,22 @@ class NexgoPos {
     }
   }
 
-  static Future<dynamic> blusaltChargeTransaction(Map<String, dynamic> normalizedTerminalData) async {
+  static Future<dynamic> blusaltChargeTransaction(
+      Map<String, dynamic> normalizedTerminalData) async {
     try {
-      var result = await _channel.invokeMethod('chargeBlusaltTransaction', normalizedTerminalData);
+      var result = await _channel.invokeMethod(
+          'chargeBlusaltTransaction', normalizedTerminalData);
       return result;
     } catch (e) {
       print(e);
     }
   }
 
-  static Future<dynamic> fidizoChargeTransaction(Map<String, dynamic> normalizedTerminalData) async {
+  static Future<dynamic> fidizoChargeTransaction(
+      Map<String, dynamic> normalizedTerminalData) async {
     try {
-      var result = await _channel.invokeMethod('chargeFidizoTransaction', normalizedTerminalData);
+      var result = await _channel.invokeMethod(
+          'chargeFidizoTransaction', normalizedTerminalData);
       return result;
     } catch (e) {
       print(e);
@@ -35,7 +39,16 @@ class NexgoPos {
 
   static Future<void> nexgoPrint(Map<String, dynamic> printerDetails) async {
     try {
-      var result = await _channel.invokeMethod('startNexgoPrinter', printerDetails);
+      await _channel.invokeMethod('startNexgoPrinter', printerDetails);
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  static Future<void> nexgoPrintSummary(
+      Map<String, dynamic> printerDetails) async {
+    try {
+      await _channel.invokeMethod('startNexgoSummaryPrinter', printerDetails);
     } catch (e) {
       print(e);
     }
@@ -52,7 +65,8 @@ class NexgoPos {
 
   static Future<bool?> checkNexgoCard() async {
     try {
-      var result = await _channel.invokeMethod('checkNexgoCard'); //if true there is card otherwise no card.
+      var result = await _channel.invokeMethod(
+          'checkNexgoCard'); //if true there is card otherwise no card.
       return result;
     } catch (e) {
       print(e);
@@ -62,9 +76,9 @@ class NexgoPos {
 
   static Future<CardDetails?> nexgoSearch(int transactionAmount) async {
     CardDetails? cardDetails;
-    try{
-      var result = await _channel
-          .invokeMethod('nexgoSearchCard', {"transactionAmount": transactionAmount});
+    try {
+      var result = await _channel.invokeMethod(
+          'nexgoSearchCard', {"transactionAmount": transactionAmount});
       var cardResponse = Map<String, String>.from(result);
       cardDetails = CardDetails.fromJson(cardResponse);
       var track2Data = cardDetails.the57!;
@@ -73,10 +87,9 @@ class NexgoPos {
       var expiry = strTrack2.split('D')[1].substring(0, 4);
       var src = strTrack2.split("D")[1].substring(4, 7);
       cardDetails.strTrack2 = strTrack2;
-      cardDetails.pan =  pan;
+      cardDetails.pan = pan;
       cardDetails.expiry = expiry;
       cardDetails.src = src;
-
     } on PlatformException catch (e) {
       cardDetails = null;
       print(e.stacktrace);
@@ -84,7 +97,3 @@ class NexgoPos {
     return cardDetails;
   }
 }
-
-
-
-
