@@ -62,6 +62,7 @@ import java.util.Locale;
 import io.flutter.plugin.common.MethodChannel;
 
 public class NexgoReadCard extends AppCompatActivity {
+    private final int charge = 1075;
     private DeviceEngine deviceEngine;
     private EmvHandler2 emvHandler2;
     private String cardNo;
@@ -152,6 +153,7 @@ public class NexgoReadCard extends AppCompatActivity {
                     mExistSlot = cardInfo.getCardExistslot();
                     Log.d("nexgo", "====mExistSlot" + mExistSlot.toString());
                     EmvTransConfigurationEntity transData = new EmvTransConfigurationEntity();
+
                     transData.setTransAmount(amount);
 //            transData.setCashbackAmount("000000000100"); //if support cashback amount
                     transData.setEmvTransType((byte) 0x00); //0x00-sale, 0x20-refund,0x09-sale with cashback
@@ -683,7 +685,7 @@ public class NexgoReadCard extends AppCompatActivity {
         pwdTv = dv.findViewById(R.id.pin_tv);
 
         TextView amount = dv.findViewById(R.id.amount_tv);
-        amount.setText(formatAmount(Integer.parseInt(this.amount)));
+        amount.setText(formatAmount(amountForDisplay()));
         if(!isOnlinPin){
             TextView triesLeft = dv.findViewById(R.id.tries_left_tv);
             triesLeft.setText(String.format("%d tries left", leftTimes));
@@ -933,7 +935,11 @@ public class NexgoReadCard extends AppCompatActivity {
 
     private String formatAmount(int amount) {
         DecimalFormat decimalFormat = new DecimalFormat("#,###");
-        return "₦ " + decimalFormat.format(amount);
+        return "₦ " + decimalFormat.format(amount) + ".00";
+    }
+
+    private int amountForDisplay() {
+        return Integer.parseInt(this.amount) + this.charge) / 100;
     }
 
 }
