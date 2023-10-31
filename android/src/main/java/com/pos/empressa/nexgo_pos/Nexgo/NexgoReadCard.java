@@ -77,7 +77,7 @@ public class NexgoReadCard extends AppCompatActivity {
     private TextView pwdTv;
     private AlertDialog pwdAlertDialog;
 
-    String amount ;
+    String amount;
 
     String cardPin = "";
 
@@ -95,13 +95,13 @@ public class NexgoReadCard extends AppCompatActivity {
 
     private int fallBackRetries = 0;
 
-    public NexgoReadCard (Context mContext, Activity activity) {
+    public NexgoReadCard(Context mContext, Activity activity) {
         this.mContext = mContext;
         this.mActivity = activity;
     }
 
     public void searchCard(@NonNull MethodChannel.Result result, int transactionAmount) {
-        try{
+        try {
 
             if (deviceEngine == null) {
                 deviceEngine = APIProxy.getDeviceEngine(mContext);
@@ -111,7 +111,7 @@ public class NexgoReadCard extends AppCompatActivity {
 
             emvHandler2 = deviceEngine.getEmvHandler2("app2");
 
-            //enable below lines to capture the EMV logs
+            // enable below lines to capture the EMV logs
             emvHandler2.emvDebugLog(true);
             LogUtils.setDebugEnable(true);
 
@@ -125,14 +125,14 @@ public class NexgoReadCard extends AppCompatActivity {
 
             startEmvTest(result);
 
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             emvHandler2.emvProcessCancel();
         }
     }
 
     public void cancelSearch() {
-        if(emvHandler2 != null) {
+        if (emvHandler2 != null) {
             emvHandler2.emvProcessCancel();
         }
     }
@@ -155,10 +155,10 @@ public class NexgoReadCard extends AppCompatActivity {
                     EmvTransConfigurationEntity transData = new EmvTransConfigurationEntity();
 
                     transData.setTransAmount(amount);
-//            transData.setCashbackAmount("000000000100"); //if support cashback amount
-                    transData.setEmvTransType((byte) 0x00); //0x00-sale, 0x20-refund,0x09-sale with cashback
-                    transData.setCountryCode("566");    //CountryCode
-                    transData.setCurrencyCode("566");    //CurrencyCode, 566 indicate Nigerian Naira
+                    // transData.setCashbackAmount("000000000100"); //if support cashback amount
+                    transData.setEmvTransType((byte) 0x00); // 0x00-sale, 0x20-refund,0x09-sale with cashback
+                    transData.setCountryCode("566"); // CountryCode
+                    transData.setCurrencyCode("566"); // CurrencyCode, 566 indicate Nigerian Naira
                     transData.setTermId("00000001");
                     transData.setMerId("000000000000001");
                     transData.setTransDate(new SimpleDateFormat("yyMMdd", Locale.getDefault()).format(new Date()));
@@ -176,28 +176,31 @@ public class NexgoReadCard extends AppCompatActivity {
 
                     setExpressPayDrl();
 
-                    if(isExpressPaySeePhoneTapCardAgain){
+                    if (isExpressPaySeePhoneTapCardAgain) {
                         AmexTransDataEntity amexTransDataEntity = new AmexTransDataEntity();
                         amexTransDataEntity.setExpressPaySeePhoneTapCardAgain(true);
                     }
 
-                    //for UPI
+                    // for UPI
                     UnionPayTransDataEntity unionPayTransDataEntity = new UnionPayTransDataEntity();
                     unionPayTransDataEntity.setQpbocForGlobal(true);
                     unionPayTransDataEntity.setSupportCDCVM(true);
-                    //if support QPS, please enable below lines
-                    //unionPayTransDataEntity.setSupportContactlessQps(true);
-                    //unionPayTransDataEntity.setContactlessQpsLimit("000000030000");
+                    // if support QPS, please enable below lines
+                    // unionPayTransDataEntity.setSupportContactlessQps(true);
+                    // unionPayTransDataEntity.setContactlessQpsLimit("000000030000");
                     transData.setUnionPayTransDataEntity(unionPayTransDataEntity);
 
-
-                    //if you want set contactless aid for first select, you can enable below lines. it is only used for contactless
-                    //for example, the card have paypass and pure application(paypass priority is highest), but the local bank required use pure application,
+                    // if you want set contactless aid for first select, you can enable below lines.
+                    // it is only used for contactless
+                    // for example, the card have paypass and pure application(paypass priority is
+                    // highest), but the local bank required use pure application,
                     // in this situation , you can use below method.
-//            emvHandler2.contactlessSetAidFirstSelect((byte) 0x07, ByteUtils.hexString2ByteArray("a0000000041010"));
-//            emvHandler2.contactlessSetAidFirstSelect((byte) 0x07, ByteUtils.hexString2ByteArray("a0000001524010"));
+                    // emvHandler2.contactlessSetAidFirstSelect((byte) 0x07,
+                    // ByteUtils.hexString2ByteArray("a0000000041010"));
+                    // emvHandler2.contactlessSetAidFirstSelect((byte) 0x07,
+                    // ByteUtils.hexString2ByteArray("a0000001524010"));
 
-                    Log.d("nexgo", "start emv " );
+                    Log.d("nexgo", "start emv ");
                     readcard(result, transData);
                 } else {
 
@@ -212,12 +215,13 @@ public class NexgoReadCard extends AppCompatActivity {
 
             @Override
             public void onMultipleCards() {
-                //cardReader.stopSearch(); //before next search card, please stopSearch first
+                // cardReader.stopSearch(); //before next search card, please stopSearch first
 
                 Log.d("Search Card", "please tap one card");
             }
         });
-//        Toast.makeText(mContext, "please insert or tap card", Toast.LENGTH_SHORT).show();
+        // Toast.makeText(mContext, "please insert or tap card",
+        // Toast.LENGTH_SHORT).show();
 
     }
 
@@ -225,41 +229,44 @@ public class NexgoReadCard extends AppCompatActivity {
         Log.d("Read Card", "Calling Read Card");
         emvHandler2.emvProcess(transData, new OnEmvProcessListener2() {
             @Override
-            public void onSelApp(final List<String> appNameList, List<CandidateAppInfoEntity> appInfoList, boolean isFirstSelect) {
+            public void onSelApp(final List<String> appNameList, List<CandidateAppInfoEntity> appInfoList,
+                    boolean isFirstSelect) {
                 Log.d("Read Card", "Calling Select App");
             }
 
             @Override
             public void onTransInitBeforeGPO() {
-                Log.d("nexgo",  "onAfterFinalSelectedApp" );
-                byte[] aid = emvHandler2.getTlv(new byte[]{0x4F}, EmvDataSourceEnum.FROM_KERNEL);
+                Log.d("nexgo", "onAfterFinalSelectedApp");
+                byte[] aid = emvHandler2.getTlv(new byte[] { 0x4F }, EmvDataSourceEnum.FROM_KERNEL);
 
                 if (mExistSlot == CardSlotTypeEnum.RF) {
                     if (aid != null) {
-                        if(ByteUtils.byteArray2HexString(aid).toUpperCase().contains("A000000004")){
-                            //Paypass
+                        if (ByteUtils.byteArray2HexString(aid).toUpperCase().contains("A000000004")) {
+                            // Paypass
                             configPaypassParameter(aid);
-                        }else if(ByteUtils.byteArray2HexString(aid).toUpperCase().contains("A000000003")){
-                            //Paywave
+                        } else if (ByteUtils.byteArray2HexString(aid).toUpperCase().contains("A000000003")) {
+                            // Paywave
                             configPaywaveParameters();
-                        }else if(ByteUtils.byteArray2HexString(aid).toUpperCase().contains("A000000025")){
-                            //ExpressPay
+                        } else if (ByteUtils.byteArray2HexString(aid).toUpperCase().contains("A000000025")) {
+                            // ExpressPay
                             configExpressPayParameter();
-                        }else if(ByteUtils.byteArray2HexString(aid).toUpperCase().contains("A000000541")){
-                            //configPureContactlessParameter();
-                        }else if(ByteUtils.byteArray2HexString(aid).toUpperCase().contains("A000000065")){
-                            //configJcbContactlessParameter();
+                        } else if (ByteUtils.byteArray2HexString(aid).toUpperCase().contains("A000000541")) {
+                            // configPureContactlessParameter();
+                        } else if (ByteUtils.byteArray2HexString(aid).toUpperCase().contains("A000000065")) {
+                            // configJcbContactlessParameter();
                         }
                     }
-                }else{
-                    //contact terminal capability ; if different card brand(depend on aid) have different terminal capability
-//            if(ByteUtils.byteArray2HexString(aid).toUpperCase().contains("A000000004")){
-//                emvHandler2.setTlv(new byte[]{(byte)0x9F,(byte)0x33}, new byte[]{(byte)0xE0,(byte)0xF8,(byte)0xC8});
-//                emvHandler2.setTlv(new byte[]{(byte)0x9F,(byte)0x1D}, ByteUtils.hexString2ByteArray("6C00800000000000"));//terminal risk
+                } else {
+                    // contact terminal capability ; if different card brand(depend on aid) have
+                    // different terminal capability
+                    // if(ByteUtils.byteArray2HexString(aid).toUpperCase().contains("A000000004")){
+                    // emvHandler2.setTlv(new byte[]{(byte)0x9F,(byte)0x33}, new
+                    // byte[]{(byte)0xE0,(byte)0xF8,(byte)0xC8});
+                    // emvHandler2.setTlv(new byte[]{(byte)0x9F,(byte)0x1D},
+                    // ByteUtils.hexString2ByteArray("6C00800000000000"));//terminal risk
 
-//            }
+                    // }
                 }
-
 
                 emvHandler2.onSetTransInitBeforeGPOResponse(true);
             }
@@ -268,21 +275,24 @@ public class NexgoReadCard extends AppCompatActivity {
             public void onContactlessTapCardAgain() {
                 Log.d("nexgo", "onReadCardAgain");
 
-                //this method only used for EMV contactless card if the host response the script. Such as paywave , AMEX...
+                // this method only used for EMV contactless card if the host response the
+                // script. Such as paywave , AMEX...
 
-                //for paywave, onOnlineProc-->onSetOnlineProcResponse->onContactlessTapCardAgain--> search contactless card ->onReadCardAgainResponse->onFinish
+                // for paywave,
+                // onOnlineProc-->onSetOnlineProcResponse->onContactlessTapCardAgain--> search
+                // contactless card ->onReadCardAgainResponse->onFinish
 
-//        emvHandler.onSetReadCardAgainResponse(true);
+                // emvHandler.onSetReadCardAgainResponse(true);
             }
 
             @Override
             public void onConfirmCardNo(final CardInfoEntity cardInfo) {
-                Log.d("nexgo",  "onConfirmCardNo" + new Gson().toJson(cardInfo) );
-                Log.d("nexgo",  "onConfirmCardNo" + cardInfo.getTk2() );
-                Log.d("nexgo",  "onConfirmCardNo" + cardInfo.getCardNo() );
-                if(mExistSlot == CardSlotTypeEnum.RF ){
+                Log.d("nexgo", "onConfirmCardNo" + new Gson().toJson(cardInfo));
+                Log.d("nexgo", "onConfirmCardNo" + cardInfo.getTk2());
+                Log.d("nexgo", "onConfirmCardNo" + cardInfo.getCardNo());
+                if (mExistSlot == CardSlotTypeEnum.RF) {
                     emvHandler2.onSetConfirmCardNoResponse(true);
-                    return ;
+                    return;
                 }
 
                 cardNo = cardInfo.getCardNo();
@@ -291,27 +301,24 @@ public class NexgoReadCard extends AppCompatActivity {
 
             @Override
             public void onCardHolderInputPin(final boolean isOnlinePin, int leftTimes) {
-                Log.d("nexgo",  "onCardHolderInputPin isOnlinePin = " + isOnlinePin);
-                Log.d("nexgo",  "onCardHolderInputPin leftTimes = " + leftTimes);
+                Log.d("nexgo", "onCardHolderInputPin isOnlinePin = " + isOnlinePin);
+                Log.d("nexgo", "onCardHolderInputPin leftTimes = " + leftTimes);
 
                 runOnUiThread(() -> showInputPin(isOnlinePin, leftTimes));
             }
 
-
             @Override
             public void onRemoveCard() {
-                Log.d("nexgo",  "onRemoveCard" );
+                Log.d("nexgo", "onRemoveCard");
 
                 emvHandler2.onSetRemoveCardResponse();
             }
 
-
             @Override
             public void onPrompt(PromptEnum promptEnum) {
-                Log.d("nexgo",  "onPrompt->" + promptEnum);
+                Log.d("nexgo", "onPrompt->" + promptEnum);
                 emvHandler2.onSetPromptResponse(true);
             }
-
 
             @Override
             public void onOnlineProc() {
@@ -322,24 +329,25 @@ public class NexgoReadCard extends AppCompatActivity {
                 Log.d("nexgo", "getEmvCvmResult:" + emvHandler2.getEmvCvmResult());
                 Log.d("nexgo", "getSignNeed--" + emvHandler2.getSignNeed());
 
-                byte[] tlv_5A = emvHandler2.getTlv(new byte[]{(byte) 0x5A}, EmvDataSourceEnum.FROM_KERNEL);
+                byte[] tlv_5A = emvHandler2.getTlv(new byte[] { (byte) 0x5A }, EmvDataSourceEnum.FROM_KERNEL);
                 Log.d("nexgo", "tlv_5A--" + ByteUtils.byteArray2HexString(tlv_5A));
 
-                byte[] tlv_95 = emvHandler2.getTlv(new byte[]{(byte) 0x95}, EmvDataSourceEnum.FROM_KERNEL);
+                byte[] tlv_95 = emvHandler2.getTlv(new byte[] { (byte) 0x95 }, EmvDataSourceEnum.FROM_KERNEL);
                 Log.d("nexgo", "tlv_95--" + ByteUtils.byteArray2HexString(tlv_95));
 
-
-                byte[] tlv_84 = emvHandler2.getTlv(new byte[]{(byte) 0x84}, EmvDataSourceEnum.FROM_KERNEL);
+                byte[] tlv_84 = emvHandler2.getTlv(new byte[] { (byte) 0x84 }, EmvDataSourceEnum.FROM_KERNEL);
                 Log.d("nexgo", "tlv_84--" + ByteUtils.byteArray2HexString(tlv_84));
 
-                byte[] tlv_50 = emvHandler2.getTlv(new byte[]{(byte) 0x50}, EmvDataSourceEnum.FROM_KERNEL);
+                byte[] tlv_50 = emvHandler2.getTlv(new byte[] { (byte) 0x50 }, EmvDataSourceEnum.FROM_KERNEL);
                 Log.d("nexgo", "tlv_50--" + ByteUtils.byteArray2HexString(tlv_50));
 
                 EmvOnlineResultEntity emvOnlineResult = new EmvOnlineResultEntity();
                 emvOnlineResult.setAuthCode("123450");
                 emvOnlineResult.setRejCode("00");
-                //fill with the host response 55 field EMV data to do second auth, the format should be TLV format.
-                // for example: 910870741219600860008a023030  91 = tag, 08 = len, 7074121960086000 = value;
+                // fill with the host response 55 field EMV data to do second auth, the format
+                // should be TLV format.
+                // for example: 910870741219600860008a023030 91 = tag, 08 = len,
+                // 7074121960086000 = value;
                 // 8a = tag, 02 = len, 3030 = value
                 emvOnlineResult.setRecvField55(null);
                 emvHandler2.onSetOnlineProcResponse(SdkResult.Success, emvOnlineResult);
@@ -348,24 +356,24 @@ public class NexgoReadCard extends AppCompatActivity {
 
             @Override
             public void onFinish(final int retCode, EmvProcessResultEntity entity) {
-                Log.d("nexgo", "onFinish" + "retCode :" + retCode ); //-8014
+                Log.d("nexgo", "onFinish" + "retCode :" + retCode); // -8014
                 if (pwdAlertDialog != null) {
                     pwdAlertDialog.dismiss();
                 }
 
                 boolean flag = false;
-                byte[] aid = emvHandler2.getTlv(new byte[]{0x4F}, EmvDataSourceEnum.FROM_KERNEL);
-                if(aid != null){
-                    if(mExistSlot == CardSlotTypeEnum.RF){
-                        if(ByteUtils.byteArray2HexString(aid).toUpperCase().contains("A000000025")){
-                            if(retCode == SdkResult.Emv_Plz_See_Phone){
+                byte[] aid = emvHandler2.getTlv(new byte[] { 0x4F }, EmvDataSourceEnum.FROM_KERNEL);
+                if (aid != null) {
+                    if (mExistSlot == CardSlotTypeEnum.RF) {
+                        if (ByteUtils.byteArray2HexString(aid).toUpperCase().contains("A000000025")) {
+                            if (retCode == SdkResult.Emv_Plz_See_Phone) {
                                 isExpressPaySeePhoneTapCardAgain = true;
                                 flag = true;
                             }
                         }
                     }
                 }
-                if(!flag){
+                if (!flag) {
                     isExpressPaySeePhoneTapCardAgain = false;
                 }
 
@@ -373,44 +381,42 @@ public class NexgoReadCard extends AppCompatActivity {
 
                 Log.d("nexgo", "tlvData:" + tlvData);
 
-                //Building Card data Map
+                // Building Card data Map
                 HashMap<String, String> cardDataMap = (HashMap<String, String>) TlvUtil.tlvToMap(tlvData);
 
                 KSNUtilities ksnUtilitites = new KSNUtilities();
-                String workingKey2 = ksnUtilitites.getWorkingKey("3F2216D8297BCE9C",pinKsn);
-                Log.d(NexgoReadCard.class.getName(),"pinKSn 2" + ksnUtilitites.getLatestKsn());
+                String workingKey2 = ksnUtilitites.getWorkingKey("3F2216D8297BCE9C", pinKsn);
+                Log.d(NexgoReadCard.class.getName(), "pinKSn 2" + ksnUtilitites.getLatestKsn());
 
                 cardDataMap.put("pan", cardNo);
-                cardDataMap.put("CardPin",pinBlockArray);
-                cardDataMap.put("ksn",ksnUtilitites.getLatestKsn());
+                cardDataMap.put("CardPin", pinBlockArray);
+                cardDataMap.put("ksn", ksnUtilitites.getLatestKsn());
                 cardDataMap.put("isOnline", isOnline);
 
                 Log.d(NexgoReadCard.class.getName(), ">>>onCompleted :" + cardDataMap + "\n" + ".............." + "\n" +
-                        "pinKSn " + pinKsn + "\n" + "pinBlockArray " + pinBlockArray );
+                        "pinKSn " + pinKsn + "\n" + "pinBlockArray " + pinBlockArray);
 
-                //get CVM result
+                // get CVM result
                 Log.d("nexgo", "getEmvCvmResult:" + emvHandler2.getEmvCvmResult());
 
                 Log.d("nexgo", "emvHandler2.getSignNeed()--" + emvHandler2.getSignNeed());
 
-                //get card number, track 2 data...etc
+                // get card number, track 2 data...etc
                 Log.d("nexgo", "getcardinfo:" + new Gson().toJson(emvHandler2.getEmvCardDataInfo()));
 
-
-                byte[] tlv_5A = emvHandler2.getTlv(new byte[]{(byte) 0x5A}, EmvDataSourceEnum.FROM_KERNEL);
+                byte[] tlv_5A = emvHandler2.getTlv(new byte[] { (byte) 0x5A }, EmvDataSourceEnum.FROM_KERNEL);
                 Log.d("nexgo", "tlv_5A--" + ByteUtils.byteArray2HexString(tlv_5A));
 
-                byte[] tlv_95 = emvHandler2.getTlv(new byte[]{(byte) 0x95}, EmvDataSourceEnum.FROM_KERNEL);
+                byte[] tlv_95 = emvHandler2.getTlv(new byte[] { (byte) 0x95 }, EmvDataSourceEnum.FROM_KERNEL);
                 Log.d("nexgo", "tlv_95--" + ByteUtils.byteArray2HexString(tlv_95));
 
-
-                byte[] tlv_84 = emvHandler2.getTlv(new byte[]{(byte) 0x84}, EmvDataSourceEnum.FROM_KERNEL);
+                byte[] tlv_84 = emvHandler2.getTlv(new byte[] { (byte) 0x84 }, EmvDataSourceEnum.FROM_KERNEL);
                 Log.d("nexgo", "tlv_84--" + ByteUtils.byteArray2HexString(tlv_84));
 
-                byte[] tlv_50 = emvHandler2.getTlv(new byte[]{(byte) 0x50}, EmvDataSourceEnum.FROM_KERNEL);
+                byte[] tlv_50 = emvHandler2.getTlv(new byte[] { (byte) 0x50 }, EmvDataSourceEnum.FROM_KERNEL);
                 Log.d("nexgo", "tlv_50--" + ByteUtils.byteArray2HexString(tlv_50));
 
-                switch (retCode){
+                switch (retCode) {
                     case SdkResult.Emv_Success_Arpc_Fail:
                     case SdkResult.Success:
                         Log.d("nexgo", "success");
@@ -427,23 +433,23 @@ public class NexgoReadCard extends AppCompatActivity {
                         });
                         break;
                     case SdkResult.Emv_Script_Fail:
-                        //online approve
+                        // online approve
                         break;
 
                     case SdkResult.Emv_Qpboc_Offline:// EMV Contactless: Offline Approval
-                    case SdkResult.Emv_Offline_Accept://EMV Contact: Offline Approval
-                        //offline approve
+                    case SdkResult.Emv_Offline_Accept:// EMV Contact: Offline Approval
+                        // offline approve
                         break;
 
-                    //this retcode is Abolished
-                    case SdkResult.Emv_Qpboc_Online://EMV Contactless: Online Process for union pay
-                        //union pay online contactless--application should go online
+                    // this retcode is Abolished
+                    case SdkResult.Emv_Qpboc_Online:// EMV Contactless: Online Process for union pay
+                        // union pay online contactless--application should go online
                         break;
 
                     case SdkResult.Emv_Candidatelist_Empty:// Application have no aid list
-                    case SdkResult.Emv_FallBack://  FallBack ,chip card reset failed
-                        //fallback process
-//                        TODO(Read card again)
+                    case SdkResult.Emv_FallBack:// FallBack ,chip card reset failed
+                        // fallback process
+                        // TODO(Read card again)
                         Log.d("nexgo", "fallback retrying");
 
                         if (fallBackRetries < 2) {
@@ -454,48 +460,50 @@ public class NexgoReadCard extends AppCompatActivity {
 
                     case SdkResult.Emv_Arpc_Fail: //
                     case SdkResult.Emv_Declined:
-                        //online decline ,if it is in second gac, application should decide if it is need reversal the transaction
+                        // online decline ,if it is in second gac, application should decide if it is
+                        // need reversal the transaction
                         break;
 
                     case SdkResult.Emv_Cancel:// Transaction Cancel
-                        //user cancel
+                        // user cancel
                         break;
 
                     case SdkResult.Emv_Offline_Declined: //
-                        //offline decline
+                        // offline decline
                         break;
 
-                    case SdkResult.Emv_Card_Block: //Card Block
-                        //card is blocked
+                    case SdkResult.Emv_Card_Block: // Card Block
+                        // card is blocked
                         break;
 
                     case SdkResult.Emv_App_Block: // Application Block
-                        //card application block
+                        // card application block
                         break;
 
                     case SdkResult.Emv_App_Ineffect:
-                        //card not active
+                        // card not active
                         break;
 
                     case SdkResult.Emv_App_Expired:
-                        //card Expired
+                        // card Expired
                         break;
 
                     case SdkResult.Emv_Other_Interface:
-                        //try other entry mode, like contact or mag-stripe
+                        // try other entry mode, like contact or mag-stripe
                         break;
 
                     case SdkResult.Emv_Plz_See_Phone:
-                        //see phone flow
-                        //prompt a dialog to user to check phone-->search contactless card(another card) -->start new emvProcess again
+                        // see phone flow
+                        // prompt a dialog to user to check phone-->search contactless card(another
+                        // card) -->start new emvProcess again
                         break;
 
                     case SdkResult.Emv_Terminate:
-                        //transaction terminate
+                        // transaction terminate
                         break;
 
                     default:
-                        //other error
+                        // other error
                         break;
                 }
                 emvHandler2.emvProcessCancel();
@@ -504,23 +512,23 @@ public class NexgoReadCard extends AppCompatActivity {
 
     }
 
-    private void setExpressPayDrl(){
+    private void setExpressPayDrl() {
         DynamicReaderLimitEntity defaultDynamicReaderLimitEntity = new DynamicReaderLimitEntity();
-        defaultDynamicReaderLimitEntity.setAppProgID(new byte[]{(byte) 0xFF});
+        defaultDynamicReaderLimitEntity.setAppProgID(new byte[] { (byte) 0xFF });
         defaultDynamicReaderLimitEntity.setReaderCVMReqLimit(ByteUtils.hexString2ByteArray("000000001000"));
         defaultDynamicReaderLimitEntity.setReaderContactlessTransLimit(ByteUtils.hexString2ByteArray("000000001500"));
         defaultDynamicReaderLimitEntity.setReaderContactlessFloorLimit(ByteUtils.hexString2ByteArray("000000001200"));
 
         List<DynamicReaderLimitEntity> dynamicReaderLimitEntities = new ArrayList<>();
         DynamicReaderLimitEntity dynamicReaderLimitEntity = new DynamicReaderLimitEntity();
-        dynamicReaderLimitEntity.setAppProgID(new byte[]{(byte) 0x06});
+        dynamicReaderLimitEntity.setAppProgID(new byte[] { (byte) 0x06 });
         dynamicReaderLimitEntity.setReaderCVMReqLimit(ByteUtils.hexString2ByteArray("000000000200"));
         dynamicReaderLimitEntity.setReaderContactlessTransLimit(ByteUtils.hexString2ByteArray("000000000700"));
         dynamicReaderLimitEntity.setReaderContactlessFloorLimit(ByteUtils.hexString2ByteArray("000000000400"));
         dynamicReaderLimitEntities.add(dynamicReaderLimitEntity);
 
         dynamicReaderLimitEntity = new DynamicReaderLimitEntity();
-        dynamicReaderLimitEntity.setAppProgID(new byte[]{(byte) 0x0B});
+        dynamicReaderLimitEntity.setAppProgID(new byte[] { (byte) 0x0B });
         dynamicReaderLimitEntity.setReaderCVMReqLimit(ByteUtils.hexString2ByteArray("000000000200"));
         dynamicReaderLimitEntity.setReaderContactlessTransLimit(ByteUtils.hexString2ByteArray("000000000300"));
         dynamicReaderLimitEntity.setReaderContactlessFloorLimit(ByteUtils.hexString2ByteArray("000000000100"));
@@ -529,70 +537,69 @@ public class NexgoReadCard extends AppCompatActivity {
         emvHandler2.setDynamicReaderLimitListForExpressPay(defaultDynamicReaderLimitEntity, dynamicReaderLimitEntities);
     }
 
-
     private void setPaywaveDrl() {
         List<DynamicReaderLimitEntity> dynamicReaderLimitEntity = new ArrayList<>();
 
         DynamicReaderLimitEntity entity = new DynamicReaderLimitEntity();
         entity.setDrlSupport(true);
-        entity.setAppProgID(new byte[]{0x31, 0x02, 0x68, 0x26, 0x20});//get from 9f5a
+        entity.setAppProgID(new byte[] { 0x31, 0x02, 0x68, 0x26, 0x20 });// get from 9f5a
         entity.setAuthOfZeroCheck(true);
         entity.setStatusCheck(false);
         entity.setReaderCVMReqLimitCheck(true);
         entity.setReaderContactlessFloorLimitCheck(true);
         entity.setReaderContactlessTransLimitCheck(false);
-        entity.setReaderCVMReqLimit(new byte[]{0x00, 0x00, 0x00, 0x00, 0x50, 0x01});
-        entity.setReaderContactlessFloorLimit(new byte[]{0x00, 0x00, 0x00, 0x00, 0x50, 0x00});
-        entity.setReaderContactlessTransLimit(new byte[]{0x00, 0x00, 0x00, 0x00, 0x60, 0x01});
+        entity.setReaderCVMReqLimit(new byte[] { 0x00, 0x00, 0x00, 0x00, 0x50, 0x01 });
+        entity.setReaderContactlessFloorLimit(new byte[] { 0x00, 0x00, 0x00, 0x00, 0x50, 0x00 });
+        entity.setReaderContactlessTransLimit(new byte[] { 0x00, 0x00, 0x00, 0x00, 0x60, 0x01 });
         dynamicReaderLimitEntity.add(entity);
 
         DynamicReaderLimitEntity entity1 = new DynamicReaderLimitEntity();
         entity1.setDrlSupport(true);
-        entity1.setAppProgID(new byte[]{0x31, 0x02, 0x68, 0x26, 0x12, 0x00,0x00,0x03});//get from 9f5a
+        entity1.setAppProgID(new byte[] { 0x31, 0x02, 0x68, 0x26, 0x12, 0x00, 0x00, 0x03 });// get from 9f5a
         entity1.setStatusCheck(false);
         entity1.setAuthOfZeroCheck(true);
         entity1.setReaderCVMReqLimitCheck(true);
         entity1.setReaderContactlessFloorLimitCheck(true);
         entity1.setReaderContactlessTransLimitCheck(false);
-        entity1.setReaderCVMReqLimit(new byte[]{0x00, 0x00, 0x00, 0x00, 0x50, 0x01});
-        entity1.setReaderContactlessFloorLimit(new byte[]{0x00, 0x00, 0x00, 0x00, 0x50, 0x00});
-        entity1.setReaderContactlessTransLimit(new byte[]{0x00, 0x00, 0x00, 0x00, 0x60, 0x01});
+        entity1.setReaderCVMReqLimit(new byte[] { 0x00, 0x00, 0x00, 0x00, 0x50, 0x01 });
+        entity1.setReaderContactlessFloorLimit(new byte[] { 0x00, 0x00, 0x00, 0x00, 0x50, 0x00 });
+        entity1.setReaderContactlessTransLimit(new byte[] { 0x00, 0x00, 0x00, 0x00, 0x60, 0x01 });
         dynamicReaderLimitEntity.add(entity1);
 
         DynamicReaderLimitEntity entity2 = new DynamicReaderLimitEntity();
         entity2.setDrlSupport(true);
-        entity2.setAppProgID(new byte[]{0x31, 0x02, 0x68, 0x26, 0x12});//get from 9f5a
+        entity2.setAppProgID(new byte[] { 0x31, 0x02, 0x68, 0x26, 0x12 });// get from 9f5a
         entity2.setAuthOfZeroCheck(true);
         entity2.setStatusCheck(false);
         entity2.setReaderCVMReqLimitCheck(true);
         entity2.setReaderContactlessFloorLimitCheck(true);
         entity2.setReaderContactlessTransLimitCheck(false);
-        entity2.setReaderCVMReqLimit(new byte[]{0x00, 0x00, 0x00, 0x00, 0x50, 0x01});
-        entity2.setReaderContactlessFloorLimit(new byte[]{0x00, 0x00, 0x00, 0x00, 0x50, 0x00});
-        entity2.setReaderContactlessTransLimit(new byte[]{0x00, 0x00, 0x00, 0x00, 0x60, 0x01});
+        entity2.setReaderCVMReqLimit(new byte[] { 0x00, 0x00, 0x00, 0x00, 0x50, 0x01 });
+        entity2.setReaderContactlessFloorLimit(new byte[] { 0x00, 0x00, 0x00, 0x00, 0x50, 0x00 });
+        entity2.setReaderContactlessTransLimit(new byte[] { 0x00, 0x00, 0x00, 0x00, 0x60, 0x01 });
         dynamicReaderLimitEntity.add(entity2);
 
         DynamicReaderLimitEntity entity3 = new DynamicReaderLimitEntity();
         entity3.setDrlSupport(true);
-        entity3.setAppProgID(new byte[]{0x31, 0x02, 0x68, 0x26,0x00});//get from 9f5a
+        entity3.setAppProgID(new byte[] { 0x31, 0x02, 0x68, 0x26, 0x00 });// get from 9f5a
         entity3.setAuthOfZeroCheck(true);
         entity3.setStatusCheck(false);
         entity3.setReaderCVMReqLimitCheck(true);
         entity3.setReaderContactlessFloorLimitCheck(true);
         entity3.setReaderContactlessTransLimitCheck(false);
-        entity3.setReaderCVMReqLimit(new byte[]{0x00, 0x00, 0x00, 0x00, 0x50, 0x01});
-        entity3.setReaderContactlessFloorLimit(new byte[]{0x00, 0x00, 0x00, 0x00, 0x50, 0x00});
-        entity3.setReaderContactlessTransLimit(new byte[]{0x00, 0x00, 0x00, 0x00, 0x60, 0x01});
+        entity3.setReaderCVMReqLimit(new byte[] { 0x00, 0x00, 0x00, 0x00, 0x50, 0x01 });
+        entity3.setReaderContactlessFloorLimit(new byte[] { 0x00, 0x00, 0x00, 0x00, 0x50, 0x00 });
+        entity3.setReaderContactlessTransLimit(new byte[] { 0x00, 0x00, 0x00, 0x00, 0x60, 0x01 });
         dynamicReaderLimitEntity.add(entity3);
 
         emvHandler2.setDynamicReaderLimitListForPaywave(dynamicReaderLimitEntity);
     }
 
-    private void configPaywaveParameters(){
-        byte[] TTQ ;
+    private void configPaywaveParameters() {
+        byte[] TTQ;
         byte[] kernelTTQ = emvHandler2.getTlv(ByteUtils.hexString2ByteArray("9F66"), EmvDataSourceEnum.FROM_KERNEL);
-        Log.d("nexgo",  "configPaywaveParameters, TTQ" + ByteUtils.byteArray2HexString(kernelTTQ));
-        //default TTQ value
+        Log.d("nexgo", "configPaywaveParameters, TTQ" + ByteUtils.byteArray2HexString(kernelTTQ));
+        // default TTQ value
         TTQ = ByteUtils.hexString2ByteArray("36004000");
         kernelTTQ[0] = TTQ[0];
         kernelTTQ[2] = TTQ[2];
@@ -601,38 +608,42 @@ public class NexgoReadCard extends AppCompatActivity {
         emvHandler2.setTlv(ByteUtils.hexString2ByteArray("9F66"), kernelTTQ);
     }
 
+    private void configPaypassParameter(byte[] aid) {
+        // kernel configuration, enable RRP and cdcvm
+        emvHandler2.setTlv(new byte[] { (byte) 0xDF, (byte) 0x81, (byte) 0x1B }, new byte[] { (byte) 0x30 });
 
-    private void configPaypassParameter(byte[] aid){
-        //kernel configuration, enable RRP and cdcvm
-        emvHandler2.setTlv(new byte[]{(byte) 0xDF, (byte) 0x81, (byte) 0x1B}, new byte[]{(byte) 0x30});
+        // EMV MODE :amount >contactless cvm limit, set 60 = online pin and signature
+        emvHandler2.setTlv(new byte[] { (byte) 0xDF, (byte) 0x81, (byte) 0x18 }, new byte[] { (byte) 0x60 });
+        // EMV mode :amount < contactless cvm limit, set 08 = no cvm
+        emvHandler2.setTlv(new byte[] { (byte) 0xDF, (byte) 0x81, (byte) 0x19 }, new byte[] { (byte) 0x08 });
 
-        //EMV MODE :amount >contactless cvm limit, set 60 = online pin and signature
-        emvHandler2.setTlv(new byte[]{(byte) 0xDF, (byte) 0x81, (byte) 0x18}, new byte[]{(byte) 0x60});
-        //EMV mode :amount < contactless cvm limit, set 08 = no cvm
-        emvHandler2.setTlv(new byte[]{(byte) 0xDF, (byte) 0x81, (byte) 0x19}, new byte[]{(byte) 0x08});
-
-        emvHandler2.setTlv(new byte[]{(byte) 0xDF, (byte) 0x81, (byte) 0x25}, ByteUtils.hexString2ByteArray("000999999999"));
+        emvHandler2.setTlv(new byte[] { (byte) 0xDF, (byte) 0x81, (byte) 0x25 },
+                ByteUtils.hexString2ByteArray("000999999999"));
 
         if (ByteUtils.byteArray2HexString(aid).toUpperCase().contains("A0000000043060")) {
-            Log.d("nexgo",  "======maestro===== ");
-            //maestro only support online pin
-            emvHandler2.setTlv(new byte[]{(byte) 0x9F, (byte) 0x33}, new byte[]{(byte) 0xE0, (byte) 0x40, (byte) 0xC8});
-            emvHandler2.setTlv(new byte[]{(byte) 0xDF, (byte) 0x81, (byte) 0x18}, new byte[]{(byte) 0x40});
-            emvHandler2.setTlv(new byte[]{(byte) 0xDF, (byte) 0x81, (byte) 0x19}, new byte[]{(byte) 0x08});
+            Log.d("nexgo", "======maestro===== ");
+            // maestro only support online pin
+            emvHandler2.setTlv(new byte[] { (byte) 0x9F, (byte) 0x33 },
+                    new byte[] { (byte) 0xE0, (byte) 0x40, (byte) 0xC8 });
+            emvHandler2.setTlv(new byte[] { (byte) 0xDF, (byte) 0x81, (byte) 0x18 }, new byte[] { (byte) 0x40 });
+            emvHandler2.setTlv(new byte[] { (byte) 0xDF, (byte) 0x81, (byte) 0x19 }, new byte[] { (byte) 0x08 });
 
-            //set 9F1D terminal risk management - Maestro. it should be same with the MTIP configuration for 9F1D
-            emvHandler2.setTlv(new byte[]{(byte) 0x9F, (byte) 0x1d}, ByteUtils.hexString2ByteArray("4C00800000000000"));
-        }else{
-            //set 9F1D terminal risk management - MasterCard. it should be same with the MTIP configuration for 9F1D
-            emvHandler2.setTlv(new byte[]{(byte) 0x9F, (byte) 0x1d}, ByteUtils.hexString2ByteArray("6C00800000000000"));
+            // set 9F1D terminal risk management - Maestro. it should be same with the MTIP
+            // configuration for 9F1D
+            emvHandler2.setTlv(new byte[] { (byte) 0x9F, (byte) 0x1d },
+                    ByteUtils.hexString2ByteArray("4C00800000000000"));
+        } else {
+            // set 9F1D terminal risk management - MasterCard. it should be same with the
+            // MTIP configuration for 9F1D
+            emvHandler2.setTlv(new byte[] { (byte) 0x9F, (byte) 0x1d },
+                    ByteUtils.hexString2ByteArray("6C00800000000000"));
         }
-
 
     }
 
-    private void configExpressPayParameter(){
-        //set terminal capability...
-        byte[] TTC ;
+    private void configExpressPayParameter() {
+        // set terminal capability...
+        byte[] TTC;
         byte[] kernelTTC = emvHandler2.getTlv(ByteUtils.hexString2ByteArray("9F6E"), EmvDataSourceEnum.FROM_KERNEL);
 
         TTC = ByteUtils.hexString2ByteArray("D8C00000");
@@ -640,25 +651,28 @@ public class NexgoReadCard extends AppCompatActivity {
 
         emvHandler2.setTlv(ByteUtils.hexString2ByteArray("9F6E"), kernelTTC);
 
-//
-//        //TacDefault
-//        emvHandler2.setTlv(ByteUtils.hexString2ByteArray("DF8120"), ByteUtils.hexString2ByteArray("fc50b8a000"));
-//
-//        //TacDecline
-//        emvHandler2.setTlv(ByteUtils.hexString2ByteArray("DF8121"), ByteUtils.hexString2ByteArray("0000000000"));
-//
-//        //TacOnline
-//        emvHandler2.setTlv(ByteUtils.hexString2ByteArray("DF8122"), ByteUtils.hexString2ByteArray("fc50808800"));
+        //
+        // //TacDefault
+        // emvHandler2.setTlv(ByteUtils.hexString2ByteArray("DF8120"),
+        // ByteUtils.hexString2ByteArray("fc50b8a000"));
+        //
+        // //TacDecline
+        // emvHandler2.setTlv(ByteUtils.hexString2ByteArray("DF8121"),
+        // ByteUtils.hexString2ByteArray("0000000000"));
+        //
+        // //TacOnline
+        // emvHandler2.setTlv(ByteUtils.hexString2ByteArray("DF8122"),
+        // ByteUtils.hexString2ByteArray("fc50808800"));
     }
 
-    private void configPureContactlessParameter(){
-        Log.d("nexgo",  "configPureContactlessParameter" );
-//        emvHandler2.setPureKernelCapab(ByteUtils.hexString2ByteArray("3400400A99"));
+    private void configPureContactlessParameter() {
+        Log.d("nexgo", "configPureContactlessParameter");
+        // emvHandler2.setPureKernelCapab(ByteUtils.hexString2ByteArray("3400400A99"));
 
     }
 
-    private void configJcbContactlessParameter(){
-        Log.d("nexgo",  "configJcbContactlessParameter" );
+    private void configJcbContactlessParameter() {
+        Log.d("nexgo", "configJcbContactlessParameter");
 
     }
 
@@ -667,14 +681,16 @@ public class NexgoReadCard extends AppCompatActivity {
     private void showInputPin(boolean isOnlinPin, int leftTimes) {
         int INJECTED_PIN_SLOT = 0;
         if (pinPad.dukptCurrentKsn(INJECTED_PIN_SLOT) == null) {
-            //There is no key injected; cannot continue - show some error to user and break out
+            // There is no key injected; cannot continue - show some error to user and break
+            // out
             Log.e("Nexgo", "startInputPin() : cannot continue, No key is injected!");
-            emvHandler2.emvProcessCancel();  //Stop the EMV process, cannot proceed to enter PIN without the injected key
+            emvHandler2.emvProcessCancel(); // Stop the EMV process, cannot proceed to enter PIN without the injected
+                                            // key
             return;
         }
-        int[] pinLen = new int[]{0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c};
+        int[] pinLen = new int[] { 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c };
         pinPad.setPinKeyboardMode(PinKeyboardModeEnum.RANDOM);
-        //Set the PINPAD algorithm mode - we want to use DUKPT
+        // Set the PINPAD algorithm mode - we want to use DUKPT
         pinPad.setAlgorithmMode(AlgorithmModeEnum.DUKPT);
         byte[] panBytes = ByteUtils.string2ASCIIByteArray(cardNo);
 
@@ -686,7 +702,7 @@ public class NexgoReadCard extends AppCompatActivity {
 
         TextView amount = dv.findViewById(R.id.amount_tv);
         amount.setText(formatAmount(amountForDisplay()));
-        if(!isOnlinPin){
+        if (!isOnlinPin) {
             TextView triesLeft = dv.findViewById(R.id.tries_left_tv);
             triesLeft.setText(String.format("%d tries left", leftTimes));
             triesLeft.setVisibility(View.VISIBLE);
@@ -694,7 +710,7 @@ public class NexgoReadCard extends AppCompatActivity {
         pwdAlertDialog.setCanceledOnTouchOutside(false);
         pwdAlertDialog.show();
 
-        OnPinPadInputListener pinPadInputListener =  new OnPinPadInputListener() {
+        OnPinPadInputListener pinPadInputListener = new OnPinPadInputListener() {
             @Override
             public void onInputResult(int retCode, byte[] data) {
                 pwdText = "";
@@ -708,20 +724,27 @@ public class NexgoReadCard extends AppCompatActivity {
                             byte[] temp = new byte[8];
                             System.arraycopy(data, 0, temp, 0, 8);
 
-                            pinBlockArray = ByteUtils.byteArray2HexString(data).toUpperCase();  //Set the pinBlockArray (String) to the return value 'data' (PIN output) for sending to host
-                            pinKsn = ByteUtils.byteArray2HexString(pinPad.dukptCurrentKsn(0));   //Save the pinKsn in case needed to send to host
+                            pinBlockArray = ByteUtils.byteArray2HexString(data).toUpperCase(); // Set the pinBlockArray
+                                                                                               // (String) to the return
+                                                                                               // value 'data' (PIN
+                                                                                               // output) for sending to
+                                                                                               // host
+                            pinKsn = ByteUtils.byteArray2HexString(pinPad.dukptCurrentKsn(0)); // Save the pinKsn in
+                                                                                               // case needed to send to
+                                                                                               // host
 
                             char lastChar = pinKsn.charAt(pinKsn.length() - 1);
                             if (lastChar == '9') {
                                 injectKSN(pinPad);
                             } else {
-                                pinPad.dukptKsnIncrease(0); //Incremenent the KSN counter
+                                pinPad.dukptKsnIncrease(0); // Incremenent the KSN counter
                             }
                         }
-                    }else {
+                    } else {
                         Log.d("CArd pin result", "is empty");
                     }
-                    emvHandler2.onSetPinInputResponse(retCode != SdkResult.PinPad_Input_Cancel, retCode == SdkResult.PinPad_No_Pin_Input);
+                    emvHandler2.onSetPinInputResponse(retCode != SdkResult.PinPad_Input_Cancel,
+                            retCode == SdkResult.PinPad_No_Pin_Input);
                 } else {
                     Log.d("nexgo", "pin enter failed");
                     emvHandler2.onSetPinInputResponse(false, false);
@@ -742,10 +765,11 @@ public class NexgoReadCard extends AppCompatActivity {
         };
         if (isOnlinPin) {
             isOnline = "0";
-            if(cardNo == null){
+            if (cardNo == null) {
                 cardNo = emvHandler2.getEmvCardDataInfo().getCardNo();
             }
-            pinPad.inputOnlinePin(pinLen, 60, cardNo.getBytes(), INJECTED_PIN_SLOT, PinAlgorithmModeEnum.ISO9564FMT1, pinPadInputListener);
+            pinPad.inputOnlinePin(pinLen, 60, cardNo.getBytes(), INJECTED_PIN_SLOT, PinAlgorithmModeEnum.ISO9564FMT1,
+                    pinPadInputListener);
         } else {
             pinPad.inputOfflinePin(pinLen, 60, pinPadInputListener);
         }
@@ -753,7 +777,7 @@ public class NexgoReadCard extends AppCompatActivity {
 
     public static String byte2Char(byte[] bytes) {
         StringBuilder sb = new StringBuilder();
-        for(int i = 0; i < bytes.length; i++) {
+        for (int i = 0; i < bytes.length; i++) {
             sb.append((char) bytes[i]);
         }
         return sb.toString();
@@ -771,25 +795,25 @@ public class NexgoReadCard extends AppCompatActivity {
 
     public static int bytesToInt2(byte[] src, int offset) {
         int value;
-        value = (int) ( ((src[offset] & 0xFF)<<24)
-                |((src[offset+1] & 0xFF)<<16)
-                |((src[offset+2] & 0xFF)<<8)
-                |(src[offset+3] & 0xFF));
+        value = (int) (((src[offset] & 0xFF) << 24)
+                | ((src[offset + 1] & 0xFF) << 16)
+                | ((src[offset + 2] & 0xFF) << 8)
+                | (src[offset + 3] & 0xFF));
         return value;
     }
 
     private void initEmvAidAndCapk() {
         Log.d("calling aid ", "init capk and aid");
-        //AID
+        // AID
 
         emvHandler2.delAllAid();
-        if(emvHandler2.getAidListNum() <= 0){
-            String[] newAids = new String[]{
+        if (emvHandler2.getAidListNum() <= 0) {
+            String[] newAids = new String[] {
                     // Verve
                     "9F0607A0000003710001DF0101009F08020140DF1105DC4000A800DF1205DC4004F800DF130500100000009F1B0400000000DF1504F0F0F0F0DF160100DF170100DF14039F3704DF180101DF1906000000010000DF2006001000000000DF21060000000300009F3303E0F0C89F6604620000805F2A0208409F1A020418",
                     "9F0607A0000003710002DF0101009F08020140DF1105DC4000A800DF1205DC4004F800DF130500100000009F1B0400000000DF1504F0F0F0F0DF160100DF170100DF14039F3704DF180101DF1906000000010000DF2006001000000000DF21060000000300009F3303E0F0C89F6604620000805F2A0208409F1A020418",
 
-                    //VISA
+                    // VISA
                     "9F0608A000000003010101DF0101009F08020000DF1105DC4000A800DF1205DC4004F800DF130500100000009F1B0400000000DF1504F0F0F0F0DF160100DF170100DF14039F3704DF180101DF1906000000010000DF2006001000000000DF21060000000300009F3303E0B0C89F6604620000805F2A0208409F1A020418",
                     "9F0608A000000003010102DF0101009F08020000DF1105DC4000A800DF1205DC4004F800DF130500100000009F1B0400000000DF1504F0F0F0F0DF160100DF170100DF14039F3704DF180101DF1906000000010000DF2006001000000000DF21060000000300009F3303E0B0C89F6604620000805F2A0208409F1A020418",
                     "9F0607A0000000031010DF0101009F08020140DF1105DC4000A800DF1205DC4004F800DF130500100000009F1B0400000000DF1504F0F0F0F0DF160100DF170100DF14039F3704DF180101DF1906000000010000DF2006001000000000DF21060000000300009F3303E0B0C89F6604620000805F2A0208409F1A020418",
@@ -809,21 +833,21 @@ public class NexgoReadCard extends AppCompatActivity {
                     "9F0608A000000003101008DF0101009F08020140DF1105DC4000A800DF1205DC4004F800DF130500100000009F1B0400000000DF1504F0F0F0F0DF160100DF170100DF14039F3704DF180101DF1906000000010000DF2006001000000000DF21060000000300009F3303E0B0C89F6604620000805F2A0208409F1A020418",
                     "9F0608A000000003101009DF0101009F08020140DF1105DC4000A800DF1205DC4004F800DF130500100000009F1B0400000000DF1504F0F0F0F0DF160100DF170100DF14039F3704DF180101DF1906000000010000DF2006001000000000DF21060000000300009F3303E0B0C89F6604620000805F2A0208409F1A020418",
                     "9F0608A000000003101012DF0101009F08020140DF1105DC4000A800DF1205DC4004F800DF130500100000009F1B0400000000DF1504F0F0F0F0DF160100DF170100DF14039F3704DF180101DF1906000000010000DF2006001000000000DF21060000000300009F3303E0B0C89F6604620000805F2A0208409F1A020418",
-                    //masterCard
-                    //9F0607A0000000041010DF0101009F08020002DF1105DC4000A800DF1205DC4004F800DF130500100000009F1B0400000000DF1504F0F0F0F0DF160100DF170100DF14039F3704DF180101DF1906000000010000DF2006001000000000DF21060000000300009F3303E0B0C89F6604620000805F2A0208409F1A020418
+                    // masterCard
+                    // 9F0607A0000000041010DF0101009F08020002DF1105DC4000A800DF1205DC4004F800DF130500100000009F1B0400000000DF1504F0F0F0F0DF160100DF170100DF14039F3704DF180101DF1906000000010000DF2006001000000000DF21060000000300009F3303E0B0C89F6604620000805F2A0208409F1A020418
                     "9F0607A0000000041010DF010100DF1105FC50BC2000DF1205FC50BCF800DF130500000000009F1B0400000000DF1504F0F0F0F0DF160100DF170100DF14039F3704DF180101DF1906000000010000DF2006001000000000DF21060000000300009F3303E0B8C89F6604620000805F2A0208409F1D086E7A000000000000",
                     "9F0607A0000000043060DF010100DF1105DC4000A800DF1205DC4004F800DF130500100000009F1B0400000000DF1504F0F0F0F0DF160100DF170100DF14039F3704DF180101DF1906000000010000DF2006001000000000DF21060000000300009F3303E0B8C89F6604620000805F2A0208409F1D086E7A000000000000",
-                    //JCB
+                    // JCB
                     "9F0607A0000000651010DF010100DF1105DC4000A800DF1205DC4004F800DF130500100000009F1B0400000000DF1504F0F0F0F0DF160100DF170100DF14039F3704DF180101DF1906000000000000DF2006001000000000DF21060000000300009F3303E0B0C89F660462000080",
-                    //UnionPay
+                    // UnionPay
                     "9F0608A000000333010101DF010100DF1105DC4000A800DF1205DC4004F800DF130500100000009F1B0400000000DF1504F0F0F0F0DF160100DF170100DF14039F3704DF1801009F7B06000000100000DF1906001000000000DF2006001000000000DF21060010000000009F3303E0B8C89F660422000080",
-//                    "9F0608A000000333010102DF010100DF1105DC4000A800DF1205DC4004F800DF130500100000009F1B0400000000DF1504F0F0F0F0DF160100DF170100DF14039F3704DF1801019F7B06000000100000DF1906000000100000DF2006001000000000DF21061000001000009F3303E0F0C8",
+                    // "9F0608A000000333010102DF010100DF1105DC4000A800DF1205DC4004F800DF130500100000009F1B0400000000DF1504F0F0F0F0DF160100DF170100DF14039F3704DF1801019F7B06000000100000DF1906000000100000DF2006001000000000DF21061000001000009F3303E0F0C8",
                     "9F0608A000000333010102DF010100DF11050000000000DF12050000000000DF130500000000009F1B0400000000DF1504F0F0F0F0DF160100DF170100DF14039F3704DF1801019F7B06000000100000DF1906001000000000DF2006001000000000DF21060010000000009F3303E028C89F660426000080",
                     "9F0608A000000333010103DF010100DF1105DC4000A800DF1205DC4004F800DF130500100000009F1B0400000000DF1504F0F0F0F0DF160100DF170100DF14039F3704DF1801019F7B06000000100000DF1906001000000000DF2006001000000000DF21060010000000009F3303E028C89F660426000080",
                     "9F0608A000000333010106DF010100DF1105DC4000A800DF1205DC4004F800DF130500100000009F1B0400000000DF1504F0F0F0F0DF160100DF170100DF14039F3704DF1801019F7B06000000100000DF1906001000000000DF2006001000000000DF21060010000000009F3303E028C89F660426000080",
-                    //JCB
+                    // JCB
                     "9F0607A0000000651010DF0101009F09020200DF1105DC4000A800DF1205DC4004F800DF130500100000009F1B0400000000DF1504F0F0F0F0DF160100DF170100DF14039F3704DF180101DF1906000000000000DF2006000010000000DF21060000000000009F3303E040C89F6604640000805F2A0204189F1A020418",
-                    //Rupay
+                    // Rupay
                     "9f0607A0000005241010df1105fc5080a000df1205f85080f800df130504000000009f1b0400000000df150400000000df160199df170199df14039f3704df1801009f7b06000000100000df1906000000200000df2006000000500001df21060000005000015f2a0203569f1a0203569f090200029f3303e0d9c89f660436004000"
             };
 
@@ -833,19 +857,19 @@ public class NexgoReadCard extends AppCompatActivity {
             Log.d("nexgo", "setAidParaList 2" + ii);
 
             if (ii == SdkResult.Fail) {
-                Log.d("nexgo","add new aids failed");
+                Log.d("nexgo", "add new aids failed");
             }
-        }else{
+        } else {
             Log.d("nexgo", "setAidParaList " + "already load aid");
         }
 
-        //CAPK
+        // CAPK
 
         emvHandler2.delAllCapk();
         int capk_num = emvHandler2.getCapkListNum();
         Log.d("nexgo", "capk_num " + capk_num);
-        if(capk_num <= 0){
-            String[] newCapks = new String[]{
+        if (capk_num <= 0) {
+            String[] newCapks = new String[] {
 
                     // Verve Capk
                     "9F0607A00000037100019F220109DF05083230323431323331DF060101DF070101DF0281B0B036A8CAE0593A480976BFE84F8A67759E52B3D9F4A68CCC37FE720E594E5694CD1AE20E1B120D7A18FA5C70E044D3B12E932C9BBD9FDEA4BE11071EF8CA3AF48FF2B5DDB307FC752C5C73F5F274D4238A92B4FCE66FC93DA18E6C1CC1AA3CFAFCB071B67DAACE96D9314DB494982F5C967F698A05E1A8A69DA931B8E566270F04EAB575F5967104118E4F12ABFF9DEC92379CD955A10675282FE1B60CAD13F9BB80C272A40B6A344EA699FB9EFA6867DF040103DF0314319F3C608B67F1118C729B0E1516EAB07CB290C8",
@@ -856,7 +880,6 @@ public class NexgoReadCard extends AppCompatActivity {
                     "9F0607A00000037100029F220104DF05083230313731323331DF060101DF070101DF028190D13CD5E1B921E4E0F0D40E2DE14CCE73E3A34ED2DCFA826531D8195641091E37C8474D19B686E8243F089A69F7B18D2D34CB4824F228F7750F96D1EFBDFF881F259A8C04DE64915A3A3D7CB846135F4083C93CDE755BC808886F600542DFF085558D5EA7F45CB15EC835064AA856D602A0A44CD021F54CF8EC0CC680B54B3665ABE74A7C43D02897FF84BB4CB98BC91DDF040103DF0314676822D335AB0D2C3848418CB546DF7B6A6C32C0",
                     "9F0607A00000037100029F220103DF05083230313731323331DF060101DF070101DF028190d06238b856cf2c8890a7f668ca17c19247498d193a7c11e7105dedeee6a873e8189e50493e9b17547c42ea4fa88bbef30bb6bc2409246ccc95f36622a7f4d92d46444f20b1b24bf63c5b28395d8ef18c23205c2119dfe5fba2fbfc311b2fe8a6a75b35a7dab72d421792a500cdfd8133b8a97d84a49c0bd22d52d06ea5e0ef3e471d47d8370c37aa48b564689d0035d9DF040103DF0314319F3C608B67F1118C729B0E1516EAB07CB290C8",
                     "9F0607A00000037100029F220106DF05083230323831323238DF060101DF070101DF0281F8D2DA0134B4DFC93A75EE8960C99896D50A91527B87BA7B16CDB77E5B6FDB750EB70B54026CADDA1D562C77A2C6DA541E94BC415D43E68489B16980F2E887C09E4CF90E2E639B179277BBA0E982CCD1F80521D1457209125B3ABCD309E1B92B5AEDA2EB1CBF933BEAD9CE7365E52B7D17FCB405AA28E5DE6AA3F08E764F745E70859ABCBA41E570A6E4367B3D6FECE723B73ABF3EB53DCDE3816E8A813460447021509D0DFDF2EEEE74CC35485FB55C26836EB3BF9C7DEBEE6C0B77B7BE059233801CF76B321FCA25FB1E63117AE1865E23161EC39D7B1FB84256C2BE72BF8EC771548DB9F00BEF77C509FADA15E2B53FF950D383F96211D3DF040103DF0314F5BAB84ECE5F8BD45511E5CA861B80C7E6C51F55",
-
 
                     "9F0605A0000000659F220109DF05083230303931323331DF060101DF070101DF028180B72A8FEF5B27F2B550398FDCC256F714BAD497FF56094B7408328CB626AA6F0E6A9DF8388EB9887BC930170BCC1213E90FC070D52C8DCD0FF9E10FAD36801FE93FC998A721705091F18BC7C98241CADC15A2B9DA7FB963142C0AB640D5D0135E77EBAE95AF1B4FEFADCF9C012366BDDA0455C1564A68810D7127676D493890BDDF040103DF03144410C6D51C2F83ADFD92528FA6E38A32DF048D0A",
                     "9F0605A0000000659F220110DF05083230313231323331DF060101DF070101DF02819099B63464EE0B4957E4FD23BF923D12B61469B8FFF8814346B2ED6A780F8988EA9CF0433BC1E655F05EFA66D0C98098F25B659D7A25B8478A36E489760D071F54CDF7416948ED733D816349DA2AADDA227EE45936203CBF628CD033AABA5E5A6E4AE37FBACB4611B4113ED427529C636F6C3304F8ABDD6D9AD660516AE87F7F2DDF1D2FA44C164727E56BBC9BA23C0285DF040103DF0314C75E5210CBE6E8F0594A0F1911B07418CADB5BAB",
@@ -894,9 +917,9 @@ public class NexgoReadCard extends AppCompatActivity {
             Log.d("nexgo", "setCapKList 2" + jj);
 
             if (jj == SdkResult.Fail) {
-                Log.d("nexgo","add new capks failed");
+                Log.d("nexgo", "add new capks failed");
             }
-        }else{
+        } else {
             Log.d("nexgo", "setCAPKList " + "already load capk");
         }
 
@@ -907,7 +930,7 @@ public class NexgoReadCard extends AppCompatActivity {
             deviceEngine = APIProxy.getDeviceEngine(mContext);
         }
 
-        CardReader cardReader =  deviceEngine.getCardReader();
+        CardReader cardReader = deviceEngine.getCardReader();
         boolean cardExist = cardReader.isCardExist(CardSlotTypeEnum.ICC1);
         runOnUiThread(() -> result.success(cardExist));
     }
@@ -919,7 +942,8 @@ public class NexgoReadCard extends AppCompatActivity {
     }
 
     private byte[] hexToByteArr(String hexString) {
-        if(hexString == null) return null;
+        if (hexString == null)
+            return null;
         byte[] byteArray = new byte[hexString.length() / 2];
         for (int i = 0; i < byteArray.length; i++) {
             int index = i * 2;
@@ -929,6 +953,7 @@ public class NexgoReadCard extends AppCompatActivity {
 
         return byteArray;
     }
+
     private String getKSN() {
         return "0000000002DDDDE00001";
     }
@@ -939,8 +964,7 @@ public class NexgoReadCard extends AppCompatActivity {
     }
 
     private int amountForDisplay() {
-        return Integer.parseInt(this.amount) + this.charge) / 100;
+        return Integer.parseInt(this.amount) + this.charge / 100;
     }
 
 }
-
