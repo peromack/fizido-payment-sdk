@@ -3,11 +3,9 @@ package com.pos.empressa.nexgo_pos;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 
-
 import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
-
 
 import com.pos.empressa.nexgo_pos.Blusalt.BlusaltApiService;
 import com.pos.empressa.nexgo_pos.Fizido.FizidoApiService;
@@ -28,9 +26,11 @@ import io.flutter.plugin.common.MethodChannel.Result;
  * EmpressaPosPlugin
  */
 public class NexgoPosPlugin implements FlutterPlugin, MethodCallHandler, ActivityAware {
-    /// The MethodChannel that will the communication between Flutter and native Android
+    /// The MethodChannel that will the communication between Flutter and native
+    /// Android
     ///
-    /// This local reference serves to register the plugin with the Flutter Engine and unregister it
+    /// This local reference serves to register the plugin with the Flutter Engine
+    /// and unregister it
     /// when the Flutter Engine is detached from the Activity
     private MethodChannel channel;
     NexgoReadCard nexgoReadCard;
@@ -38,8 +38,7 @@ public class NexgoPosPlugin implements FlutterPlugin, MethodCallHandler, Activit
 
     private Context mContext;
 
-    private  Activity activity;
-
+    private Activity activity;
 
     @Override
     public void onAttachedToEngine(@NonNull FlutterPluginBinding flutterPluginBinding) {
@@ -68,7 +67,7 @@ public class NexgoPosPlugin implements FlutterPlugin, MethodCallHandler, Activit
                 if (nexgoPrinter == null) {
                     nexgoPrinter = new NexgoPrinter(mContext);
                 }
-                nexgoPrinter.nexgoSummaryPrint(call);
+                nexgoPrinter.nexgoPrintTransactionSummary(call);
                 break;
             case "chargeBlusaltTransaction":
                 BlusaltApiService.chargeTransaction(result, mContext, call);
@@ -96,7 +95,6 @@ public class NexgoPosPlugin implements FlutterPlugin, MethodCallHandler, Activit
         channel.setMethodCallHandler(null);
     }
 
-
     @Override
     public void onAttachedToActivity(@NonNull @org.jetbrains.annotations.NotNull ActivityPluginBinding binding) {
         // TODO: your plugin is now attached to an Activity
@@ -106,20 +104,24 @@ public class NexgoPosPlugin implements FlutterPlugin, MethodCallHandler, Activit
 
     @Override
     public void onDetachedFromActivityForConfigChanges() {
-        // TODO: the Activity your plugin was attached to was destroyed to change configuration.
+        // TODO: the Activity your plugin was attached to was destroyed to change
+        // configuration.
         // This call will be followed by onReattachedToActivityForConfigChanges().
     }
 
     @Override
-    public void onReattachedToActivityForConfigChanges(@NonNull @org.jetbrains.annotations.NotNull ActivityPluginBinding binding) {
-        // TODO: your plugin is now attached to a new Activity after a configuration change.
+    public void onReattachedToActivityForConfigChanges(
+            @NonNull @org.jetbrains.annotations.NotNull ActivityPluginBinding binding) {
+        // TODO: your plugin is now attached to a new Activity after a configuration
+        // change.
 
     }
 
     @Override
     public void onDetachedFromActivity() {
         nexgoReadCard.cancelSearch();
-        // TODO: your plugin is no longer associated with an Activity. Clean up references.
+        // TODO: your plugin is no longer associated with an Activity. Clean up
+        // references.
 
     }
 

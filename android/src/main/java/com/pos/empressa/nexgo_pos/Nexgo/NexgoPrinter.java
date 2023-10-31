@@ -114,7 +114,7 @@ public class NexgoPrinter {
         printer.appendPrnStr("Summary breakdown", fontNormal, AlignEnum.CENTER);
         printer.appendPrnStr("--------------------------------", fontNormal, AlignEnum.CENTER);
         // Print transaction summary list
-        printSummaryList(call, "summaryList");
+        nexgoSummaryPrint(call, "summaryList");
         printer.appendPrnStr("--------------------------------", fontNormal, AlignEnum.CENTER);
         printFooter(call, "footer");
         printer.appendPrnStr("\n", fontNormal, AlignEnum.LEFT);
