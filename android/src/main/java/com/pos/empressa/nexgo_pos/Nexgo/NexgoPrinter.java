@@ -113,12 +113,8 @@ public class NexgoPrinter {
         printer.appendPrnStr("--------------------------------", fontNormal, AlignEnum.CENTER);
         printer.appendPrnStr("Summary breakdown", fontNormal, AlignEnum.CENTER);
         printer.appendPrnStr("--------------------------------", fontNormal, AlignEnum.CENTER);
-        // Print pos payment
-        printer.appendPrnStr(call.argument("transactionType"), fontNormal, AlignEnum.LEFT);
-        printer.appendPrnStr("Count: " + call.argument("transactionCount").toString() + "\n", fontNormal,
-                AlignEnum.LEFT);
-        printer.appendPrnStr("Value: " + "NGN " + call.argument("transactionCount").toString() + "\n", fontNormal,
-                AlignEnum.LEFT);
+        // Print transaction summary list
+        printSummaryList(call, "summaryList");
         printer.appendPrnStr("--------------------------------", fontNormal, AlignEnum.CENTER);
         printFooter(call, "footer");
         printer.appendPrnStr("\n", fontNormal, AlignEnum.LEFT);
@@ -128,6 +124,30 @@ public class NexgoPrinter {
             public void onPrintResult(final int retCode) {
             }
         });
+    }
+
+    private void printSummaryList(@NonNull MethodCall call, String key) {
+        // ["type1,count1,200", "type2,count3,500"]
+
+        String[] summaryList = call.argument(key);
+        for (String[] transaction : transactions) {
+            for (String transactions : transactions) {
+                String[] transactionsParts = transactions.split(",");
+
+                String transactionType = transactionsParts[0];
+                String transactionCount = transactionsParts[1];
+                String transactionValue = transactionsParts[2];
+
+                printer.appendPrnStr(transactionType, fontNormal, AlignEnum.LEFT);
+                printer.appendPrnStr("Count: " + transactionCount + "\n", fontNormal,
+                        AlignEnum.LEFT);
+                printer.appendPrnStr("Value: " + "NGN " + transactionAmount + "\n\n",
+                        fontNormal,
+                        AlignEnum.LEFT);
+
+            }
+        }
+
     }
 
     private void printText(@NonNull MethodCall call, String key, String title) {
