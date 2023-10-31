@@ -134,7 +134,7 @@ public class NexgoPrinter {
         ArrayList<String> transactions = call.argument(key);
 
         for (String transaction : transactions) {
-            ArrayList<String> transactionsParts = transaction.split(",");
+            String[] transactionsParts = transaction.split(",");
 
             String transactionType = transactionsParts.get(0);
             String transactionCount = transactionsParts.get(1);
