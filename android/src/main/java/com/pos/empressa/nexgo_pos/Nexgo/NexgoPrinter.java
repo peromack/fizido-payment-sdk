@@ -5,6 +5,8 @@ import android.graphics.Typeface;
 
 import androidx.annotation.NonNull;
 
+import java.util.ArrayList;
+
 import com.nexgo.oaf.apiv3.APIProxy;
 import com.nexgo.oaf.apiv3.DeviceEngine;
 import com.nexgo.oaf.apiv3.device.printer.AlignEnum;
@@ -129,14 +131,14 @@ public class NexgoPrinter {
     private void nexgoSummaryPrint(@NonNull MethodCall call, String key) {
         // ["type1,count1,200", "type2,count3,500"]
 
-        String[] transactions = call.argument(key);
+        ArrayList<String> transactions = call.argument(key);
 
         for (String transaction : transactions) {
-            String[] transactionsParts = transaction.split(",");
+            ArrayList<String> transactionsParts = transaction.split(",");
 
-            String transactionType = transactionsParts[0];
-            String transactionCount = transactionsParts[1];
-            String transactionValue = transactionsParts[2];
+            String transactionType = transactionsParts.get(0);
+            String transactionCount = transactionsParts.get(1);
+            String transactionValue = transactionsParts.get(2);
 
             printer.appendPrnStr(transactionType, fontNormal, AlignEnum.LEFT);
             printer.appendPrnStr("Count: " + transactionCount + "\n", fontNormal,
