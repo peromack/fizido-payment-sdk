@@ -964,7 +964,7 @@ public class NexgoReadCard extends AppCompatActivity {
     }
 
     private int amountForDisplay() {
-        return Integer.parseInt(this.amount) + this.charge / 100;
+        return (Integer.parseInt(this.amount) + this.charge) / 100;
     }
 
 }
