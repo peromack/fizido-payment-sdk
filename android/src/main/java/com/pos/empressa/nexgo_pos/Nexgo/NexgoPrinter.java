@@ -129,23 +129,22 @@ public class NexgoPrinter {
     private void printSummaryList(@NonNull MethodCall call, String key) {
         // ["type1,count1,200", "type2,count3,500"]
 
-        String[] summaryList = call.argument(key);
-        for (String[] transaction : transactions) {
-            for (String transactions : transactions) {
-                String[] transactionsParts = transactions.split(",");
+        String[] transactions = call.argument(key);
 
-                String transactionType = transactionsParts[0];
-                String transactionCount = transactionsParts[1];
-                String transactionValue = transactionsParts[2];
+        for (String transaction : transactions) {
+            String[] transactionsParts = transaction.split(",");
 
-                printer.appendPrnStr(transactionType, fontNormal, AlignEnum.LEFT);
-                printer.appendPrnStr("Count: " + transactionCount + "\n", fontNormal,
-                        AlignEnum.LEFT);
-                printer.appendPrnStr("Value: " + "NGN " + transactionAmount + "\n\n",
-                        fontNormal,
-                        AlignEnum.LEFT);
+            String transactionType = transactionsParts[0];
+            String transactionCount = transactionsParts[1];
+            String transactionValue = transactionsParts[2];
 
-            }
+            printer.appendPrnStr(transactionType, fontNormal, AlignEnum.LEFT);
+            printer.appendPrnStr("Count: " + transactionCount + "\n", fontNormal,
+                    AlignEnum.LEFT);
+            printer.appendPrnStr("Value: " + "NGN " + transactionAmount + "\n\n",
+                    fontNormal,
+                    AlignEnum.LEFT);
+
         }
 
     }
