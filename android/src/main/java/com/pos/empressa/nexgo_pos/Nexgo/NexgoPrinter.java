@@ -107,7 +107,7 @@ public class NexgoPrinter {
         printer.appendPrnStr("--------------------------------", fontNormal, AlignEnum.CENTER);
         printText(call, "merchantName", "Merchant Name");
         printText(call, "merchantLocation", "Merchant Location");
-        printText(call, "time", "Report Time");
+        printText(call, "time", "Report Date");
         printText(call, "totalTransactionAmount", "Total");
         printText(call, "totalTransactionCount", "Count");
         printer.appendPrnStr("--------------------------------", fontNormal, AlignEnum.CENTER);
