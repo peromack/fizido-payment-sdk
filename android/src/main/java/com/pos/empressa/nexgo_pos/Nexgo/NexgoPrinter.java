@@ -141,7 +141,7 @@ public class NexgoPrinter {
             printer.appendPrnStr(transactionType, fontNormal, AlignEnum.LEFT);
             printer.appendPrnStr("Count: " + transactionCount + "\n", fontNormal,
                     AlignEnum.LEFT);
-            printer.appendPrnStr("Value: " + "NGN " + transactionAmount + "\n\n",
+            printer.appendPrnStr("Value: " + "NGN " + transactionValue + "\n\n",
                     fontNormal,
                     AlignEnum.LEFT);
 
