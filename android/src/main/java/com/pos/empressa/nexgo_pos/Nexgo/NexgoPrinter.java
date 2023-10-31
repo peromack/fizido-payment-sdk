@@ -126,7 +126,7 @@ public class NexgoPrinter {
         });
     }
 
-    private void printSummaryList(@NonNull MethodCall call, String key) {
+    private void nexgoSummaryPrint(@NonNull MethodCall call, String key) {
         // ["type1,count1,200", "type2,count3,500"]
 
         String[] transactions = call.argument(key);
