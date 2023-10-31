@@ -34,6 +34,8 @@ public class NexgoPosPlugin implements FlutterPlugin, MethodCallHandler, Activit
     /// when the Flutter Engine is detached from the Activity
     private MethodChannel channel;
     NexgoReadCard nexgoReadCard;
+    NexgoPrinter nexgoPrinter;
+
     private Context mContext;
 
     private  Activity activity;
@@ -57,8 +59,16 @@ public class NexgoPosPlugin implements FlutterPlugin, MethodCallHandler, Activit
                 nApplication.initEmv(result);
                 break;
             case "startNexgoPrinter":
-                NexgoPrinter nexgoPrinter = new NexgoPrinter(mContext);
+                if (nexgoPrinter == null) {
+                    nexgoPrinter = new NexgoPrinter(mContext);
+                }
                 nexgoPrinter.nexgoPrint(call);
+                break;
+            case "startNexgoSummaryPrinter":
+                if (nexgoPrinter == null) {
+                    nexgoPrinter = new NexgoPrinter(mContext);
+                }
+                nexgoPrinter.nexgoSummaryPrint(call);
                 break;
             case "chargeBlusaltTransaction":
                 BlusaltApiService.chargeTransaction(result, mContext, call);
