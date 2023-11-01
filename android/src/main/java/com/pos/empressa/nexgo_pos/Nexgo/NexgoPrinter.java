@@ -111,11 +111,12 @@ public class NexgoPrinter {
         printText(call, "merchantLocation", "Merchant Location");
         printText(call, "time", "Report Date");
         printText(call, "totalTransactionAmount", "Total");
+        printer.appendPrnStr("Total: NGN " + call.argument("totalTransactionAmount").toString(), fontNormal,
+                AlignEnum.LEFT);
         printText(call, "totalTransactionCount", "Count");
         printer.appendPrnStr("--------------------------------", fontNormal, AlignEnum.CENTER);
         printer.appendPrnStr("Summary breakdown", fontNormal, AlignEnum.CENTER);
         printer.appendPrnStr("--------------------------------", fontNormal, AlignEnum.CENTER);
-        // Print transaction summary list
         nexgoSummaryPrint(call, "summaryList");
         printer.appendPrnStr("--------------------------------", fontNormal, AlignEnum.CENTER);
         printFooter(call, "footer");
