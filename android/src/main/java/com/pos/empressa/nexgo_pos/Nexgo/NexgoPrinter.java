@@ -137,9 +137,9 @@ public class NexgoPrinter {
         for (String transaction : transactions) {
             String[] transactionsParts = transaction.split(",");
 
-            String transactionType = transactionsParts.get(0);
-            String transactionCount = transactionsParts.get(1);
-            String transactionValue = transactionsParts.get(2);
+            String transactionType = transactionsParts[0];
+            String transactionCount = transactionsParts[1];
+            String transactionValue = transactionsParts[2];
 
             printer.appendPrnStr(transactionType, fontNormal, AlignEnum.LEFT);
             printer.appendPrnStr("Count: " + transactionCount + "\n", fontNormal,
