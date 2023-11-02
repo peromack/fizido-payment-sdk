@@ -110,7 +110,6 @@ public class NexgoPrinter {
         printText(call, "merchantName", "Merchant Name");
         printText(call, "merchantLocation", "Merchant Location");
         printText(call, "time", "Report Date");
-        printText(call, "totalTransactionAmount", "Total");
         printer.appendPrnStr("Total: NGN " + call.argument("totalTransactionAmount").toString(), fontNormal,
                 AlignEnum.LEFT);
         printText(call, "totalTransactionCount", "Count");
