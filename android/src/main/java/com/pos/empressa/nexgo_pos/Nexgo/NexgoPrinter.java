@@ -69,6 +69,7 @@ public class NexgoPrinter {
         printText(call, "accountNumber", "Account Number");
         printText(call, "description", "Description");
         printText(call, "bill", "Bill");
+        printText(call, "pumpNo", "Pump number");
         printText(call, "paymentItem", "Payment Item");
         printText(call, "billItem", "Bill Item");
         printText(call, "qty", "Qty");
